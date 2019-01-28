@@ -21,6 +21,14 @@ import java.util.Optional;
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
  * <p>
+ *     ___       ___       ___       ___       ___       ___       ___
+ *    /\  \     /\  \     /\__\     /\__\     /\  \     /\  \     /\__\
+ *    \:\  \   /::\  \   /:/  /    /:/ _/_   /::\  \   /::\  \   |::L__L
+ *    /::\__\ /::\:\__\ /:/__/    /::-"\__\ /::\:\__\ /:/\:\__\ /::::\__\
+ *   /:/\/__/ \/\::/  / \:\  \    \;:;-",-" \:\::/  / \:\/:/  / \;::;/__/
+ *   \/__/      /:/  /   \:\__\    |:|  |    \::/  /   \::/  /   |::|__|
+ *              \/__/     \/__/     \|__|     \/__/     \/__/     \/__/
+ * <p>
  * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <codez>TalkBox.getTotalNumberOfButtons()</codez> buttons may be removed, renamed, or have an audio file added to them.
  * <p>
  * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
@@ -36,162 +44,179 @@ import java.util.Optional;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-    private File file;
-    private TalkBoxData ts;
-    private Button[] buttons;
+	private File file;
+	private TalkBoxData ts;
+	private Button[] buttons;
+	private ContextMenu contextMenu;
+	private boolean isEmpty = true;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        /* Initializes app */
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        primaryStage.setTitle("TalkBox Config");
-        primaryStage.setWidth(500);
-        primaryStage.setHeight(400);
-        primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		/* Initializes app */
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		primaryStage.setTitle("TalkBox Config");
+		primaryStage.setWidth(500);
+		primaryStage.setHeight(400);
+		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
 
-        /* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
-        VBox box = new VBox();
+		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
+		VBox box = new VBox();
 
-        /* Creates the menu bar */
-        MenuBar menuBar = new MenuBar();
-        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+		/* Creates the menu bar */
+		MenuBar menuBar = new MenuBar();
+		menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
 
-        /* Creates the sole menu in the menu bar, `File` */
-        Menu menuFile = new Menu("File");
-        menuBar.getMenus().addAll(menuFile);
+		/* Creates the sole menu in the menu bar, `File` */
+		Menu menuFile = new Menu("File");
+		menuBar.getMenus().addAll(menuFile);
 
-        /* Adds an Open and Save action to the File menu. The latter is initially disabled. */
-        MenuItem open = new MenuItem("Open");
-        MenuItem save = new MenuItem("Save");
-        save.setDisable(true);
+		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
+		MenuItem open = new MenuItem("Open");
+		MenuItem save = new MenuItem("Save");
+		save.setDisable(true);
 
-        /* Creates main scene */
-        Scene scene = new Scene(box);
-        save.setOnAction(event -> save());
+		/* Creates main scene */
+		Scene scene = new Scene(box);
+		save.setOnAction(event -> save());
 
-        /* Configures the open action to open a file/ If successful, continue to `action` method */
-        open.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
-            fileChooser.getExtensionFilters().add(filter); // specifies file type
+		/* Configures the open action to open a file/ If successful, continue to `action` method */
+		open.setOnAction(event -> {
+			FileChooser fileChooser = new FileChooser();
+			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
+			fileChooser.getExtensionFilters().add(filter); // specifies file type
 
-            fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
-            this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
+			fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
+			this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
 
-            // gets the name of the file
-            String str = file.toString()
-                    .substring(file.toString().lastIndexOf('/'))
-                    .substring(1);
+			// gets the name of the file
+			String str = file.toString()
+					.substring(file.toString().lastIndexOf('/'))
+					.substring(1);
 
-            // adds file name to Window title
-            primaryStage.setTitle("TalkBox Configurator – " + str);
+			// adds file name to Window title
+			primaryStage.setTitle("TalkBox Configurator – " + str);
 
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream oin = new ObjectInputStream(fis);
+			try {
+				FileInputStream fis = new FileInputStream(file);
+				ObjectInputStream oin = new ObjectInputStream(fis);
 
-                ts = (TalkBoxData) oin.readObject();
-                buttons = new Button[ts.numberOfAudioButtons];
+				ts = (TalkBoxData) oin.readObject();
+				buttons = new Button[ts.numberOfAudioButtons];
 
-                Pagination pagination = new Pagination(ts.numberOfAudioSets);
-                int page = pagination.getCurrentPageIndex();
-                box.getChildren().add(pagination);
+				Pagination pagination = new Pagination(ts.numberOfAudioSets);
+				int page = pagination.getCurrentPageIndex();
+				box.getChildren().add(pagination);
 
-                pagination.setPageFactory(this::configButtons);
+				pagination.setPageFactory(this::configButtons);
 
-                save.setDisable(false);
-                open.setDisable(true);
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println(e.getMessage());
-            }
-        });
+				save.setDisable(false);
+				open.setDisable(true);
+			} catch (IOException | ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		});
 
-        // show menu bar
-        menuFile.getItems().addAll(open, save);
-        box.getChildren().addAll(menuBar);
+		contextMenu = new ContextMenu();
+		MenuItem rename = new MenuItem("Rename");
+		MenuItem remove = new MenuItem("Remove");
+		MenuItem change = new MenuItem("Change");
 
-        // show window
-        primaryStage.setScene(scene);
-        primaryStage.show();
+		contextMenu.getItems().addAll(rename, remove, change);
 
-        warnBeforeExit(primaryStage);
-    }
+		// show menu bar
+		menuFile.getItems().addAll(open, save);
+		box.getChildren().addAll(menuBar);
 
-    private void warnBeforeExit(Stage primaryStage) {
-        primaryStage.setOnCloseRequest(event -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Exit");
-            alert.setHeaderText("Save File?");
-            alert.setContentText("Please choose an option.");
+		// show window
+		primaryStage.setScene(scene);
+		primaryStage.show();
 
-            ButtonType yesButton = new ButtonType("Yes");
-            ButtonType noButton = new ButtonType("No");
-            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+		warnBeforeExit(primaryStage);
+	}
 
-            alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+	private void warnBeforeExit(Stage primaryStage) {
+		primaryStage.setOnCloseRequest(event -> {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Confirm Exit");
+			alert.setHeaderText("Save File?");
+			alert.setContentText("Please choose an option.");
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == yesButton) {
-                event.consume();
-                save();
-                Platform.exit();
-            } else if (result.isPresent() && result.get() == noButton) {
-                Platform.exit();
-            } else if (result.isPresent() && result.get() == cancelButton) {
-                event.consume();
-            }
-        });
-    }
+			ButtonType yesButton = new ButtonType("Yes");
+			ButtonType noButton = new ButtonType("No");
+			ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-    private void save() {
-        try {
-            FileOutputStream fos = new FileOutputStream(file.toString());
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(ts);
-            oos.flush();
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
 
-    private FlowPane configButtons(int page) {
-        FlowPane flowPane = new FlowPane();
-        flowPane.setPadding(new Insets(30, 20, 30, 20));
-        flowPane.setVgap(10);
-        flowPane.setHgap(10);
-        flowPane.setAlignment(Pos.CENTER);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.isPresent() && result.get() == yesButton) {
+				event.consume();
+				save();
+				Platform.exit();
+			} else if (result.isPresent() && result.get() == noButton) {
+				Platform.exit();
+			} else if (result.isPresent() && result.get() == cancelButton) {
+				event.consume();
+			}
+		});
+	}
 
-        for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-            buttons[i] = ts.audioFilenames[page][i] == null
-                    ? new Button("Empty")
-                    : new Button(ts.audioFilenames[page][i]);
+	private void save() {
+		try {
+			FileOutputStream fos = new FileOutputStream(file.toString());
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(ts);
+			oos.flush();
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-            buttons[i].setPrefSize(100, 100);
-            flowPane.getChildren().add(buttons[i]);
-        }
+	private FlowPane configButtons(int page) {
+		FlowPane flowPane = new FlowPane();
+		flowPane.setPadding(new Insets(30, 20, 30, 20));
+		flowPane.setVgap(10);
+		flowPane.setHgap(10);
+		flowPane.setAlignment(Pos.CENTER);
 
-        for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
-            int j = i;
-            buttons[i].setOnAction(event2 -> {
-                if (ts.audioFilenames[page][j] == null) {
-                    FileChooser audioFile = new FileChooser();
-                    FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
-                    audioFile.getExtensionFilters().add(filter2);
+		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+			buttons[i] = ts.audioFilenames[page][i] == null
+					? new Button("Empty")
+					: new Button(ts.audioFilenames[page][i]);
 
-                    audioFile.setTitle("Select Audio File");
-                    File audio = audioFile.showOpenDialog(null);
-                    ts.audioFilenames[page][j] = audio.getPath();
-                } else {
-                    File soundFile = new File(ts.audioFilenames[page][j]);
-                    Media media = new Media(soundFile.toURI().toString());
-                    MediaPlayer player = new MediaPlayer(media);
-                    player.play();
-                }
-                buttons[j].setText(ts.audioFilenames[page][j]);
-            });
-        }
-        return flowPane;
-    }
+			buttons[i].setPrefSize(100, 100);
+			flowPane.getChildren().add(buttons[i]);
+		}
+
+		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
+			int j = i;
+			buttons[i].setOnAction(event2 -> {
+				if (ts.audioFilenames[page][j] == null) {
+					FileChooser audioFile = new FileChooser();
+					FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
+					audioFile.getExtensionFilters().add(filter2);
+
+					audioFile.setTitle("Select Audio File");
+					File audio = audioFile.showOpenDialog(null);
+					ts.audioFilenames[page][j] = audio.getPath();
+				} else {
+					File soundFile = new File(ts.audioFilenames[page][j]);
+					Media media = new Media(soundFile.toURI().toString());
+					MediaPlayer player = new MediaPlayer(media);
+					player.play();
+					System.out.println(player.getTotalDuration().toString());
+					System.out.println(player.getStopTime());
+				}
+				buttons[j].setText(ts.audioFilenames[page][j]);
+			});
+		}
+
+		for (Button b : buttons) {
+			if (!b.getText().equals("Empty")) b.setContextMenu(contextMenu);
+		}
+
+
+		return flowPane;
+	}
 
 }
