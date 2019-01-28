@@ -47,11 +47,11 @@ public class TalkBoxApp extends Application {
 	private File file;
 	private TalkBoxData ts;
 	private Button[] buttons;
-	private ContextMenu contextMenu;
-	private boolean isEmpty = true;
+	private Stage primaryStage;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
 		/* Initializes app */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		primaryStage.setTitle("TalkBox Config");
@@ -107,7 +107,7 @@ public class TalkBoxApp extends Application {
 				int page = pagination.getCurrentPageIndex();
 				box.getChildren().add(pagination);
 
-				pagination.setPageFactory(this::configButtons);
+				pagination.setPageFactory(page1 -> configButtons(page1, primaryStage));
 
 				save.setDisable(false);
 				open.setDisable(true);
@@ -115,13 +115,6 @@ public class TalkBoxApp extends Application {
 				System.out.println(e.getMessage());
 			}
 		});
-
-		contextMenu = new ContextMenu();
-		MenuItem rename = new MenuItem("Rename");
-		MenuItem remove = new MenuItem("Remove");
-		MenuItem change = new MenuItem("Change");
-
-		contextMenu.getItems().addAll(rename, remove, change);
 
 		// show menu bar
 		menuFile.getItems().addAll(open, save);
@@ -172,7 +165,7 @@ public class TalkBoxApp extends Application {
 		}
 	}
 
-	private FlowPane configButtons(int page) {
+	private FlowPane configButtons(int page, Stage primaryStage) {
 		FlowPane flowPane = new FlowPane();
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setVgap(10);
@@ -192,13 +185,7 @@ public class TalkBoxApp extends Application {
 			int j = i;
 			buttons[i].setOnAction(event2 -> {
 				if (ts.audioFilenames[page][j] == null) {
-					FileChooser audioFile = new FileChooser();
-					FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
-					audioFile.getExtensionFilters().add(filter2);
-
-					audioFile.setTitle("Select Audio File");
-					File audio = audioFile.showOpenDialog(null);
-					ts.audioFilenames[page][j] = audio.getPath();
+					setAudio(page, j);
 				} else {
 					File soundFile = new File(ts.audioFilenames[page][j]);
 					Media media = new Media(soundFile.toURI().toString());
@@ -211,12 +198,39 @@ public class TalkBoxApp extends Application {
 			});
 		}
 
-		for (Button b : buttons) {
-			if (!b.getText().equals("Empty")) b.setContextMenu(contextMenu);
+		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
+			int j = i;
+
+			ContextMenu contextMenu = new ContextMenu();
+			MenuItem rename = new MenuItem("Rename");
+			MenuItem remove = new MenuItem("Remove");
+			MenuItem change = new MenuItem("Change");
+			contextMenu.getItems().addAll(rename, remove, change);
+
+			change.setOnAction(event -> {
+				FileChooser audioFile = new FileChooser();
+				FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
+				audioFile.getExtensionFilters().add(filter2);
+
+				audioFile.setTitle("Select Audio File");
+				File audio = audioFile.showOpenDialog(primaryStage);
+				ts.audioFilenames[page][j] = audio.getPath();
+			});
+
+			if (!buttons[j].getText().equals("Empty")) buttons[j].setContextMenu(contextMenu);
 		}
 
-
 		return flowPane;
+	}
+
+	private void setAudio(int page, int j) {
+		FileChooser audioFile = new FileChooser();
+		FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
+		audioFile.getExtensionFilters().add(filter2);
+
+		audioFile.setTitle("Select Audio File");
+		File audio = audioFile.showOpenDialog(primaryStage);
+		ts.audioFilenames[page][j] = audio.getPath();
 	}
 
 }
