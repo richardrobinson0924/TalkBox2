@@ -2,28 +2,39 @@ package talkbox;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 import javax.swing.*;
 import java.io.*;
 import java.util.Optional;
 
+/**
+ * NOT SUITABLE YET FOR PRODUCTION USE
+ * <p>
+ * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <codez>TalkBox.getTotalNumberOfButtons()</codez> buttons may be removed, renamed, or have an audio file added to them.
+ * <p>
+ * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
+ * <p>
+ * The backend of the app uses a FlowPane of buttons in addition to a Pagination control, wrapped together in a VBox. Upon exit, a dialog is presented to ask the user to save the file before exit, or discard its state.
+ * <p>
+ * Furthermore, the TalkBoxApp communicates with a TalkBoxSimulator or TalkBoxDevice via the use of TalkBoxInfo serialized objects described via *.tbc files. As of 01/27/19, TalkBoxApp is a minimum viable product.
+ * <p>
+ * TODO: 2019-01-27  add Context Menus to allow for options; account for edge cases
+ * FIXME: 2019-01-27 get audio working
+ *
+ * @author Richard Robinson
+ * @version 0.1
+ */
 public class TalkBoxApp extends Application {
     private File file;
     private TalkBoxData ts;
