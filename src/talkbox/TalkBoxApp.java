@@ -22,15 +22,7 @@ import java.util.stream.IntStream;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
- * <p>
- *     ___       ___       ___       ___       ___       ___       ___
- *    /\  \     /\  \     /\__\     /\__\     /\  \     /\  \     /\__\
- *    \:\  \   /::\  \   /:/  /    /:/ _/_   /::\  \   /::\  \   |::L__L
- *    /::\__\ /::\:\__\ /:/__/    /::-"\__\ /::\:\__\ /:/\:\__\ /::::\__\
- *   /:/\/__/ \/\::/  / \:\  \    \;:;-",-" \:\::/  / \:\/:/  / \;::;/__/
- *   \/__/      /:/  /   \:\__\    |:|  |    \::/  /   \::/  /   |::|__|
- *              \/__/     \/__/     \|__|     \/__/     \/__/     \/__/
- * <p>
+ *
  * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code> buttons may be removed, renamed, or have an audio file added to them.
  * <p>
  * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
@@ -53,6 +45,8 @@ public class TalkBoxApp extends Application {
 	private VBox box;
 	private MenuItem open, save;
 
+	private boolean fileIsChanged = false;
+
 	/**
 	 * The main method to launch the application
 	 */
@@ -62,13 +56,13 @@ public class TalkBoxApp extends Application {
 
 	/**
 	 * Initializes the app.
+	 *
+	 * @param primaryStage cuz Java needs this
+	 * @throws Exception just in case
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 * @see #warnBeforeExit() method to warn user before exit
 	 * @see #open(ActionEvent) method to open file
 	 * @see #save(ActionEvent) method to save file
-	 *
-	 * @param primaryStage cuz Java needs this
-	 * @throws Exception just in case
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -119,6 +113,8 @@ public class TalkBoxApp extends Application {
 	 */
 	private void warnBeforeExit() {
 		primaryStage.setOnCloseRequest(event -> {
+			if (!fileIsChanged) return;
+
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("Confirm Exit");
 			alert.setHeaderText("Save File?");
@@ -153,6 +149,7 @@ public class TalkBoxApp extends Application {
 			oos.writeObject(ts);
 			oos.flush();
 			oos.close();
+			setIsChanged(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -186,7 +183,6 @@ public class TalkBoxApp extends Application {
 
 			pagination.setPageFactory(this::configButtons);
 
-			save.setDisable(false);
 			open.setDisable(true);
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -261,8 +257,9 @@ public class TalkBoxApp extends Application {
 
 	/**
 	 * Sets the audio file located at [page, j] to the file the user chooses
+	 *
 	 * @param page the audio set
-	 * @param j the audio button
+	 * @param j    the audio button
 	 */
 	private void setAudio(int page, int j) {
 		FileChooser audioFile = new FileChooser();
@@ -272,5 +269,24 @@ public class TalkBoxApp extends Application {
 		audioFile.setTitle("Select Audio File");
 		File audio = audioFile.showOpenDialog(primaryStage);
 		ts.audioFilenames[page][j] = audio.getPath();
+		setIsChanged(true);
+	}
+
+	/**
+	 * An intermediary method to change the state of <code>fileIsChanged</code>. If a file is saved, disable the Save menu item, and don't warn upon application exit. If a file is edited, add <code>(Edited)</code> to the title bar
+	 *
+	 * @param isChanged set to true if a property is modified; set to false upon file save
+	 */
+	private void setIsChanged(boolean isChanged) {
+		if (fileIsChanged == isChanged) return;
+		fileIsChanged = isChanged;
+
+		if (isChanged) {
+			save.setDisable(false);
+			primaryStage.setTitle("TalkBox Configurator — " + file.getName() + " (Edited)");
+		} else {
+			save.setDisable(true);
+			primaryStage.setTitle("TalkBox Configurator — " + file.getName());
+		}
 	}
 }
