@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
  * TODO: 2019-01-27  add Context Menus to allow for options; account for edge cases
  * FIXME: 2019-01-27 get audio working
  *
- * @author Richard Robinson
+ * @author EECS 2311 W2019 Z, Group 2
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
@@ -45,6 +45,7 @@ public class TalkBoxApp extends Application {
 	private VBox box;
 	private MenuItem open, save;
 
+	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
 	private boolean fileIsChanged = false;
 
 	/**
@@ -103,6 +104,7 @@ public class TalkBoxApp extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		open(null);
 		warnBeforeExit();
 	}
 
@@ -204,10 +206,11 @@ public class TalkBoxApp extends Application {
 
 		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			buttons[i] = ts.audioFilenames[page][i] == null
-					? new Button("Empty")
-					: new Button(ts.audioFilenames[page][i]);
+			String caption = (ts.audioFilenames[page][i] == null)
+					? "Empty"
+					: new File(ts.audioFilenames[page][i]).getName();
 
+			buttons[i] = new Button(caption);
 			buttons[i].setPrefSize(100, 100);
 			flowPane.getChildren().add(buttons[i]);
 		}
@@ -216,13 +219,14 @@ public class TalkBoxApp extends Application {
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 			if (ts.audioFilenames[page][i] == null) {
 				setAudio(page, i);
+				String caption = new File(ts.audioFilenames[page][i]).getName();
+				buttons[i].setText(caption);
 			} else {
 				File soundFile = new File(ts.audioFilenames[page][i]);
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
 				player.play();
 			}
-			buttons[i].setText(ts.audioFilenames[page][i]);
 		}));
 
 		// button context menus
@@ -239,20 +243,36 @@ public class TalkBoxApp extends Application {
 	 */
 	private void makeContextMenu(int page, int j) {
 		ContextMenu contextMenu = new ContextMenu();
+
 		MenuItem rename = new MenuItem("Rename");
 		MenuItem remove = new MenuItem("Remove");
 		MenuItem change = new MenuItem("Change");
 		contextMenu.getItems().addAll(rename, remove, change);
 
 		change.setOnAction(event -> setAudio(page, j));
+		rename.setOnAction(event -> changeName(j));
 
 		buttons[j].setContextMenu(contextMenu);
 
 		// if button has no file, disable context menu items
 		if (ts.audioFilenames[page][j] == null) {
-			for (MenuItem menuItem : contextMenu.getItems())
-				menuItem.setDisable(true);
+			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
+	}
+
+	/**
+	 * Displays an input dialog box to change the name of the button text
+	 *
+	 * @param j the button whose text to change
+	 */
+	private void changeName(int j) {
+		TextInputDialog dialog = new TextInputDialog(buttons[j].getText());
+		dialog.setTitle("Change Button Name");
+		dialog.setHeaderText("Change Button Name");
+		dialog.setContentText("Please enter the new name:");
+
+		Optional<String> result = dialog.showAndWait();
+		result.ifPresent(name -> buttons[j].setText(name));
 	}
 
 	/**
