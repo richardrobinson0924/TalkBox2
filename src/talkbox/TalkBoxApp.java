@@ -92,13 +92,8 @@ public class TalkBoxApp extends Application {
 			fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
 			this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
 
-			// gets the name of the file
-			String str = file.toString()
-					.substring(file.toString().lastIndexOf('/'))
-					.substring(1);
-
 			// adds file name to Window title
-			primaryStage.setTitle("TalkBox Configurator – " + str);
+			primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
 			try {
 				FileInputStream fis = new FileInputStream(file);
@@ -128,10 +123,15 @@ public class TalkBoxApp extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		warnBeforeExit(primaryStage);
+		warnBeforeExit();
 	}
 
-	private void warnBeforeExit(Stage primaryStage) {
+	/**
+	 * Upon application close, presents a warning dialog asking the user if they wish to (a) save changes, (b) do not save changes, or (c) cancel
+	 * <p>
+	 * TODO: 2019-01-28  if no edits were made, do not present dialog
+	 */
+	private void warnBeforeExit() {
 		primaryStage.setOnCloseRequest(event -> {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("Confirm Exit");
@@ -216,12 +216,23 @@ public class TalkBoxApp extends Application {
 
 			change.setOnAction(event -> setAudio(page, j));
 
-			if (!buttons[j].getText().equals("Empty")) buttons[j].setContextMenu(contextMenu);
+			buttons[j].setContextMenu(contextMenu);
+
+			// if button has no file, disable context menu items
+			if (ts.audioFilenames[page][j] == null) {
+				for (MenuItem menuItem : contextMenu.getItems())
+					menuItem.setDisable(true);
+			}
 		}
 
 		return flowPane;
 	}
 
+	/**
+	 * Sets the audio file located at [page, j] to the file the user chooses
+	 * @param page the audio set
+	 * @param j the audio button
+	 */
 	private void setAudio(int page, int j) {
 		FileChooser audioFile = new FileChooser();
 		FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
