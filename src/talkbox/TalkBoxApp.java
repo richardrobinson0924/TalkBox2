@@ -2,6 +2,7 @@ package talkbox;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -48,11 +49,26 @@ public class TalkBoxApp extends Application {
 	private TalkBoxData ts;
 	private Button[] buttons;
 	private Stage primaryStage;
+	private VBox box;
+	private MenuItem open, save;
 
+	/**
+	 * The main method to launch the application
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/**
+	 * Initializes the app.
+	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
+	 * @see #warnBeforeExit() method to warn user before exit
+	 * @see #open(ActionEvent) method to open file
+	 * @see #save(ActionEvent) method to save file
+	 *
+	 * @param primaryStage cuz Java needs this
+	 * @throws Exception just in case
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -64,7 +80,7 @@ public class TalkBoxApp extends Application {
 		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
 
 		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
-		VBox box = new VBox();
+		box = new VBox();
 
 		/* Creates the menu bar */
 		MenuBar menuBar = new MenuBar();
@@ -75,45 +91,14 @@ public class TalkBoxApp extends Application {
 		menuBar.getMenus().addAll(menuFile);
 
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
-		MenuItem open = new MenuItem("Open");
-		MenuItem save = new MenuItem("Save");
+		open = new MenuItem("Open");
+		save = new MenuItem("Save");
 		save.setDisable(true);
 
 		/* Creates main scene */
 		Scene scene = new Scene(box);
-		save.setOnAction(event -> save());
-
-		/* Configures the open action to open a file/ If successful, continue to `action` method */
-		open.setOnAction(event -> {
-			FileChooser fileChooser = new FileChooser();
-			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
-			fileChooser.getExtensionFilters().add(filter); // specifies file type
-
-			fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
-			this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
-
-			// adds file name to Window title
-			primaryStage.setTitle("TalkBox Configurator — " + file.getName());
-
-			try {
-				FileInputStream fis = new FileInputStream(file);
-				ObjectInputStream oin = new ObjectInputStream(fis);
-
-				ts = (TalkBoxData) oin.readObject();
-				buttons = new Button[ts.numberOfAudioButtons];
-
-				Pagination pagination = new Pagination(ts.numberOfAudioSets);
-				int page = pagination.getCurrentPageIndex();
-				box.getChildren().add(pagination);
-
-				pagination.setPageFactory(page1 -> configButtons(page1, primaryStage));
-
-				save.setDisable(false);
-				open.setDisable(true);
-			} catch (IOException | ClassNotFoundException e) {
-				System.out.println(e.getMessage());
-			}
-		});
+		save.setOnAction(this::save);
+		open.setOnAction(this::open);
 
 		// show menu bar
 		menuFile.getItems().addAll(open, save);
@@ -147,7 +132,7 @@ public class TalkBoxApp extends Application {
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.isPresent() && result.get() == yesButton) {
 				event.consume();
-				save();
+				save(null);
 				Platform.exit();
 			} else if (result.isPresent() && result.get() == noButton) {
 				Platform.exit();
@@ -157,7 +142,10 @@ public class TalkBoxApp extends Application {
 		});
 	}
 
-	private void save() {
+	/**
+	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
+	 */
+	private void save(ActionEvent event) {
 		try {
 			FileOutputStream fos = new FileOutputStream(file.toString());
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -169,7 +157,49 @@ public class TalkBoxApp extends Application {
 		}
 	}
 
-	private FlowPane configButtons(int page, Stage primaryStage) {
+	/**
+	 * Method reference to open a file, then passes control to <code>configButtons</code>
+	 *
+	 * @see #configButtons(int)
+	 */
+	private void open(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
+		fileChooser.getExtensionFilters().add(filter); // specifies file type
+
+		fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
+		this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
+
+		// adds file name to Window title
+		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
+
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream oin = new ObjectInputStream(fis);
+
+			ts = (TalkBoxData) oin.readObject();
+			buttons = new Button[ts.numberOfAudioButtons];
+
+			Pagination pagination = new Pagination(ts.numberOfAudioSets);
+			box.getChildren().add(pagination);
+
+			pagination.setPageFactory(this::configButtons);
+
+			save.setDisable(false);
+			open.setDisable(true);
+		} catch (IOException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
+	/**
+	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets. Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method of a pagination
+	 *
+	 * @param page a generalized audio set
+	 * @return the FlowPane created with the buttons
+	 */
+	private FlowPane configButtons(int page) {
 		FlowPane flowPane = new FlowPane();
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setVgap(10);
@@ -197,8 +227,6 @@ public class TalkBoxApp extends Application {
 					Media media = new Media(soundFile.toURI().toString());
 					MediaPlayer player = new MediaPlayer(media);
 					player.play();
-					System.out.println(player.getTotalDuration().toString());
-					System.out.println(player.getStopTime());
 				}
 				buttons[j].setText(ts.audioFilenames[page][j]);
 			});
@@ -242,5 +270,4 @@ public class TalkBoxApp extends Application {
 		File audio = audioFile.showOpenDialog(primaryStage);
 		ts.audioFilenames[page][j] = audio.getPath();
 	}
-
 }
