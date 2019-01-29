@@ -49,6 +49,10 @@ public class TalkBoxApp extends Application {
 	private Button[] buttons;
 	private Stage primaryStage;
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -172,6 +176,7 @@ public class TalkBoxApp extends Application {
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
 
+		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 			buttons[i] = ts.audioFilenames[page][i] == null
 					? new Button("Empty")
@@ -181,6 +186,7 @@ public class TalkBoxApp extends Application {
 			flowPane.getChildren().add(buttons[i]);
 		}
 
+		// on button press
 		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
 			int j = i;
 			buttons[i].setOnAction(event2 -> {
@@ -198,6 +204,7 @@ public class TalkBoxApp extends Application {
 			});
 		}
 
+		// button context menus
 		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
 			int j = i;
 
@@ -207,15 +214,7 @@ public class TalkBoxApp extends Application {
 			MenuItem change = new MenuItem("Change");
 			contextMenu.getItems().addAll(rename, remove, change);
 
-			change.setOnAction(event -> {
-				FileChooser audioFile = new FileChooser();
-				FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
-				audioFile.getExtensionFilters().add(filter2);
-
-				audioFile.setTitle("Select Audio File");
-				File audio = audioFile.showOpenDialog(primaryStage);
-				ts.audioFilenames[page][j] = audio.getPath();
-			});
+			change.setOnAction(event -> setAudio(page, j));
 
 			if (!buttons[j].getText().equals("Empty")) buttons[j].setContextMenu(contextMenu);
 		}
