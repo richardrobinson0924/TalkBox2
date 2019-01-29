@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.*;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
@@ -30,7 +31,7 @@ import java.util.Optional;
  *   \/__/      /:/  /   \:\__\    |:|  |    \::/  /   \::/  /   |::|__|
  *              \/__/     \/__/     \|__|     \/__/     \/__/     \/__/
  * <p>
- * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <codez>TalkBox.getTotalNumberOfButtons()</codez> buttons may be removed, renamed, or have an audio file added to them.
+ * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code> buttons may be removed, renamed, or have an audio file added to them.
  * <p>
  * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
  * <p>
@@ -192,7 +193,6 @@ public class TalkBoxApp extends Application {
 		}
 	}
 
-
 	/**
 	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets. Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method of a pagination
 	 *
@@ -217,43 +217,46 @@ public class TalkBoxApp extends Application {
 		}
 
 		// on button press
-		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
-			int j = i;
-			buttons[i].setOnAction(event2 -> {
-				if (ts.audioFilenames[page][j] == null) {
-					setAudio(page, j);
-				} else {
-					File soundFile = new File(ts.audioFilenames[page][j]);
-					Media media = new Media(soundFile.toURI().toString());
-					MediaPlayer player = new MediaPlayer(media);
-					player.play();
-				}
-				buttons[j].setText(ts.audioFilenames[page][j]);
-			});
-		}
+		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
+			if (ts.audioFilenames[page][i] == null) {
+				setAudio(page, i);
+			} else {
+				File soundFile = new File(ts.audioFilenames[page][i]);
+				Media media = new Media(soundFile.toURI().toString());
+				MediaPlayer player = new MediaPlayer(media);
+				player.play();
+			}
+			buttons[i].setText(ts.audioFilenames[page][i]);
+		}));
 
 		// button context menus
-		for (int i = 0; i < ts.getNumberOfAudioButtons(); i++) {
-			int j = i;
-
-			ContextMenu contextMenu = new ContextMenu();
-			MenuItem rename = new MenuItem("Rename");
-			MenuItem remove = new MenuItem("Remove");
-			MenuItem change = new MenuItem("Change");
-			contextMenu.getItems().addAll(rename, remove, change);
-
-			change.setOnAction(event -> setAudio(page, j));
-
-			buttons[j].setContextMenu(contextMenu);
-
-			// if button has no file, disable context menu items
-			if (ts.audioFilenames[page][j] == null) {
-				for (MenuItem menuItem : contextMenu.getItems())
-					menuItem.setDisable(true);
-			}
-		}
+		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));
 
 		return flowPane;
+	}
+
+	/**
+	 * Generates the context menu for each button. If button has no file, disable menu items.
+	 *
+	 * @param page the audio set
+	 * @param j    the audio button
+	 */
+	private void makeContextMenu(int page, int j) {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem rename = new MenuItem("Rename");
+		MenuItem remove = new MenuItem("Remove");
+		MenuItem change = new MenuItem("Change");
+		contextMenu.getItems().addAll(rename, remove, change);
+
+		change.setOnAction(event -> setAudio(page, j));
+
+		buttons[j].setContextMenu(contextMenu);
+
+		// if button has no file, disable context menu items
+		if (ts.audioFilenames[page][j] == null) {
+			for (MenuItem menuItem : contextMenu.getItems())
+				menuItem.setDisable(true);
+		}
 	}
 
 	/**
