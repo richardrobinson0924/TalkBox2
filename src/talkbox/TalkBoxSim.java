@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 
 public class TalkBoxSim {
     public static void main(String... args) throws IOException {
-        FileOutputStream fos = new FileOutputStream("/Users/richardrobinson/Desktop/test.tbc");
+	    FileOutputStream fos = new FileOutputStream("test.tbc");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         TalkBoxData ts = new TalkBoxData();
         ts.numberOfAudioButtons = 5;

@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.io.*;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -68,6 +69,7 @@ public class TalkBoxApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
+		UndoManager undoManager = new UndoManager();
 		/* Initializes app */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		primaryStage.setTitle("TalkBox Config");
@@ -84,20 +86,30 @@ public class TalkBoxApp extends Application {
 
 		/* Creates the sole menu in the menu bar, `File` */
 		Menu menuFile = new Menu("File");
-		menuBar.getMenus().addAll(menuFile);
+		Menu menuEdit = new Menu("Edit");
+		Menu menuHelp = new Menu("Help");
+		menuBar.getMenus().addAll(menuFile, menuEdit, menuHelp);
 
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		open = new MenuItem("Open");
 		save = new MenuItem("Save");
 		save.setDisable(true);
 
+		MenuItem undo = new MenuItem("Undo");
+		MenuItem redo = new MenuItem("Redo");
+
 		/* Creates main scene */
 		Scene scene = new Scene(box);
 		save.setOnAction(this::save);
 		open.setOnAction(this::open);
 
+		undo.setOnAction(event -> undoManager.undo());
+		redo.setOnAction(event -> undoManager.redo());
+
 		// show menu bar
 		menuFile.getItems().addAll(open, save);
+		menuEdit.getItems().addAll(undo, redo);
+
 		box.getChildren().addAll(menuBar);
 
 		// show window
@@ -208,7 +220,7 @@ public class TalkBoxApp extends Application {
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 			String caption = (ts.audioFilenames[page][i] == null)
 					? "Empty"
-					: new File(ts.audioFilenames[page][i]).getName();
+					: ts.getAlias(page, i);
 
 			buttons[i] = new Button(caption);
 			buttons[i].setPrefSize(100, 100);
@@ -218,11 +230,13 @@ public class TalkBoxApp extends Application {
 		// on button press
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 			if (ts.audioFilenames[page][i] == null) {
-				setAudio(page, i);
-				String caption = new File(ts.audioFilenames[page][i]).getName();
+				setAudio(null, page, i);
+				String caption = ts.getAlias(page, i);
+				System.out.println(caption);
 				buttons[i].setText(caption);
+				makeContextMenu(page, i);
 			} else {
-				File soundFile = new File(ts.audioFilenames[page][i]);
+				File soundFile = new File(ts.getPath(page, i));
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
 				player.play();
@@ -249,8 +263,8 @@ public class TalkBoxApp extends Application {
 		MenuItem change = new MenuItem("Change");
 		contextMenu.getItems().addAll(rename, remove, change);
 
-		change.setOnAction(event -> setAudio(page, j));
-		rename.setOnAction(event -> changeName(j));
+		change.setOnAction(event -> setAudio(contextMenu, page, j));
+		rename.setOnAction(event -> changeName(page, j));
 
 		buttons[j].setContextMenu(contextMenu);
 
@@ -265,14 +279,19 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param j the button whose text to change
 	 */
-	private void changeName(int j) {
+	private void changeName(int page, int j) {
 		TextInputDialog dialog = new TextInputDialog(buttons[j].getText());
 		dialog.setTitle("Change Button Name");
 		dialog.setHeaderText("Change Button Name");
 		dialog.setContentText("Please enter the new name:");
 
 		Optional<String> result = dialog.showAndWait();
-		result.ifPresent(name -> buttons[j].setText(name));
+		result.ifPresent(name -> {
+			buttons[j].setText(name);
+			String path = ts.getPath(page, j);
+			ts.getAudioFileNames()[page][j] = path + "\\|" + name;
+			setIsChanged(true);
+		});
 	}
 
 	/**
@@ -281,15 +300,19 @@ public class TalkBoxApp extends Application {
 	 * @param page the audio set
 	 * @param j    the audio button
 	 */
-	private void setAudio(int page, int j) {
+	private void setAudio(ContextMenu contextMenu, int page, int j) {
 		FileChooser audioFile = new FileChooser();
 		FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
 		audioFile.getExtensionFilters().add(filter2);
 
 		audioFile.setTitle("Select Audio File");
 		File audio = audioFile.showOpenDialog(primaryStage);
-		ts.audioFilenames[page][j] = audio.getPath();
-		setIsChanged(true);
+
+		if (audio != null) {
+			ts.audioFilenames[page][j] = audio.getPath() + "\\|" + audio.getName();
+			setIsChanged(true);
+			if (contextMenu != null) contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
+		}
 	}
 
 	/**
