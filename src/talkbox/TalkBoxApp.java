@@ -46,6 +46,8 @@ public class TalkBoxApp extends Application {
 	private VBox box;
 	private MenuItem open, save;
 
+	private static final String DELIM = "\\|";
+
 	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
 	private boolean fileIsChanged = false;
 
@@ -122,8 +124,6 @@ public class TalkBoxApp extends Application {
 
 	/**
 	 * Upon application close, presents a warning dialog asking the user if they wish to (a) save changes, (b) do not save changes, or (c) cancel
-	 * <p>
-	 * TODO: 2019-01-28  if no edits were made, do not present dialog
 	 */
 	private void warnBeforeExit() {
 		primaryStage.setOnCloseRequest(event -> {
@@ -265,6 +265,7 @@ public class TalkBoxApp extends Application {
 
 		change.setOnAction(event -> setAudio(contextMenu, page, j));
 		rename.setOnAction(event -> changeName(page, j));
+		remove.setOnAction(event -> remove(page, j));
 
 		buttons[j].setContextMenu(contextMenu);
 
@@ -272,6 +273,18 @@ public class TalkBoxApp extends Application {
 		if (ts.audioFilenames[page][j] == null) {
 			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
+	}
+
+	/**
+	 * Removes an audio file
+	 *
+	 * @param page the audio set
+	 * @param j    the audio button
+	 */
+	private void remove(int page, int j) {
+		ts.audioFilenames[page][j] = null;
+		buttons[j].setText("Empty");
+		setIsChanged(true);
 	}
 
 	/**
@@ -289,7 +302,7 @@ public class TalkBoxApp extends Application {
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
 			String path = ts.getPath(page, j);
-			ts.getAudioFileNames()[page][j] = path + "\\|" + name;
+			ts.getAudioFileNames()[page][j] = path + DELIM + name;
 			setIsChanged(true);
 		});
 	}
@@ -309,7 +322,7 @@ public class TalkBoxApp extends Application {
 		File audio = audioFile.showOpenDialog(primaryStage);
 
 		if (audio != null) {
-			ts.audioFilenames[page][j] = audio.getPath() + "\\|" + audio.getName();
+			ts.audioFilenames[page][j] = audio.getPath() + DELIM + audio.getName();
 			setIsChanged(true);
 			if (contextMenu != null) contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
 		}
