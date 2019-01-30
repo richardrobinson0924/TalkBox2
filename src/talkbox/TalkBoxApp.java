@@ -1,5 +1,6 @@
 package talkbox;
 
+import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,9 +15,13 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import marytts.LocalMaryInterface;
+import marytts.exceptions.MaryConfigurationException;
+import marytts.exceptions.SynthesisException;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
-import javax.swing.undo.UndoManager;
 import java.io.*;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -71,7 +76,7 @@ public class TalkBoxApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		UndoManager undoManager = new UndoManager();
+
 		/* Initializes app */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		primaryStage.setTitle("TalkBox Config");
@@ -88,29 +93,30 @@ public class TalkBoxApp extends Application {
 
 		/* Creates the sole menu in the menu bar, `File` */
 		Menu menuFile = new Menu("File");
-		Menu menuEdit = new Menu("Edit");
 		Menu menuHelp = new Menu("Help");
-		menuBar.getMenus().addAll(menuFile, menuEdit, menuHelp);
+		menuBar.getMenus().addAll(menuFile, menuHelp);
 
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		open = new MenuItem("Open");
 		save = new MenuItem("Save");
+		MenuItem newAudio = new MenuItem("Add new Audio");
 		save.setDisable(true);
 
-		MenuItem undo = new MenuItem("Undo");
-		MenuItem redo = new MenuItem("Redo");
+		MenuItem about = new MenuItem("About");
+		MenuItem help = new MenuItem("Help");
 
 		/* Creates main scene */
 		Scene scene = new Scene(box);
 		save.setOnAction(this::save);
 		open.setOnAction(this::open);
+		newAudio.setOnAction(this::newAudio);
 
-		undo.setOnAction(event -> undoManager.undo());
-		redo.setOnAction(event -> undoManager.redo());
+		about.setOnAction(this::about);
+		help.setOnAction(this::help);
 
 		// show menu bar
-		menuFile.getItems().addAll(open, save);
-		menuEdit.getItems().addAll(undo, redo);
+		menuFile.getItems().addAll(open, save, newAudio);
+		menuHelp.getItems().addAll(about, help);
 
 		box.getChildren().addAll(menuBar);
 
@@ -120,6 +126,41 @@ public class TalkBoxApp extends Application {
 
 		open(null);
 		warnBeforeExit();
+	}
+
+	private void newAudio(ActionEvent event) {
+		TextInputDialog dialog = new TextInputDialog("Hello");
+		dialog.setTitle("Create new Audio File");
+		dialog.setHeaderText("Create new Audio File");
+		dialog.setContentText("Please enter the text:");
+
+		Optional<String> result = dialog.showAndWait();
+
+		result.ifPresent(text -> {
+			AudioInputStream sound = null;
+			try {
+				sound = new LocalMaryInterface().generateAudio(text);
+			} catch (SynthesisException | MaryConfigurationException e) {
+				e.printStackTrace();
+			}
+
+			WaveFileWriter writer = new WaveFileWriter();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Save Audio File"); // specifies file prompt
+			File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
+
+			try {
+				writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private void help(ActionEvent event) {
+	}
+
+	private void about(ActionEvent event) {
 	}
 
 	/**
@@ -229,18 +270,21 @@ public class TalkBoxApp extends Application {
 
 		// on button press
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
+			boolean added = false;
+
 			if (ts.audioFilenames[page][i] == null) {
 				setAudio(null, page, i);
 				String caption = ts.getAlias(page, i);
-				System.out.println(caption);
+
 				buttons[i].setText(caption);
 				makeContextMenu(page, i);
-			} else {
-				File soundFile = new File(ts.getPath(page, i));
-				Media media = new Media(soundFile.toURI().toString());
-				MediaPlayer player = new MediaPlayer(media);
-				player.play();
+				added = true;
 			}
+
+			File soundFile = new File(ts.getPath(page, i));
+			Media media = new Media(soundFile.toURI().toString());
+			MediaPlayer player = new MediaPlayer(media);
+			if (!added) player.play();
 		}));
 
 		// button context menus
@@ -263,7 +307,10 @@ public class TalkBoxApp extends Application {
 		MenuItem change = new MenuItem("Change");
 		contextMenu.getItems().addAll(rename, remove, change);
 
-		change.setOnAction(event -> setAudio(contextMenu, page, j));
+		change.setOnAction(event -> {
+			setAudio(contextMenu, page, j);
+			buttons[j].setText(ts.getAlias(page, j));
+		});
 		rename.setOnAction(event -> changeName(page, j));
 		remove.setOnAction(event -> remove(page, j));
 
