@@ -1,6 +1,5 @@
 package talkbox;
 
-import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -15,12 +14,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import marytts.LocalMaryInterface;
-import marytts.exceptions.MaryConfigurationException;
-import marytts.exceptions.SynthesisException;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
 import java.util.Optional;
@@ -28,7 +22,7 @@ import java.util.stream.IntStream;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
- *
+ * <p>
  * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code> buttons may be removed, renamed, or have an audio file added to them.
  * <p>
  * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
@@ -129,32 +123,35 @@ public class TalkBoxApp extends Application {
 	}
 
 	private void newAudio(ActionEvent event) {
-		TextInputDialog dialog = new TextInputDialog("Hello");
-		dialog.setTitle("Create new Audio File");
-		dialog.setHeaderText("Create new Audio File");
-		dialog.setContentText("Please enter the text:");
+		TTSWizard ttsWizard = new TTSWizard();
 
-		Optional<String> result = dialog.showAndWait();
 
-		result.ifPresent(text -> {
-			AudioInputStream sound = null;
-			try {
-				sound = new LocalMaryInterface().generateAudio(text);
-			} catch (SynthesisException | MaryConfigurationException e) {
-				e.printStackTrace();
-			}
-
-			WaveFileWriter writer = new WaveFileWriter();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Save Audio File"); // specifies file prompt
-			File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
-
-			try {
-				writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+//		TextInputDialog dialog = new TextInputDialog("Hello");
+//		dialog.setTitle("Create new Audio File");
+//		dialog.setHeaderText("Create new Audio File");
+//		dialog.setContentText("Please enter the text:");
+//
+//		Optional<String> result = dialog.showAndWait();
+//
+//		result.ifPresent(text -> {
+//			AudioInputStream sound = null;
+//			try {
+//				sound = new LocalMaryInterface().generateAudio(text);
+//			} catch (Exception e) {
+//				Platform.exit();
+//			}
+//
+//			WaveFileWriter writer = new WaveFileWriter();
+//			FileChooser fileChooser = new FileChooser();
+//			fileChooser.setTitle("Save Audio File"); // specifies file prompt
+//			File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
+//
+//			try {
+//				writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
+//			} catch (Exception e) {
+//				Platform.exit();
+//			}
+//		});
 	}
 
 	private void help(ActionEvent event) {
