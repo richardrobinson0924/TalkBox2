@@ -103,6 +103,7 @@ public class TalkBoxApp extends Application {
 		Scene scene = new Scene(box);
 		save.setOnAction(this::save);
 		open.setOnAction(this::open);
+
 		newAudio.setOnAction(this::newAudio);
 
 		about.setOnAction(this::about);
@@ -123,35 +124,7 @@ public class TalkBoxApp extends Application {
 	}
 
 	private void newAudio(ActionEvent event) {
-		TTSWizard ttsWizard = new TTSWizard();
-
-
-//		TextInputDialog dialog = new TextInputDialog("Hello");
-//		dialog.setTitle("Create new Audio File");
-//		dialog.setHeaderText("Create new Audio File");
-//		dialog.setContentText("Please enter the text:");
-//
-//		Optional<String> result = dialog.showAndWait();
-//
-//		result.ifPresent(text -> {
-//			AudioInputStream sound = null;
-//			try {
-//				sound = new LocalMaryInterface().generateAudio(text);
-//			} catch (Exception e) {
-//				Platform.exit();
-//			}
-//
-//			WaveFileWriter writer = new WaveFileWriter();
-//			FileChooser fileChooser = new FileChooser();
-//			fileChooser.setTitle("Save Audio File"); // specifies file prompt
-//			File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
-//
-//			try {
-//				writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
-//			} catch (Exception e) {
-//				Platform.exit();
-//			}
-//		});
+		TTSWizard.launch(primaryStage);
 	}
 
 	private void help(ActionEvent event) {
@@ -308,6 +281,7 @@ public class TalkBoxApp extends Application {
 			setAudio(contextMenu, page, j);
 			buttons[j].setText(ts.getAlias(page, j));
 		});
+
 		rename.setOnAction(event -> changeName(page, j));
 		remove.setOnAction(event -> remove(page, j));
 
