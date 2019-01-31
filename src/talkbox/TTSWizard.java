@@ -19,12 +19,14 @@ import javax.sound.sampled.Clip;
 import java.io.File;
 import java.util.Optional;
 
-class TTSWizard {
+final class TTSWizard {
+	private static final String REGEX = "^\\w[\\w ]*$";
+	private static final String FEMALE = "dfki-poppy-hsmm";
 
 	private TTSWizard() {
 	}
 
-	static void launch(Stage primaryStage) {
+	static synchronized void launch(Stage primaryStage) {
 		Dialog<ButtonType> dialog1 = new Dialog<>();
 		dialog1.setTitle("Text to Speech Wizard");
 		dialog1.setHeaderText("TTS Wizard");
@@ -55,18 +57,18 @@ class TTSWizard {
 		female.setToggleGroup(group);
 
 		Button b = new Button("Play");
+		b.setDisable(true);
 		b.setOnAction(event1 -> {
-			AudioInputStream sound = null;
 			try {
 				LocalMaryInterface tts = new LocalMaryInterface();
-				if (female.isSelected()) tts.setVoice("dfki-poppy-hsmm");
-				sound = tts.generateAudio(phrase.getText());
+				if (female.isSelected()) tts.setVoice(FEMALE);
+				AudioInputStream sound = tts.generateAudio(phrase.getText());
 
 				Clip clip = AudioSystem.getClip();
 				clip.open(sound);
 				clip.start();
 			} catch (Exception e) {
-				Platform.exit();
+				primaryStage.close();
 			}
 		});
 
@@ -83,7 +85,11 @@ class TTSWizard {
 		Node authorize = dialog1.getDialogPane().lookupButton(ButtonType.OK);
 		authorize.setDisable(true);
 
-		phrase.textProperty().addListener((observable, oldVal, newVal) -> authorize.setDisable(newVal.isEmpty()));
+		phrase.textProperty().addListener((observable, oldVal, newVal) -> {
+			boolean condition = !newVal.matches(REGEX);
+			authorize.setDisable(condition);
+			b.setDisable(condition);
+		});
 
 		Platform.runLater(phrase::requestFocus);
 
@@ -97,7 +103,7 @@ class TTSWizard {
 			AudioInputStream sound;
 			try {
 				LocalMaryInterface tts = new LocalMaryInterface();
-				if (female.isSelected()) tts.setVoice("dfki-poppy-hsmm");
+				if (female.isSelected()) tts.setVoice(FEMALE);
 				sound = tts.generateAudio(phrase.getText());
 
 				WaveFileWriter writer = new WaveFileWriter();
@@ -106,13 +112,9 @@ class TTSWizard {
 				fileChooser.setTitle("Save Audio File"); // specifies file prompt
 				File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
 
-				try {
-					writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
-				} catch (Exception e) {
-					Platform.exit();
-				}
+				writer.write(sound, AudioFileFormat.Type.WAVE, audioFile);
 			} catch (Exception e) {
-				Platform.exit();
+				primaryStage.close();
 			}
 		}
 	}

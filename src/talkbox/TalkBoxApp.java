@@ -93,7 +93,7 @@ public class TalkBoxApp extends Application {
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		open = new MenuItem("Open");
 		save = new MenuItem("Save");
-		MenuItem newAudio = new MenuItem("Add new Audio");
+		MenuItem newAudio = new MenuItem("Launch TTS Wizard");
 		save.setDisable(true);
 
 		MenuItem about = new MenuItem("About");
