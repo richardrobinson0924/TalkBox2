@@ -20,36 +20,27 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.EnumSet;
 import java.util.Optional;
 
 
 /**
  * A singleton class for a custom dialog wizard window to create an audio file of user-inputted text. A user types their desired text into the text field, and the gender of the voice they wish to use. The user can see what the audio file will sound like by clicking the "Play" button. If they are satisfied, the "OK" button saves the <code>*.wav</code> to a specified destination.
- * <p>
- * The dialog uses a custom GridPane with the following hierarchy:
- * <code>
- * |- Label (Phrase)
- * |- HBox
- * |- TextField
- * |- Button (Play)
- * |- Label (Gender)
- * |- HBox
- * |- Radio Button (Male)
- * |- Radio Button (Female)
- * </code>
- * <p>
- * The phrase a user enters must only consist of alphanumeric characters, and without leading whitespaces.
  *
  * @author Richard Robinson
  * @apiNote This class is fully independent, and can be launched from any JavaFX stage
  */
 final class TTSWizard {
-	private static final char[] VOICES = {'A', 'B', 'C', 'D', 'E', 'F'};
 
 	private TTSWizard() {
 	}
 
-	static synchronized void launch(Stage primaryStage) throws Exception {
+	/**
+	 * The only public TTS Wizard Dialog launcher and configurator method. If any exceptions occur, the Dialog window is closed and view returns to <code>primaryStage</code>
+	 *
+	 * @param primaryStage the stage from which the TTSWizard instance is launched from
+	 */
+	static synchronized void launch(Stage primaryStage) {
 		Dialog<ButtonType> dialog1 = new Dialog<>();
 		dialog1.setTitle("Text to Speech Wizard");
 		dialog1.setHeaderText("TTS Wizard");
@@ -72,17 +63,16 @@ final class TTSWizard {
 		TextField phrase = new TextField();
 		phrase.setPromptText("Hello");
 
-		ObservableList<String> options = FXCollections.observableArrayList("Male 1", "Male 2", "Female 1", "Male 3", "Female 2", "Female 3");
+		ObservableList<Voice> options = FXCollections.observableArrayList(EnumSet.allOf(Voice.class));
 
-		final ComboBox<String> comboBox = new ComboBox<>(options);
-		comboBox.setValue(options.get(0));
+		final ComboBox<Voice> comboBox = new ComboBox<>(options);
+		comboBox.setValue(EnumSet.allOf(Voice.class).toArray(new Voice[0])[0]);
 
 		Button b = new Button("Play");
 		b.setDisable(true);
 		b.setOnAction(event1 -> {
 			try {
-				char variant = VOICES[options.indexOf(comboBox.getValue())];
-				AudioInputStream audio = generateAudio(phrase.getText(), variant);
+				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
 
 				Clip clip = AudioSystem.getClip();
 				clip.open(audio);
@@ -119,8 +109,7 @@ final class TTSWizard {
 			dialog1.close();
 		} else if (result.get() == ButtonType.OK) {
 			try {
-				char variant = VOICES[options.indexOf(comboBox.getValue())];
-				AudioInputStream audio = generateAudio(phrase.getText(), variant);
+				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
 
 				WaveFileWriter writer = new WaveFileWriter();
 				FileChooser fileChooser = new FileChooser();
@@ -135,8 +124,15 @@ final class TTSWizard {
 		}
 	}
 
-
-	public static AudioInputStream generateAudio(String text, char variant) throws Exception {
+	/**
+	 * Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
+	 *
+	 * @param text    the text to be converted to audio
+	 * @param variant A char value in range [A, F] to indicate the speech variant
+	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file or use with <code>Clip</code> class to play directly.
+	 * @throws Exception if any exception occurs
+	 */
+	private static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		TextToSpeechClient textToSpeechClient = TextToSpeechClient.create();
 
 		System.out.println(textToSpeechClient.listVoices("en-*"));
@@ -149,7 +145,7 @@ final class TTSWizard {
 		// ("neutral")
 		VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
 				.setLanguageCode("en-US")
-				.setName("en-US-Wavenet-" + variant)
+				.setName("en-US-Wavenet-" + v.variant)
 				.build();
 
 		// Select the type of audio file you want returned
@@ -164,5 +160,27 @@ final class TTSWizard {
 
 		ByteArrayInputStream bin = new ByteArrayInputStream(response.getAudioContent().toByteArray());
 		return AudioSystem.getAudioInputStream(bin);
+	}
+
+	public enum Voice {
+		MALE1("Male 1", 'A'),
+		MALE2("Male 2", 'B'),
+		MALE3("Male 3", 'D'),
+		FEMALE1("Female 1", 'C'),
+		FEMALE2("Female 2", 'E'),
+		FEMALE3("Female 3", 'F');
+
+		private final char variant;
+		private final String name;
+
+		Voice(String name, char variant) {
+			this.variant = variant;
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
 	}
 }
