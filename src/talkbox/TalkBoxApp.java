@@ -124,7 +124,11 @@ public class TalkBoxApp extends Application {
 	}
 
 	private void newAudio(ActionEvent event) {
-		TTSWizard.launch(primaryStage);
+		try {
+			TTSWizard.launch(primaryStage);
+		} catch (Exception e) {
+			Platform.exit();
+		}
 	}
 
 	private void help(ActionEvent event) {
