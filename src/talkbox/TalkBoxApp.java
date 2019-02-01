@@ -104,7 +104,7 @@ public class TalkBoxApp extends Application {
 		save.setOnAction(this::save);
 		open.setOnAction(this::open);
 
-		newAudio.setOnAction(this::newAudio);
+		newAudio.setOnAction(event -> TTSWizard.launch(primaryStage));
 
 		about.setOnAction(this::about);
 		help.setOnAction(this::help);
@@ -121,14 +121,6 @@ public class TalkBoxApp extends Application {
 
 		open(null);
 		warnBeforeExit();
-	}
-
-	private void newAudio(ActionEvent event) {
-		try {
-			TTSWizard.launch(primaryStage);
-		} catch (Exception e) {
-			Platform.exit();
-		}
 	}
 
 	private void help(ActionEvent event) {

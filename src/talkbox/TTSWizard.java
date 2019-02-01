@@ -66,7 +66,7 @@ final class TTSWizard {
 		ObservableList<Voice> options = FXCollections.observableArrayList(EnumSet.allOf(Voice.class));
 
 		final ComboBox<Voice> comboBox = new ComboBox<>(options);
-		comboBox.setValue(EnumSet.allOf(Voice.class).toArray(new Voice[0])[0]);
+		comboBox.setValue(EnumSet.allOf(Voice.class).iterator().next());
 
 		Button b = new Button("Play");
 		b.setDisable(true);
@@ -113,9 +113,12 @@ final class TTSWizard {
 
 				WaveFileWriter writer = new WaveFileWriter();
 				FileChooser fileChooser = new FileChooser();
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("WAV file (*.wav)", "*.wav"));
+
 
 				fileChooser.setTitle("Save Audio File"); // specifies file prompt
 				File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
+				audioFile = new File(audioFile.getAbsolutePath() + ".wav");
 
 				writer.write(audio, AudioFileFormat.Type.WAVE, audioFile);
 			} catch (Exception e) {
@@ -128,14 +131,13 @@ final class TTSWizard {
 	 * Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
 	 *
 	 * @param text    the text to be converted to audio
-	 * @param variant A char value in range [A, F] to indicate the speech variant
+	 * @param v       the voice to be used
 	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */
 	private static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		TextToSpeechClient textToSpeechClient = TextToSpeechClient.create();
 
-		System.out.println(textToSpeechClient.listVoices("en-*"));
 		// Set the text input to be synthesized
 		SynthesisInput input = SynthesisInput.newBuilder()
 				.setText(text)
@@ -162,7 +164,7 @@ final class TTSWizard {
 		return AudioSystem.getAudioInputStream(bin);
 	}
 
-	public enum Voice {
+	private enum Voice {
 		MALE1("Male 1", 'A'),
 		MALE2("Male 2", 'B'),
 		MALE3("Male 3", 'D'),
