@@ -16,40 +16,42 @@ import java.nio.file.Path;
  */
 public interface TalkBoxConfiguration extends Serializable {
 
-    /**
-     * Returns the number of physical buttons that when pressed will play an audio file.
-     *
-     * @return int A positive integer
-     */
-    public int getNumberOfAudioButtons();
+	/**
+	 * Returns the number of physical buttons that when pressed will play an audio file.
+	 *
+	 * @return int A positive integer
+	 */
+	public int getNumberOfAudioButtons();
 
-    /**
-     * Returns the number of sets of audio files that this configuration supports.
-     *
-     * @return int A positive integer
-     */
-    public int getNumberOfAudioSets();
+	/**
+	 * Returns the number of sets of audio files that this configuration supports.
+	 *
+	 * @return int A positive integer
+	 */
+	public int getNumberOfAudioSets();
 
-    /**
-     * Returns the total number of buttons in this TalkBox.
-     *
-     * @return int A positive integer
-     */
-    public int getTotalNumberOfButtons();
+	/**
+	 * Returns the total number of buttons in this TalkBox.
+	 *
+	 * @return int A positive integer
+	 */
+	public int getTotalNumberOfButtons();
 
-    /**
-     * Returns a Path relative to this configuration object where all audio files can be found
-     * @return Path A Path object that identifies the directory that contains the audio files
-     */
-    public Path getRelativePathToAudioFiles();
+	/**
+	 * Returns a Path relative to this configuration object where all audio files can be found
+	 *
+	 * @return Path A Path object that identifies the directory that contains the audio files
+	 */
+	public Path getRelativePathToAudioFiles();
 
-    /**
-     * Returns a 2-dimensional array of Strings that contains the names of all audio files.
-     * Each row of the array is an audio set.
-     * The dimensions of the array are given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons}
-     * and {@link #getNumberOfAudioSets() getNumberOfAudioSets}
-     * @return A 2-dimensional array of Strings
-     */
-    public String[][] getAudioFileNames();
+	/**
+	 * Returns a 2-dimensional array of Strings that contains the names of all audio files.
+	 * Each row of the array is an audio set.
+	 * The dimensions of the array are given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons}
+	 * and {@link #getNumberOfAudioSets() getNumberOfAudioSets}
+	 *
+	 * @return A 2-dimensional array of Strings
+	 */
+	public String[][] getAudioFileNames();
 
 }
