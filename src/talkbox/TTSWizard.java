@@ -1,6 +1,8 @@
 package talkbox;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
+import com.google.common.collect.Lists;
 import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -30,7 +32,7 @@ import java.util.Optional;
  * @author Richard Robinson
  * @apiNote This class is fully independent, and can be launched from any JavaFX stage
  */
-final class TTSWizard {
+class TTSWizard {
 
 	private TTSWizard() {
 	}
@@ -40,7 +42,9 @@ final class TTSWizard {
 	 *
 	 * @param primaryStage the stage from which the TTSWizard instance is launched from
 	 */
-	static synchronized void launch(Stage primaryStage) {
+	static void launch(Stage primaryStage) {
+		Clip[] clip = new Clip[]{null};
+
 		Dialog<ButtonType> dialog1 = new Dialog<>();
 		dialog1.setTitle("Text to Speech Wizard");
 		dialog1.setHeaderText("TTS Wizard");
@@ -71,13 +75,17 @@ final class TTSWizard {
 		Button b = new Button("Play");
 		b.setDisable(true);
 		b.setOnAction(event1 -> {
-			try {
+			if (clip[0] != null && clip[0].isRunning()) {
+				System.out.println("hi");
+				clip[0].stop();
+			} else try {
 				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
+				clip[0] = AudioSystem.getClip();
 
-				Clip clip = AudioSystem.getClip();
-				clip.open(audio);
-				clip.start();
+				clip[0].open(audio);
+				clip[0].start();
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				dialog1.close();
 			}
 		});
@@ -115,7 +123,6 @@ final class TTSWizard {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("WAV file (*.wav)", "*.wav"));
 
-
 				fileChooser.setTitle("Save Audio File"); // specifies file prompt
 				File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
 				audioFile = new File(audioFile.getAbsolutePath() + ".wav");
@@ -128,7 +135,7 @@ final class TTSWizard {
 	}
 
 	/**
-	 * Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
+	 * DO NOT MODIFY. Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
 	 *
 	 * @param text    the text to be converted to audio
 	 * @param v       the voice to be used
@@ -136,7 +143,15 @@ final class TTSWizard {
 	 * @throws Exception if any exception occurs
 	 */
 	private static AudioInputStream generateAudio(String text, Voice v) throws Exception {
-		TextToSpeechClient textToSpeechClient = TextToSpeechClient.create();
+		GoogleCredentials credentials = GoogleCredentials
+				.fromStream(TTSWizard.class.getResourceAsStream("/TalkBox-0d25e5d8c6d7.json"))
+				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+
+		TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()
+				.setCredentialsProvider(() -> credentials)
+				.build();
+
+		TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(auth);
 
 		// Set the text input to be synthesized
 		SynthesisInput input = SynthesisInput.newBuilder()
