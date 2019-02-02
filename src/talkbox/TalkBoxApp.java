@@ -104,9 +104,7 @@ public class TalkBoxApp extends Application {
 		save.setOnAction(this::save);
 		open.setOnAction(this::open);
 
-		newAudio.setOnAction(event -> {
-			TTSWizard.launch(primaryStage);
-		});
+		newAudio.setOnAction(event -> TTSWizard.launch(primaryStage));
 
 		about.setOnAction(this::about);
 		help.setOnAction(this::help);
