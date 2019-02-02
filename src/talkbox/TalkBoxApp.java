@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -31,8 +33,6 @@ import java.util.stream.IntStream;
  * <p>
  * Furthermore, the TalkBoxApp communicates with a TalkBoxSimulator or TalkBoxDevice via the use of TalkBoxInfo serialized objects described via *.tbc files. As of 01/27/19, TalkBoxApp is a minimum viable product.
  * <p>
- * TODO: 2019-01-27  add Context Menus to allow for options; account for edge cases
- * FIXME: 2019-01-27 get audio working
  *
  * @author EECS 2311 W2019 Z, Group 2
  * @version 0.1
@@ -255,10 +255,40 @@ public class TalkBoxApp extends Application {
 			if (!added) player.play();
 		}));
 
+		setDragAndDrop(page);
+
 		// button context menus
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));
 
 		return flowPane;
+	}
+
+	/**
+	 * Configures the drag and drop operation to allow a user to drag a *.wav file onto a button to change its file. If a non wav file is dragged, the event is consumed and no action occurs
+	 *
+	 * @param page the audio set
+	 */
+	private void setDragAndDrop(int page) {
+		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> {
+			buttons[i].setOnDragOver(event -> {
+				if (event.getGestureSource() != buttons[i] && event.getDragboard().hasFiles())
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				event.consume();
+			});
+
+			buttons[i].setOnDragDropped(event -> {
+				System.out.println("dragged");
+				Dragboard dragboard = event.getDragboard();
+
+				File file = dragboard.getFiles().get(0);
+				String fileName = file.getAbsolutePath();
+				if (!fileName.endsWith(".wav")) event.consume();
+
+				ts.audioFilenames[page][i] = fileName + DELIM + file.getName();
+				buttons[i].setText(ts.getAlias(page, i));
+				setIsChanged(true);
+			});
+		});
 	}
 
 	/**

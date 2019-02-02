@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TalkBox7.iml" filepath="$PROJECT_DIR$/TalkBox7.iml" />
-      <module fileurl="file://$PROJECT_DIR$/src/talkbox/talkbox.iml" filepath="$PROJECT_DIR$/src/talkbox/talkbox.iml" />
     </modules>
   </component>
 </project>
