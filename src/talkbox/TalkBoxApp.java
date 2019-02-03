@@ -11,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -68,7 +71,7 @@ public class TalkBoxApp extends Application {
 	 * @see #save(ActionEvent) method to save file
 	 */
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 		this.primaryStage = primaryStage;
 
 		/* Initializes app */
@@ -172,7 +175,8 @@ public class TalkBoxApp extends Application {
 			oos.close();
 			setIsChanged(false);
 		} catch (IOException e) {
-			e.printStackTrace();
+			displayErrorMessage(e);
+			event.consume();
 		}
 	}
 
@@ -192,22 +196,25 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
+		FileInputStream fis;
+		ObjectInputStream oin;
+
 		try {
-			FileInputStream fis = new FileInputStream(file);
-			ObjectInputStream oin = new ObjectInputStream(fis);
-
+			fis = new FileInputStream(file);
+			oin = new ObjectInputStream(fis);
 			ts = (TalkBoxData) oin.readObject();
-			buttons = new Button[ts.numberOfAudioButtons];
-
-			Pagination pagination = new Pagination(ts.numberOfAudioSets);
-			box.getChildren().add(pagination);
-
-			pagination.setPageFactory(this::configButtons);
-
-			open.setDisable(true);
-		} catch (IOException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			displayErrorMessage(e);
+			open(null);
 		}
+		buttons = new Button[ts.numberOfAudioButtons];
+
+		Pagination pagination = new Pagination(ts.numberOfAudioSets);
+		box.getChildren().add(pagination);
+
+		pagination.setPageFactory(this::configButtons);
+
+		open.setDisable(true);
 	}
 
 	/**
@@ -248,9 +255,13 @@ public class TalkBoxApp extends Application {
 			}
 
 			File soundFile = new File(ts.getPath(page, i));
-			Media media = new Media(soundFile.toURI().toString());
-			MediaPlayer player = new MediaPlayer(media);
-			if (!added) player.play();
+			try {
+				Media media = new Media(soundFile.toURI().toString());
+				MediaPlayer player = new MediaPlayer(media);
+				if (!added) player.play();
+			} catch (Exception e) {
+				displayErrorMessage(e);
+			}
 		}));
 
 		setDragAndDrop(page);
@@ -259,6 +270,37 @@ public class TalkBoxApp extends Application {
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));
 
 		return flowPane;
+	}
+
+	private void displayErrorMessage(Exception ex) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("An Error has Occurred");
+		alert.setHeaderText(alert.getTitle());
+		alert.setContentText(ex.getMessage());
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		ex.printStackTrace(pw);
+		String exceptionText = sw.toString();
+
+		Label label = new Label("Full error message:");
+
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		alert.getDialogPane().setExpandableContent(expContent);
+		alert.showAndWait();
 	}
 
 	/**
@@ -346,7 +388,7 @@ public class TalkBoxApp extends Application {
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
 			String path = ts.getPath(page, j);
-			ts.getAudioFileNames()[page][j] = path + DELIM + name;
+			ts.audioFilenames[page][j] = path + DELIM + name;
 			setIsChanged(true);
 		});
 	}
@@ -381,12 +423,10 @@ public class TalkBoxApp extends Application {
 		if (fileIsChanged == isChanged) return;
 		fileIsChanged = isChanged;
 
-		if (isChanged) {
-			save.setDisable(false);
-			primaryStage.setTitle("TalkBox Configurator — " + file.getName() + " (Edited)");
-		} else {
-			save.setDisable(true);
-			primaryStage.setTitle("TalkBox Configurator — " + file.getName());
-		}
+		save.setDisable(!isChanged);
+
+		primaryStage.setTitle(MessageFormat.format("TalkBox Configurator \u2014 {0}{1}",
+				file.getName(),
+				(isChanged) ? " (Edited)" : ""));
 	}
 }
