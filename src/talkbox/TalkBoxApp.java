@@ -73,7 +73,7 @@ public class TalkBoxApp extends Application {
 	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 		this.primaryStage = primaryStage;
 
-		Try.setFailSafe(this::setFailSafe);
+		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
 		/* Initializes app */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -127,7 +127,7 @@ public class TalkBoxApp extends Application {
 		warnBeforeExit();
 	}
 
-	private void setFailSafe(Exception ex) {
+	static void setFailSafe(Exception ex) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("An Error has Occurred");
 		alert.setHeaderText(alert.getTitle());
@@ -199,7 +199,7 @@ public class TalkBoxApp extends Application {
 	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
 	 */
 	private void save(ActionEvent event) {
-		Try.to(() -> {
+		Try.attemptTo(() -> {
 			FileOutputStream fos = new FileOutputStream(file.toString());
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(ts);
@@ -225,7 +225,7 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
-		Try.to(() -> {
+		Try.attemptTo(() -> {
 			FileInputStream fis;
 			ObjectInputStream oin;
 
@@ -286,7 +286,7 @@ public class TalkBoxApp extends Application {
 
 			File soundFile = new File(ts.getPath(page, i));
 			boolean finalAdded = added;
-			Try.to(() -> {
+			Try.attemptTo(() -> {
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
 				if (!finalAdded) player.play();
@@ -427,4 +427,5 @@ public class TalkBoxApp extends Application {
 				file.getName(),
 				(isChanged) ? " (Edited)" : ""));
 	}
+
 }

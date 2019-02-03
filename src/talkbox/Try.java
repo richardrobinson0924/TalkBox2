@@ -36,8 +36,13 @@ public final class Try {
 
 	private static Try TryMember = new Try();
 
-	private static RunnableEx r, otherwise = null;
-	private static Consumer<Exception> failSafe = Throwable::printStackTrace;
+	private RunnableEx statements = () -> {
+	};
+
+	private RunnableEx otherwise = () -> {
+	};
+
+	private static Consumer<Exception> failSafe = Exception::printStackTrace;
 
 	/**
 	 * The starter builder method. Attempts to execute the statements in <code>r</code>. If unable to do so, <code>failSafe.accept()</code> is executed
@@ -49,18 +54,19 @@ public final class Try {
 	 * Try.to(() -> statements).run();
 	 * </pre>
 	 */
-	public static Try to(RunnableEx r) {
-		Try.r = r;
-		return TryMember;
+	public static Try attemptTo(RunnableEx r) {
+		Try.TryMember = new Try();
+		Try.TryMember.statements = r;
+		return Try.TryMember;
 	}
 
 	public Try otherwise(RunnableEx otherwise) {
-		Try.otherwise = otherwise;
-		return TryMember;
+		this.otherwise = otherwise;
+		return Try.TryMember;
 	}
 
 	public static void setFailSafe(Consumer<Exception> ex) {
-		failSafe = ex;
+		Try.failSafe = ex;
 	}
 
 	/**
@@ -68,11 +74,11 @@ public final class Try {
 	 */
 	public void run() {
 		try {
-			r.run();
+			this.statements.run();
 		} catch (Exception ex) {
-			failSafe.accept(ex);
-			if (otherwise != null) try {
-				otherwise.run();
+			Try.failSafe.accept(ex);
+			try {
+				this.otherwise.run();
 			} catch (Exception ignored) {
 			}
 		}
