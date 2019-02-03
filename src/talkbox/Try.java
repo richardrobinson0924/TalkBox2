@@ -5,16 +5,20 @@ import java.util.function.Consumer;
 /**
  * Try is a Runnable-like static builder class to assure <code>failSafe.accept()</code> is executed upon failure with a possible additional(s) failure statement executions, such that
  *
- * <pre> Try.attemptTo(() -> actions)
- *    .otherwise(() -> actions)
- *    .run(); </pre>
+ * <pre>{@code
+ * Try.attemptTo(() -> actions)
+ *      .otherwise(() -> actions)
+ *      .run();
+ * }</pre>
  *
  * is equivalent to
  *
- * <pre> try { actions } catch (Exception e) {
- *  failSafe(e)
- *  // otherwise if failed
- * } </pre>
+ * <pre>{@code
+ * try { actions } catch (Exception e) {
+ *      failSafe(e)
+ *      // otherwise if failed
+ * }
+ * }</pre>
  *
  * Note the <code>otherwise</code> actions are optional. The <code>to()</code> method must be included and <code>run()</code> always last.
  *
@@ -40,7 +44,16 @@ public final class Try {
 	private static Consumer<Exception> failSafe = Exception::printStackTrace;
 
 	/**
-	 * The starter builder method. Attempts to execute the statements in <code>rex</code>. If unable to do so, <code>failSafe.accept()</code> is executed
+	 * The builder static start method. Must be called first.
+	 * @return the static Try instance
+	 */
+	public static Try newBuilder() {
+		Try.TryMember = new Try();
+		return Try.TryMember;
+	}
+
+	/**
+	 * Attempts to execute the statements in <code>rex</code>. If unable to do so, <code>failSafe.accept()</code> is executed
 	 *
 	 * @param rex the statement(s) to execute.
 	 * @return the static Try instance
@@ -49,8 +62,7 @@ public final class Try {
 	 *  Try.attemptTo(() -> statements).run();
 	 * </pre>
 	 */
-	public static Try attemptTo(RunnableEx rex) {
-		Try.TryMember = new Try();
+	public Try setDefault(RunnableEx rex) {
 		Try.TryMember.statements = rex;
 		return Try.TryMember;
 	}
@@ -61,7 +73,7 @@ public final class Try {
 	 * @param otherwise the statements execute upon failure
 	 * @return the static Try instance
 	 */
-	public Try otherwise(RunnableEx otherwise) {
+	public Try setOtherwise(RunnableEx otherwise) {
 		this.otherwise = otherwise;
 		return Try.TryMember;
 	}

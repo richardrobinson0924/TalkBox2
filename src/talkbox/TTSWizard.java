@@ -78,16 +78,13 @@ class TTSWizard {
 			if (clip[0] != null && clip[0].isRunning()) {
 				System.out.println("hi");
 				clip[0].stop();
-			} else try {
+			} else Try.newBuilder().setDefault(() -> {
 				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
 				clip[0] = AudioSystem.getClip();
 
 				clip[0].open(audio);
 				clip[0].start();
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				dialog1.close();
-			}
+			}).setOtherwise(dialog1::close).run();
 		});
 
 		HBox box2 = new HBox(phrase, b);
@@ -115,8 +112,8 @@ class TTSWizard {
 
 		if (!result.isPresent() || result.get() == ButtonType.CANCEL) {
 			dialog1.close();
-		} else if (result.get() == ButtonType.OK) {
-			try {
+		} else if (result.get() == ButtonType.OK)
+			Try.newBuilder().setDefault(() -> {
 				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
 
 				WaveFileWriter writer = new WaveFileWriter();
@@ -128,17 +125,14 @@ class TTSWizard {
 				audioFile = new File(audioFile.getAbsolutePath() + ".wav");
 
 				writer.write(audio, AudioFileFormat.Type.WAVE, audioFile);
-			} catch (Exception e) {
-				dialog1.close();
-			}
-		}
+			}).setOtherwise(dialog1::close).run();
 	}
 
 	/**
 	 * DO NOT MODIFY. Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
 	 *
-	 * @param text    the text to be converted to audio
-	 * @param v       the voice to be used
+	 * @param text the text to be converted to audio
+	 * @param v    the voice to be used
 	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */

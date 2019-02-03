@@ -199,7 +199,7 @@ public class TalkBoxApp extends Application {
 	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
 	 */
 	private void save(ActionEvent event) {
-		Try.attemptTo(() -> {
+		Try.newBuilder().setDefault(() -> {
 			FileOutputStream fos = new FileOutputStream(file.toString());
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(ts);
@@ -225,7 +225,7 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
-		Try.attemptTo(() -> {
+		Try.newBuilder().setDefault(() -> {
 			FileInputStream fis;
 			ObjectInputStream oin;
 
@@ -233,7 +233,7 @@ public class TalkBoxApp extends Application {
 			oin = new ObjectInputStream(fis);
 
 			ts = (TalkBoxData) oin.readObject();
-		}).otherwise(() -> {
+		}).setOtherwise(() -> {
 			open(null);
 		}).run();
 
@@ -286,7 +286,7 @@ public class TalkBoxApp extends Application {
 
 			File soundFile = new File(ts.getPath(page, i));
 			boolean finalAdded = added;
-			Try.attemptTo(() -> {
+			Try.newBuilder().setDefault(() -> {
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
 				if (!finalAdded) player.play();
