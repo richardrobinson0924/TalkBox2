@@ -11,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -71,6 +73,8 @@ public class TalkBoxApp extends Application {
 	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 		this.primaryStage = primaryStage;
 
+		Try.setFailSafe(this::setFailSafe);
+
 		/* Initializes app */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		primaryStage.setTitle("TalkBox Config");
@@ -123,6 +127,37 @@ public class TalkBoxApp extends Application {
 		warnBeforeExit();
 	}
 
+	private void setFailSafe(Exception ex) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("An Error has Occurred");
+		alert.setHeaderText(alert.getTitle());
+		alert.setContentText(ex.getMessage());
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		ex.printStackTrace(pw);
+		String exceptionText = sw.toString();
+
+		Label label = new Label("Full error message:");
+
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		alert.getDialogPane().setExpandableContent(expContent);
+		alert.showAndWait();
+	}
+
 	private void help(ActionEvent event) {
 	}
 
@@ -164,14 +199,14 @@ public class TalkBoxApp extends Application {
 	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
 	 */
 	private void save(ActionEvent event) {
-		Runner.tryTo(() -> {
+		Try.to(() -> {
 			FileOutputStream fos = new FileOutputStream(file.toString());
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(ts);
 			oos.flush();
 			oos.close();
 			setIsChanged(false);
-		});
+		}).run();
 	}
 
 	/**
@@ -190,13 +225,17 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
-		Runner.tryTo(() -> {
+		Try.to(() -> {
 			FileInputStream fis;
 			ObjectInputStream oin;
+
 			fis = new FileInputStream(file);
 			oin = new ObjectInputStream(fis);
+
 			ts = (TalkBoxData) oin.readObject();
-		}, () -> open(null));
+		}).otherwise(() -> {
+			open(null);
+		}).run();
 
 		buttons = new Button[ts.numberOfAudioButtons];
 
@@ -247,11 +286,11 @@ public class TalkBoxApp extends Application {
 
 			File soundFile = new File(ts.getPath(page, i));
 			boolean finalAdded = added;
-			Runner.tryTo(() -> {
+			Try.to(() -> {
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
 				if (!finalAdded) player.play();
-			});
+			}).run();
 		}));
 
 		setDragAndDrop(page);
