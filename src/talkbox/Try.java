@@ -4,23 +4,18 @@ import java.util.function.Consumer;
 
 /**
  * Try is a Runnable-like static builder class to assure <code>failSafe.accept()</code> is executed upon failure with a possible additional(s) failure statement executions, such that
- * <pre>
- * Try.to(() -> {
- *  // statements if possible
- * }).otherwise(() -> {
- *  // otherwise if failed
- * }.run();
- * </pre>
+ *
+ * <pre> Try.attemptTo(() -> actions)
+ *    .otherwise(() -> actions)
+ *    .run(); </pre>
+ *
  * is equivalent to
- * <pre>
- * try {
- *  // statements if possible
- * } catch (Exception e) {
+ *
+ * <pre> try { actions } catch (Exception e) {
  *  failSafe(e)
  *  // otherwise if failed
- * }
- * </pre>
- * <p>
+ * } </pre>
+ *
  * Note the <code>otherwise</code> actions are optional. The <code>to()</code> method must be included and <code>run()</code> always last.
  *
  * @author Richard Robinson
@@ -45,32 +40,47 @@ public final class Try {
 	private static Consumer<Exception> failSafe = Exception::printStackTrace;
 
 	/**
-	 * The starter builder method. Attempts to execute the statements in <code>r</code>. If unable to do so, <code>failSafe.accept()</code> is executed
+	 * The starter builder method. Attempts to execute the statements in <code>rex</code>. If unable to do so, <code>failSafe.accept()</code> is executed
 	 *
-	 * @param r the statement(s) to execute.
+	 * @param rex the statement(s) to execute.
 	 * @return the static Try instance
 	 * @apiNote should be used in the fashion
 	 * <pre>
-	 * Try.to(() -> statements).run();
+	 *  Try.attemptTo(() -> statements).run();
 	 * </pre>
 	 */
-	public static Try attemptTo(RunnableEx r) {
+	public static Try attemptTo(RunnableEx rex) {
 		Try.TryMember = new Try();
-		Try.TryMember.statements = r;
+		Try.TryMember.statements = rex;
 		return Try.TryMember;
 	}
 
+	/**
+	 * Optional. The statements to execute in addition to <code>failSafe.accept()</code> upon exception being caught
+	 *
+	 * @param otherwise the statements execute upon failure
+	 * @return the static Try instance
+	 */
 	public Try otherwise(RunnableEx otherwise) {
 		this.otherwise = otherwise;
 		return Try.TryMember;
 	}
 
+	/**
+	 * Statically sets the failSafe statement(s) to always execute upon an exception being caught in the form of a <code>Consumer</code>. By default, the stack trace is printed. The fail safe should be set before any other methods are called, via
+	 *
+	 * <pre> Try.setFailSafe(ClassName::methodName); </pre>
+	 *
+	 * in which <code>methodName</code> is the method with signature <code> void methodName(Exception e)</code> which includes the statements to be executed
+	 *
+	 * @param ex The exception parameter
+	 */
 	public static void setFailSafe(Consumer<Exception> ex) {
 		Try.failSafe = ex;
 	}
 
 	/**
-	 * The final builder method. Executes the code. Should <b>always</b> be included as the last call in the builder chain.
+	 * The final builder method to executes the instance. Must <b>always</b> be included as the last call in the builder chain.
 	 */
 	public void run() {
 		try {
@@ -84,6 +94,10 @@ public final class Try {
 		}
 	}
 
+	/**
+	 * A <code>Runner</code> interface which throws an exception
+	 * @see java.lang.Runnable
+	 */
 	@FunctionalInterface
 	public interface RunnableEx {
 		void run() throws Exception;
