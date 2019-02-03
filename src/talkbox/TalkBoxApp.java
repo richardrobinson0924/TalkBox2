@@ -11,8 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -64,7 +62,6 @@ public class TalkBoxApp extends Application {
 	 * Initializes the app.
 	 *
 	 * @param primaryStage cuz Java needs this
-	 * @throws Exception just in case
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 * @see #warnBeforeExit() method to warn user before exit
 	 * @see #open(ActionEvent) method to open file
@@ -167,17 +164,14 @@ public class TalkBoxApp extends Application {
 	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
 	 */
 	private void save(ActionEvent event) {
-		try {
+		Runner.tryTo(() -> {
 			FileOutputStream fos = new FileOutputStream(file.toString());
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(ts);
 			oos.flush();
 			oos.close();
 			setIsChanged(false);
-		} catch (IOException e) {
-			displayErrorMessage(e);
-			event.consume();
-		}
+		});
 	}
 
 	/**
@@ -196,17 +190,14 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
-		FileInputStream fis;
-		ObjectInputStream oin;
-
-		try {
+		Runner.tryTo(() -> {
+			FileInputStream fis;
+			ObjectInputStream oin;
 			fis = new FileInputStream(file);
 			oin = new ObjectInputStream(fis);
 			ts = (TalkBoxData) oin.readObject();
-		} catch (Exception e) {
-			displayErrorMessage(e);
-			open(null);
-		}
+		}, () -> open(null));
+
 		buttons = new Button[ts.numberOfAudioButtons];
 
 		Pagination pagination = new Pagination(ts.numberOfAudioSets);
@@ -255,13 +246,12 @@ public class TalkBoxApp extends Application {
 			}
 
 			File soundFile = new File(ts.getPath(page, i));
-			try {
+			boolean finalAdded = added;
+			Runner.tryTo(() -> {
 				Media media = new Media(soundFile.toURI().toString());
 				MediaPlayer player = new MediaPlayer(media);
-				if (!added) player.play();
-			} catch (Exception e) {
-				displayErrorMessage(e);
-			}
+				if (!finalAdded) player.play();
+			});
 		}));
 
 		setDragAndDrop(page);
@@ -270,37 +260,6 @@ public class TalkBoxApp extends Application {
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));
 
 		return flowPane;
-	}
-
-	private void displayErrorMessage(Exception ex) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("An Error has Occurred");
-		alert.setHeaderText(alert.getTitle());
-		alert.setContentText(ex.getMessage());
-
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		ex.printStackTrace(pw);
-		String exceptionText = sw.toString();
-
-		Label label = new Label("Full error message:");
-
-		TextArea textArea = new TextArea(exceptionText);
-		textArea.setEditable(false);
-		textArea.setWrapText(true);
-
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-		GridPane expContent = new GridPane();
-		expContent.setMaxWidth(Double.MAX_VALUE);
-		expContent.add(label, 0, 0);
-		expContent.add(textArea, 0, 1);
-
-		alert.getDialogPane().setExpandableContent(expContent);
-		alert.showAndWait();
 	}
 
 	/**
