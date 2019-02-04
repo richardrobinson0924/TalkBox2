@@ -148,7 +148,7 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * The method that is called whenever an exception is thrown
+	 * The method that is called whenever an exception is thrown. When an error occurs, an error dialog appears presenting the error and the exception's stacktrace, and consumes the excepted action.
 	 *
 	 * @param ex the exception that is thrown
 	 */
@@ -440,6 +440,11 @@ public class TalkBoxApp extends Application {
 				(isChanged) ? " (Edited)" : ""));
 	}
 
+	/**
+	 * Helper method to deserialize <code>file</code> into <code>ts</code>
+	 *
+	 * @throws Exception if an exception occurs
+	 */
 	private void readFile() throws Exception {
 		FileInputStream fis;
 		ObjectInputStream oin;
@@ -450,6 +455,10 @@ public class TalkBoxApp extends Application {
 		ts = (TalkBoxData) oin.readObject();
 	}
 
+	/**
+	 * Saves and serializes <code>ts</code> to <code>file</code>
+	 * @throws Exception
+	 */
 	private void save() throws Exception {
 		FileOutputStream fos = new FileOutputStream(file.toString());
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
