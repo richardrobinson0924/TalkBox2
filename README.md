@@ -4,9 +4,11 @@ description: >-
   and use your unique TalkBox device!
 ---
 
-# TalkBox Configurator
+# TalkBox User Guide
 
 TalkBox is a simple Text-to-Speech \(TTS\) device for those with difficulty speaking. Use the TalkBox Configuration App \(TCA\) \(optionally with the TalkBox Simulator\) to configure your unqiue TalkBox to match your needs.
 
 ![TalkBox Configurator Window](.gitbook/assets/screen-shot-2019-02-02-at-11.36.13-am.png)
+
+{% page-ref page="using-the-configurator.md" %}
 

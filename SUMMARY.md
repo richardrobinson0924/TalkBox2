@@ -1,5 +1,6 @@
 # Table of contents
 
-* [TalkBox Configurator](README.md)
+* [TalkBox User Guide](README.md)
 * [Using the Configurator](using-the-configurator.md)
+* [Using TalkBox Device](using-talkbox-device.md)
 
