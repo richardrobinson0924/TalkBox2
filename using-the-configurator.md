@@ -24,7 +24,7 @@ Then, go to `File > Open` to open your TBC file from either a device or the simu
 
 ## Using the Configurator
 
-The TBC automatically detects the number of audio buttons and audio sets your TalkBox has. Once you open a TalkBox Configuration File, you can use the TBC to add, remove, and configure the TalkBox buttons. If a button has an audio source, click it to play.
+The TBC automatically detects the number of audio buttons and audio sets your TalkBox has. Once you open a TalkBox Configuration File, you can use the TBC to add, remove, and configure the TalkBox buttons. If a button has an audio source, click it to play or use ⌘ \(macOS\) or Ctrl \(Windows\) + the number of the button you wish to play.
 
 #### Adding Audio
 
@@ -52,5 +52,5 @@ Here, you can enter a custom phrase and select from one of six unique voices to 
 
 ## Exporting to Device
 
-{% page-ref page="using-talkbox-device.md" %}
+Once you're done configuring your TalkBox, simply go to `File > Save` to save the file back onto your TalkBox or TalkBox Simulator. Using `File > Export`, you can also save it to a custom location. Now you're ready to use your TalkBox!
 
