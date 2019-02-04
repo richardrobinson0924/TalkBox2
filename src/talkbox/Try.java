@@ -6,8 +6,8 @@ import java.util.function.Consumer;
  * Try is a Runnable-like static builder class to assure <code>failSafe.accept()</code> is executed upon failure with a possible additional(s) failure statement executions, such that
  *
  * <pre>{@code
- * Try.attemptTo(() -> actions)
- *      .otherwise(() -> actions)
+ * Try.newBuilder().setDefault(() -> actions)
+ *      .setOtherwise(() -> actions)
  *      .run();
  * }</pre>
  *

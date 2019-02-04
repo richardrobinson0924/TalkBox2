@@ -67,7 +67,6 @@ public class TalkBoxApp extends Application {
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 * @see #warnBeforeExit() method to warn user before exit
 	 * @see #open(ActionEvent) method to open file
-	 * @see #save(ActionEvent) method to save file
 	 */
 	@Override
 	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
@@ -105,7 +104,10 @@ public class TalkBoxApp extends Application {
 
 		/* Creates main scene */
 		Scene scene = new Scene(box);
-		save.setOnAction(this::save);
+		save.setOnAction(e -> Try.newBuilder()
+				.setDefault(this::save)
+				.run());
+
 		open.setOnAction(this::open);
 
 		newAudio.setOnAction(event -> TTSWizard.launch(primaryStage));
@@ -185,7 +187,9 @@ public class TalkBoxApp extends Application {
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.isPresent() && result.get() == yesButton) {
 				event.consume();
-				save(null);
+				Try.newBuilder()
+						.setDefault(this::save)
+						.run();
 				Platform.exit();
 			} else if (result.isPresent() && result.get() == noButton) {
 				Platform.exit();
@@ -193,20 +197,6 @@ public class TalkBoxApp extends Application {
 				event.consume();
 			}
 		});
-	}
-
-	/**
-	 * Method reference to save the file (if called without reference, pass <code>null</code> as parameter
-	 */
-	private void save(ActionEvent event) {
-		Try.newBuilder().setDefault(() -> {
-			FileOutputStream fos = new FileOutputStream(file.toString());
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(ts);
-			oos.flush();
-			oos.close();
-			setIsChanged(false);
-		}).run();
 	}
 
 	/**
@@ -225,17 +215,10 @@ public class TalkBoxApp extends Application {
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
 
-		Try.newBuilder().setDefault(() -> {
-			FileInputStream fis;
-			ObjectInputStream oin;
-
-			fis = new FileInputStream(file);
-			oin = new ObjectInputStream(fis);
-
-			ts = (TalkBoxData) oin.readObject();
-		}).setOtherwise(() -> {
-			open(null);
-		}).run();
+		Try.newBuilder()
+				.setDefault(this::readFile)
+				.setOtherwise(() -> open(null))
+				.run();
 
 		buttons = new Button[ts.numberOfAudioButtons];
 
@@ -428,4 +411,22 @@ public class TalkBoxApp extends Application {
 				(isChanged) ? " (Edited)" : ""));
 	}
 
+	private void readFile() throws Exception {
+		FileInputStream fis;
+		ObjectInputStream oin;
+
+		fis = new FileInputStream(file);
+		oin = new ObjectInputStream(fis);
+
+		ts = (TalkBoxData) oin.readObject();
+	}
+
+	private void save() throws Exception {
+		FileOutputStream fos = new FileOutputStream(file.toString());
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(ts);
+		oos.flush();
+		oos.close();
+		setIsChanged(false);
+	}
 }

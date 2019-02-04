@@ -43,6 +43,7 @@ class TTSWizard {
 	 * @param primaryStage the stage from which the TTSWizard instance is launched from
 	 */
 	static void launch(Stage primaryStage) {
+		Try.setFailSafe(TalkBoxApp::setFailSafe);
 		Clip[] clip = new Clip[]{null};
 
 		Dialog<ButtonType> dialog1 = new Dialog<>();
@@ -120,9 +121,8 @@ class TTSWizard {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("WAV file (*.wav)", "*.wav"));
 
-				fileChooser.setTitle("Save Audio File"); // specifies file prompt
-				File audioFile = fileChooser.showSaveDialog(primaryStage); // displays file chooser window
-				audioFile = new File(audioFile.getAbsolutePath() + ".wav");
+				fileChooser.setTitle("Save Audio File");
+				File audioFile = fileChooser.showSaveDialog(primaryStage);
 
 				writer.write(audio, AudioFileFormat.Type.WAVE, audioFile);
 			}).setOtherwise(dialog1::close).run();
