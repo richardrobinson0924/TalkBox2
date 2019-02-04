@@ -47,6 +47,7 @@ public class TalkBoxApp extends Application {
 	private Stage primaryStage;
 	private VBox box;
 	private MenuItem open, save;
+	private Scene scene;
 
 	private static final String DELIM = "\\|";
 
@@ -72,10 +73,19 @@ public class TalkBoxApp extends Application {
 	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 		this.primaryStage = primaryStage;
 
+		/**
+		 * Sets the code that should execute whenever a <code>catch</code> block occurs (that is, an exception is thrown). More specifically, if the could which should execute is within a method (with Exception as a parameter), then it may be set via
+		 *
+		 * <pre>{@code
+		 *     Try.setFailSafe(ClassName::methodName);
+		 * }</pre>
+		 */
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
-		/* Initializes app */
+		/* Sets the UI */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+		/* Sets window size and title */
 		primaryStage.setTitle("TalkBox Config");
 		primaryStage.setWidth(500);
 		primaryStage.setHeight(400);
@@ -99,17 +109,22 @@ public class TalkBoxApp extends Application {
 		MenuItem newAudio = new MenuItem("Launch TTS Wizard");
 		save.setDisable(true);
 
+		/* Creates about and help menus */
 		MenuItem about = new MenuItem("About");
 		MenuItem help = new MenuItem("Help");
 
 		/* Creates main scene */
-		Scene scene = new Scene(box);
+		scene = new Scene(box);
+
+		/* Configures the `save` action, which attempts to execute the `save()` method */
 		save.setOnAction(e -> Try.newBuilder()
 				.setDefault(this::save)
 				.run());
 
+		/* Configures the `open` action, which attempts to execute the `open()` method */
 		open.setOnAction(this::open);
 
+		/* Configures the `newAudio` action, which launches the TTS Wizard */
 		newAudio.setOnAction(event -> TTSWizard.launch(primaryStage));
 
 		about.setOnAction(this::about);
@@ -125,10 +140,18 @@ public class TalkBoxApp extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		/* start app by opening a file with `open()` */
 		open(null);
+
+		/* Upon exit, call method to prompt user to save */
 		warnBeforeExit();
 	}
 
+	/**
+	 * The method that is called whenever an exception is thrown
+	 *
+	 * @param ex the exception that is thrown
+	 */
 	static void setFailSafe(Exception ex) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("An Error has Occurred");
@@ -277,6 +300,12 @@ public class TalkBoxApp extends Application {
 		}));
 
 		setDragAndDrop(page);
+
+		scene.setOnKeyTyped(e -> {
+			int index = Integer.parseInt(e.getCharacter()) - 1;
+			if (index < ts.getNumberOfAudioButtons())
+				buttons[index].fire();
+		});
 
 		// button context menus
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));

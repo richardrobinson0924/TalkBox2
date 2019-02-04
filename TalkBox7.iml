@@ -20,5 +20,6 @@
     <orderEntry type="library" exported="" name="com.google.cloud:google-cloud-core:1.61.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.auth:google-auth-library-oauth2-http:0.13.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.cloud:google-cloud-texttospeech:0.79.0-beta" level="project" />
+    <orderEntry type="library" exported="" name="com.aquafx-project:aquafx:0.2" level="project" />
   </component>
 </module>
