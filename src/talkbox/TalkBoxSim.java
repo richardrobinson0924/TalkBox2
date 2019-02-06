@@ -1,8 +1,10 @@
 package talkbox;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -15,11 +17,18 @@ public class TalkBoxSim extends Application {
     // you wanna ask the user if they wanna make a new tbc file or open an existing one. (2 buttons)
     // when the .tbc file is created, it opens (or when the existing file is opened) and a simple interface of the buttons
     public static void main(String... args) {
-
+        launch(args);
     }
 
-    public void start(Stage primaryStage) {
+    public void start(Stage simStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
+        simStage.setTitle("TalkBox Simulator");
+        simStage.setWidth(500);
+        simStage.setHeight(400);
+        simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
+
+        simStage.show();
     }
 
     public void createNewTBC() throws IOException {
