@@ -10,19 +10,20 @@ import java.io.ObjectOutputStream;
 public class TalkBoxSim {
     // hello John doe fix me
     public static void main(String... args) throws IOException {
-        FileOutputStream fos = new FileOutputStream("test.tbc");
+        FileOutputStream fos = new FileOutputStream("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         TalkBoxData ts = new TalkBoxData();
         ts.numberOfAudioButtons = 5;
         ts.numberOfAudioSets = 8;
 
-        ts.audioFilenames = new String[8][5];
+        ts.audioList = new Mapping[ts.numberOfAudioSets][ts.numberOfAudioButtons];
 
         for (int i = 0; i < ts.numberOfAudioSets; i++) {
             for (int j = 0; j < ts.getNumberOfAudioButtons(); j++) {
-                ts.audioFilenames[i][j] = null;
+                ts.audioList[i][j] = null;
             }
         }
+
         oos.writeObject(ts);
         oos.flush();
         oos.close();

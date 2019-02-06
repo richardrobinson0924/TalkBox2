@@ -77,7 +77,6 @@ class TTSWizard {
 		b.setDisable(true);
 		b.setOnAction(event1 -> {
 			if (clip[0] != null && clip[0].isRunning()) {
-				System.out.println("hi");
 				clip[0].stop();
 			} else Try.newBuilder().setDefault(() -> {
 				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());

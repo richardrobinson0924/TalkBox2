@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
@@ -41,18 +42,23 @@ import java.util.stream.IntStream;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	private File file;
-	private TalkBoxData ts;
-	private Button[] buttons;
-	private Stage primaryStage;
-	private VBox box;
-	private MenuItem open, save;
-	private Scene scene;
+	private static File file;
+	private static TalkBoxData ts;
+	private static Button[] buttons;
+	private static Stage primaryStage;
+	private static VBox box;
+	private static MenuItem open, save;
+	private static Scene scene;
 
-	private static final String DELIM = "\\|";
+	private static final String AUDIO_PATH = "/Audio";
+	private File audioFolder;
 
 	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
 	private boolean fileIsChanged = false;
+
+	private final static int GRAPHIC_SIZE = 55;
+	private final static int BUTTON_SIZE = 100;
+	private final static Image GRAPHIC = new Image(TalkBoxApp.class.getResource("button_graphic.png").toString());
 
 	/**
 	 * The main method to launch the application
@@ -71,15 +77,7 @@ public class TalkBoxApp extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-		this.primaryStage = primaryStage;
-
-		/**
-		 * Sets the code that should execute whenever a <code>catch</code> block occurs (that is, an exception is thrown). More specifically, if the could which should execute is within a method (with Exception as a parameter), then it may be set via
-		 *
-		 * <pre>{@code
-		 *     Try.setFailSafe(ClassName::methodName);
-		 * }</pre>
-		 */
+		TalkBoxApp.primaryStage = primaryStage;
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
 		/* Sets the UI */
@@ -101,17 +99,19 @@ public class TalkBoxApp extends Application {
 		/* Creates the sole menu in the menu bar, `File` */
 		Menu menuFile = new Menu("File");
 		Menu menuHelp = new Menu("Help");
-		menuBar.getMenus().addAll(menuFile, menuHelp);
+		Menu menuView = new Menu("View");
+		menuBar.getMenus().addAll(menuFile, menuView, menuHelp);
 
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		open = new MenuItem("Open");
 		save = new MenuItem("Save");
-		MenuItem newAudio = new MenuItem("Launch TTS Wizard");
 		save.setDisable(true);
 
 		/* Creates about and help menus */
 		MenuItem about = new MenuItem("About");
 		MenuItem help = new MenuItem("Help");
+
+		MenuItem newAudio = new MenuItem("Launch TTS Wizard");
 
 		/* Creates main scene */
 		scene = new Scene(box);
@@ -131,7 +131,8 @@ public class TalkBoxApp extends Application {
 		help.setOnAction(this::help);
 
 		// show menu bar
-		menuFile.getItems().addAll(open, save, newAudio);
+		menuFile.getItems().addAll(open, save);
+		menuView.getItems().addAll(newAudio);
 		menuHelp.getItems().addAll(about, help);
 
 		box.getChildren().addAll(menuBar);
@@ -152,7 +153,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param ex the exception that is thrown
 	 */
-	static void setFailSafe(Exception ex) {
+	public static void setFailSafe(Exception ex) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("An Error has Occurred");
 		alert.setHeaderText(alert.getTitle());
@@ -233,7 +234,7 @@ public class TalkBoxApp extends Application {
 		fileChooser.getExtensionFilters().add(filter); // specifies file type
 
 		fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
-		this.file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
+		file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
 
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
@@ -242,6 +243,8 @@ public class TalkBoxApp extends Application {
 				.setDefault(this::readFile)
 				.setOtherwise(() -> open(null))
 				.run();
+
+		audioFolder = new File(file.getParent().concat(AUDIO_PATH));
 
 		buttons = new Button[ts.numberOfAudioButtons];
 
@@ -266,38 +269,21 @@ public class TalkBoxApp extends Application {
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
 
-		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			String caption = (ts.audioFilenames[page][i] == null)
-					? "Empty"
-					: ts.getAlias(page, i);
+			String caption = (ts.audioList[page][i] != null)
+					? ts.audioList[page][i].getValue()
+					: "Empty";
 
 			buttons[i] = new Button(caption);
-			buttons[i].setPrefSize(100, 100);
+
+			buttons[i].setContentDisplay(ContentDisplay.TOP);
+			buttons[i].setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
+
 			flowPane.getChildren().add(buttons[i]);
+
+			setButtonAction(page, i);
+			makeContextMenu(page, i);
 		}
-
-		// on button press
-		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
-			boolean added = false;
-
-			if (ts.audioFilenames[page][i] == null) {
-				setAudio(null, page, i);
-				String caption = ts.getAlias(page, i);
-
-				buttons[i].setText(caption);
-				makeContextMenu(page, i);
-				added = true;
-			}
-
-			File soundFile = new File(ts.getPath(page, i));
-			boolean finalAdded = added;
-			Try.newBuilder().setDefault(() -> {
-				Media media = new Media(soundFile.toURI().toString());
-				MediaPlayer player = new MediaPlayer(media);
-				if (!finalAdded) player.play();
-			}).run();
-		}));
 
 		setDragAndDrop(page);
 
@@ -307,10 +293,39 @@ public class TalkBoxApp extends Application {
 				buttons[index].fire();
 		});
 
-		// button context menus
-		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> makeContextMenu(page, i));
+		IntStream.range(0, ts.getNumberOfAudioButtons())
+				.filter(i -> ts.audioList[page][i] != null)
+				.forEach(this::setGraphic);
 
 		return flowPane;
+	}
+
+	private void setButtonAction(int page, int i) {
+		buttons[i].setOnAction(event2 -> {
+			boolean added = false;
+
+			if (ts.audioList[page][i] == null) {
+				setAudio(null, page, i);
+				String caption2 = (ts.audioList[page][i] != null)
+						? ts.audioList[page][i].getValue()
+						: "Empty";
+
+				buttons[i].setText(caption2);
+				makeContextMenu(page, i);
+				added = true;
+			}
+
+			if (ts.audioList[page][i] != null) {
+				File soundFile = new File(getFullPath(ts.audioList[page][i].getValue()));
+				boolean finalAdded = added;
+
+				Try.newBuilder().setDefault(() -> {
+					Media media = new Media(soundFile.toURI().toString());
+					MediaPlayer player = new MediaPlayer(media);
+					if (!finalAdded) player.play();
+				}).run();
+			}
+		});
 	}
 
 	/**
@@ -331,11 +346,12 @@ public class TalkBoxApp extends Application {
 				Dragboard dragboard = event.getDragboard();
 
 				File file = dragboard.getFiles().get(0);
-				String fileName = file.getAbsolutePath();
-				if (!fileName.endsWith(".wav")) event.consume();
+				String fileName = file.getName();
+				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				ts.audioFilenames[page][i] = fileName + DELIM + file.getName();
-				buttons[i].setText(ts.getAlias(page, i));
+				ts.audioList[page][i] = new Mapping(fileName, fileName);
+
+				buttons[i].setText(fileName);
 				setIsChanged(true);
 			});
 		});
@@ -357,7 +373,7 @@ public class TalkBoxApp extends Application {
 
 		change.setOnAction(event -> {
 			setAudio(contextMenu, page, j);
-			buttons[j].setText(ts.getAlias(page, j));
+			buttons[j].setText(ts.audioList[page][j].getValue());
 		});
 
 		rename.setOnAction(event -> changeName(page, j));
@@ -366,7 +382,7 @@ public class TalkBoxApp extends Application {
 		buttons[j].setContextMenu(contextMenu);
 
 		// if button has no file, disable context menu items
-		if (ts.audioFilenames[page][j] == null) {
+		if (ts.audioList[page][j] == null) {
 			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
 	}
@@ -378,9 +394,13 @@ public class TalkBoxApp extends Application {
 	 * @param j    the audio button
 	 */
 	private void remove(int page, int j) {
-		ts.audioFilenames[page][j] = null;
+		ts.audioList[page][j] = null;
 		buttons[j].setText("Empty");
 		setIsChanged(true);
+
+		ImageView blank = new ImageView();
+		blank.setImage(null);
+		buttons[j].setGraphic(blank);
 	}
 
 	/**
@@ -397,8 +417,9 @@ public class TalkBoxApp extends Application {
 		Optional<String> result = dialog.showAndWait();
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
-			String path = ts.getPath(page, j);
-			ts.audioFilenames[page][j] = path + DELIM + name;
+			String path = ts.audioList[page][j].getValue();
+
+			ts.audioList[page][j] = new Mapping(path, name);
 			setIsChanged(true);
 		});
 	}
@@ -418,9 +439,13 @@ public class TalkBoxApp extends Application {
 		File audio = audioFile.showOpenDialog(primaryStage);
 
 		if (audio != null) {
-			ts.audioFilenames[page][j] = audio.getPath() + DELIM + audio.getName();
+			ts.audioList[page][j] = new Mapping(audio.getName(), audio.getName());
 			setIsChanged(true);
-			if (contextMenu != null) contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
+
+			if (contextMenu != null)
+				contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
+
+			setGraphic(j);
 		}
 	}
 
@@ -457,7 +482,8 @@ public class TalkBoxApp extends Application {
 
 	/**
 	 * Saves and serializes <code>ts</code> to <code>file</code>
-	 * @throws Exception
+	 *
+	 * @throws Exception exception
 	 */
 	private void save() throws Exception {
 		FileOutputStream fos = new FileOutputStream(file.toString());
@@ -466,5 +492,22 @@ public class TalkBoxApp extends Application {
 		oos.flush();
 		oos.close();
 		setIsChanged(false);
+	}
+
+	/**
+	 * Creates a new ImageView and sets buttons[i] graphic as such
+	 *
+	 * @param i index of the button
+	 */
+	private void setGraphic(int i) {
+		ImageView graphic = new ImageView(GRAPHIC);
+
+		graphic.setFitHeight(GRAPHIC_SIZE);
+		graphic.setPreserveRatio(true);
+		buttons[i].setGraphic(graphic);
+	}
+
+	private String getFullPath(String s) {
+		return audioFolder.getPath().concat('/' + s);
 	}
 }
