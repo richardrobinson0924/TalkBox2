@@ -3,7 +3,7 @@ package talkbox;
 import java.io.Serializable;
 
 /**
- * A bare-bones pair class. Associates a key with a value using method type inferences (allows for arrays)
+ * A bare-bones pair class. Maps a key with a value using method type inferences (allows for arrays)
  *
  * @author Richard Robinson
  */

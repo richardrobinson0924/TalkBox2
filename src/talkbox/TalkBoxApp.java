@@ -42,13 +42,13 @@ import java.util.stream.IntStream;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	private static File file;
-	private static TalkBoxData ts;
-	private static Button[] buttons;
-	private static Stage primaryStage;
-	private static VBox box;
-	private static MenuItem open, save;
-	private static Scene scene;
+	private File file;
+	private TalkBoxData ts;
+	private Button[] buttons;
+	private Stage primaryStage;
+	private VBox box;
+	private MenuItem open, save;
+	private Scene scene;
 
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
@@ -76,8 +76,8 @@ public class TalkBoxApp extends Application {
 	 * @see #open(ActionEvent) method to open file
 	 */
 	@Override
-	public void start(Stage primaryStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-		TalkBoxApp.primaryStage = primaryStage;
+	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
 		/* Sets the UI */

@@ -135,7 +135,7 @@ class TTSWizard {
 	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */
-	private static AudioInputStream generateAudio(String text, Voice v) throws Exception {
+	public static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		GoogleCredentials credentials = GoogleCredentials
 				.fromStream(TTSWizard.class.getResourceAsStream("/TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
@@ -166,7 +166,7 @@ class TTSWizard {
 		return AudioSystem.getAudioInputStream(bin);
 	}
 
-	private enum Voice {
+	public enum Voice {
 		MALE1("Male 1", 'A'),
 		MALE2("Male 2", 'B'),
 		MALE3("Male 3", 'D'),
