@@ -31,8 +31,4 @@ public class Mapping implements Serializable {
 	public void setValue(Object value) {
 		this.value = value;
 	}
-
-	public boolean isEmpty() {
-		return key == null && value == null;
-	}
 }
