@@ -60,9 +60,9 @@ public class TalkBoxSim extends Application {
         simStage.setHeight(400);
         simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
 
-        /* Adding to the two buttons */
-        Button newTBCbtn = new Button("Click Here to make a new .TBC File");
-        newTBCbtn.setOnAction(new EventHandler<ActionEvent>() {
+        /* Added the Creating a new file button */
+        Button newFileBtn = new Button("Create a New File");
+        newFileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 open(null);
@@ -70,12 +70,27 @@ public class TalkBoxSim extends Application {
                 simStage.setScene(newTBCscene);
             }
         });
-        newTBCbtn.setPrefSize(100,100);
-        newTBCbtn.setWrapText(true);
-        newTBCbtn.setAlignment(Pos.CENTER);
+        newFileBtn.setPrefSize(100,100);
+        newFileBtn.setWrapText(true);
+        newFileBtn.setAlignment(Pos.CENTER);
+
+        /* Added the Open an Existing File */
+        Button openExistFileBtn = new Button("Open an Existing File");
+        openExistFileBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                open(null);
+                Scene newTBCscene = new Scene(box);
+                simStage.setScene(newTBCscene);
+            }
+        });
+        openExistFileBtn.setPrefSize(100,100);
+        openExistFileBtn.setWrapText(true);
+        openExistFileBtn.setAlignment(Pos.CENTER);
 
         /* add the two buttons on the pane */
-        onStartPane.getChildren().add(newTBCbtn);
+        onStartPane.getChildren().add(newFileBtn);
+        onStartPane.getChildren().add(openExistFileBtn);
 
         /* Creates main scene */
         scene = new Scene(onStartPane);
