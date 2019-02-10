@@ -65,9 +65,7 @@ public class TalkBoxSim extends Application {
         newFileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                open(null);
-                Scene newTBCscene = new Scene(box);
-                simStage.setScene(newTBCscene);
+
             }
         });
         newFileBtn.setPrefSize(100,100);
