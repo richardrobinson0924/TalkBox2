@@ -2,6 +2,7 @@ package talkbox;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -40,6 +41,12 @@ public class TalkBoxSim extends Application {
     }
 
     public void start(Stage simStage) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        FlowPane onStartPane = new FlowPane();
+        onStartPane.setPadding(new Insets(30, 20, 30, 20));
+        onStartPane.setVgap(10);
+        onStartPane.setHgap(10);
+        onStartPane.setAlignment(Pos.CENTER);
+
         /* Sets the UI */
         this.simStage = simStage;
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -53,15 +60,31 @@ public class TalkBoxSim extends Application {
         simStage.setHeight(400);
         simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
 
+        /* Adding to the two buttons */
+        Button newTBCbtn = new Button("Click Here to make a new .TBC File");
+        newTBCbtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                open(null);
+                Scene newTBCscene = new Scene(box);
+                simStage.setScene(newTBCscene);
+            }
+        });
+        newTBCbtn.setPrefSize(100,100);
+        newTBCbtn.setWrapText(true);
+        newTBCbtn.setAlignment(Pos.CENTER);
+
+        /* add the two buttons on the pane */
+        onStartPane.getChildren().add(newTBCbtn);
+
         /* Creates main scene */
-        scene = new Scene(box);
+        scene = new Scene(onStartPane);
 
         // show window
         simStage.setScene(scene);
         simStage.show();
 
-        simStage.setScene(scene);
-        open(null);
+        //open(null);
     }
 
     private void open(ActionEvent event) {
@@ -108,10 +131,6 @@ public class TalkBoxSim extends Application {
 
         // on button press
         IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
-
-            if (ts.audioFilenames[page][i] == null) {
-
-            }
 
             File soundFile = new File(ts.getPath(page, i));
             Try.newBuilder().setDefault(() -> {
