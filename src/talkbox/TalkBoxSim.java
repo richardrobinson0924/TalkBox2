@@ -68,6 +68,9 @@ public class TalkBoxSim extends Application {
     private VBox box;
     private Scene scene;
 
+    private static final String AUDIO_PATH = "/Audio";
+    private File audioFolder;
+
     public static void main(String... args) {
         launch(args);
     }
@@ -138,15 +141,17 @@ public class TalkBoxSim extends Application {
         fileChooser.getExtensionFilters().add(filter); // specifies file type
 
         fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
-        this.file = fileChooser.showOpenDialog(simStage); // displays file chooser window
+        file = fileChooser.showOpenDialog(simStage); // displays file chooser window
 
         // adds file name to Window title
-        simStage.setTitle("TalkBox Simulator — " + file.getName());
+        simStage.setTitle("TalkBox Configurator — " + file.getName());
 
         Try.newBuilder()
                 .setDefault(this::readFile)
                 .setOtherwise(() -> open(null))
                 .run();
+
+        audioFolder = new File(file.getParent().concat(AUDIO_PATH));
 
         buttons = new Button[ts.numberOfAudioButtons];
 
@@ -165,9 +170,9 @@ public class TalkBoxSim extends Application {
 
         // make the buttons
         for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-            String caption = (ts.audioFilenames[page][i] == null)
-                    ? "Empty"
-                    : ts.getAlias(page, i);
+            String caption = (ts.audioList[page][i] != null)
+                    ? ts.audioList[page][i].getValue()
+                    : "Empty";
 
             buttons[i] = new Button(caption);
             buttons[i].setPrefSize(100, 100);
@@ -177,7 +182,7 @@ public class TalkBoxSim extends Application {
         // on button press
         IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 
-            File soundFile = new File(ts.getPath(page, i));
+            File soundFile = new File(getFullPath(ts.audioList[page][i].getValue()));
             Try.newBuilder().setDefault(() -> {
                 Media media = new Media(soundFile.toURI().toString());
                 MediaPlayer player = new MediaPlayer(media);
@@ -216,5 +221,9 @@ public class TalkBoxSim extends Application {
         oin = new ObjectInputStream(fis);
 
         ts = (TalkBoxData) oin.readObject();
+    }
+
+    private String getFullPath(String s) {
+        return audioFolder.getPath().concat('/' + s);
     }
 }
