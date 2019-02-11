@@ -3,7 +3,6 @@ package talkbox;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.common.collect.Lists;
-import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,15 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -42,7 +38,7 @@ class TTSWizard {
 	 *
 	 * @param primaryStage the stage from which the TTSWizard instance is launched from
 	 */
-	static void launch(Stage primaryStage) {
+	static AudioInputStream launch(Stage primaryStage) {
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 		Clip[] clip = new Clip[]{null};
 
@@ -112,19 +108,15 @@ class TTSWizard {
 
 		if (!result.isPresent() || result.get() == ButtonType.CANCEL) {
 			dialog1.close();
-		} else if (result.get() == ButtonType.OK)
-			Try.newBuilder().setDefault(() -> {
-				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
+		} else if (result.get() == ButtonType.OK) {
+			try {
+				return generateAudio(phrase.getText(), comboBox.getValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-				WaveFileWriter writer = new WaveFileWriter();
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("WAV file (*.wav)", "*.wav"));
-
-				fileChooser.setTitle("Save Audio File");
-				File audioFile = fileChooser.showSaveDialog(primaryStage);
-
-				writer.write(audio, AudioFileFormat.Type.WAVE, audioFile);
-			}).setOtherwise(dialog1::close).run();
+		return null;
 	}
 
 	/**

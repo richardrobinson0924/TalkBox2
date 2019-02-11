@@ -1,5 +1,6 @@
 package talkbox;
 
+import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -20,6 +21,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
@@ -160,12 +163,12 @@ public class TalkBoxApp extends Application {
 		alert.setHeaderText(alert.getTitle());
 		alert.setContentText(ex.getMessage());
 
-		StringWriter sw = new StringWriter();
+		final StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		ex.printStackTrace(pw);
 		String exceptionText = sw.toString();
 
-		Label label = new Label("Full error message:");
+		final Label label = new Label("Full error message:");
 
 		TextArea textArea = new TextArea(exceptionText);
 		textArea.setEditable(false);
@@ -203,9 +206,9 @@ public class TalkBoxApp extends Application {
 			alert.setHeaderText("Save File?");
 			alert.setContentText("Please choose an option.");
 
-			ButtonType yesButton = new ButtonType("Yes");
-			ButtonType noButton = new ButtonType("No");
-			ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+			final ButtonType yesButton = new ButtonType("Yes");
+			final ButtonType noButton = new ButtonType("No");
+			final ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
 			alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
 
@@ -305,25 +308,37 @@ public class TalkBoxApp extends Application {
 			boolean added = false;
 
 			if (ts.audioList[page][i] == null) {
-				setAudio(null, page, i);
-				String caption2 = (ts.audioList[page][i] != null)
-						? ts.audioList[page][i].getKey()
-						: "Empty";
+				AudioInputStream audio = TTSWizard.launch(primaryStage);
+				if (audio == null) return;
 
-				buttons[i].setText(caption2);
+				WaveFileWriter w = new WaveFileWriter();
+				final File f = new File(getFullPath("Audio_" + i + ".wav"));
+
+				Try.newBuilder()
+						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
+						.run();
+
+				ts.audioList[page][i] = new Mapping(f, f.getName());
+
+				buttons[i].setText(f.getName());
 				makeContextMenu(page, i);
+
+				setGraphic(i);
 				added = true;
 			}
 
-			if (ts.audioList[page][i].getKey() != null) {
-				File soundFile = new File(getFullPath(ts.audioList[page][i].getKey()));
+			if (ts.audioList[page][i] != null) {
+				final File soundFile = ts.audioList[page][i].getKey();
 				boolean finalAdded = added;
 
-				Try.newBuilder().setDefault(() -> {
-					Media media = new Media(soundFile.toURI().toString());
-					MediaPlayer player = new MediaPlayer(media);
-					if (!finalAdded) player.play();
-				}).run();
+				Try.newBuilder()
+						.setDefault(() -> {
+							final Media media = new Media(soundFile.toURI().toString());
+							final MediaPlayer player = new MediaPlayer(media);
+							if (!finalAdded) player.play();
+						})
+						.setOtherwise(() -> remove(page, i))
+						.run();
 			}
 		});
 	}
@@ -346,12 +361,11 @@ public class TalkBoxApp extends Application {
 				Dragboard dragboard = event.getDragboard();
 
 				File file = dragboard.getFiles().get(0);
-				String fileName = file.getName();
 				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				ts.audioList[page][i] = new Mapping(fileName, fileName);
+				ts.audioList[page][i] = new Mapping(file, file.getName());
 
-				buttons[i].setText(fileName);
+				buttons[i].setText(file.getName());
 				setIsChanged(true);
 			});
 		});
@@ -394,14 +408,14 @@ public class TalkBoxApp extends Application {
 	 * @param j    the audio button
 	 */
 	private void remove(int page, int j) {
-		String filename = getFullPath(ts.audioList[page][j].getKey());
+		final File f = ts.audioList[page][j].getKey();
 
 		ts.audioList[page][j] = null;
 		buttons[j].setText("Empty");
 		setIsChanged(true);
 
 		Try.newBuilder().setDefault(() -> {
-			Files.delete(new File(filename).toPath());
+			if (f.exists()) Files.delete(f.toPath());
 		}).run();
 
 		ImageView blank = new ImageView();
@@ -423,9 +437,8 @@ public class TalkBoxApp extends Application {
 		Optional<String> result = dialog.showAndWait();
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
-			String path = ts.audioList[page][j].getValue();
 
-			ts.audioList[page][j] = new Mapping(path, name);
+			ts.audioList[page][j].setValue(name);
 			setIsChanged(true);
 		});
 	}
@@ -451,7 +464,7 @@ public class TalkBoxApp extends Application {
 		}).run();
 
 		if (audio != null) {
-			ts.audioList[page][j] = new Mapping(audio.getName(), audio.getName());
+			ts.audioList[page][j] = new Mapping(audio, audio.getName());
 			setIsChanged(true);
 
 			if (contextMenu != null)
@@ -498,7 +511,7 @@ public class TalkBoxApp extends Application {
 	 * @throws Exception exception
 	 */
 	private void save() throws Exception {
-		FileOutputStream fos = new FileOutputStream(file.toString());
+		final FileOutputStream fos = new FileOutputStream(file.toString());
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(ts);
 		oos.flush();

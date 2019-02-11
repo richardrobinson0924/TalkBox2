@@ -97,6 +97,8 @@ public class TalkBoxSim extends Application {
 
         /* Added the Creating a new file button */
         Button newFileBtn = new Button("Create a New File");
+
+        // FYI: when code appears grey (like in the next line) press Alt-Enter and intelliJ will let you convert to lambda expression :)
         newFileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

@@ -9,7 +9,7 @@
         <option name="enabledSigning" value="true" />
         <option name="htmlPlaceholderId" value="" />
         <option name="keystore" value="" />
-        <option name="nativeBundle" value="dmg" />
+        <option name="nativeBundle" value="image" />
         <option name="title" value="" />
         <option name="vendor" value="" />
         <option name="version" value="" />

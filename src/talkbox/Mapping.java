@@ -13,7 +13,7 @@ public class Mapping implements Serializable {
 
 	public <T, V> Mapping(T key, V value) {
 		this.setKey(key);
-		this.setKey(value);
+		this.setValue(value);
 	}
 
 	public <T> T getKey() {
