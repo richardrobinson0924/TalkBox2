@@ -38,9 +38,10 @@ import java.io.ObjectOutputStream;
  *
  * <p>
  * The list of different options for each sentence structure will be provided in a CSV file within the directory (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
+ *
+ * @see TTSWizard#generateAudio(String, TTSWizard.Voice)
  */
 public class TalkBoxSim {
-    // hello John doe fix me
     public static void main(String... args) throws IOException {
         FileOutputStream fos = new FileOutputStream("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
         ObjectOutputStream oos = new ObjectOutputStream(fos);

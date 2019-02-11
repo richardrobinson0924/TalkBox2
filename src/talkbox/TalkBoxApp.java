@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -235,6 +236,7 @@ public class TalkBoxApp extends Application {
 
 		fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
 		file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
+		audioFolder = new File(file.getParent().concat(AUDIO_PATH));
 
 		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
@@ -243,8 +245,6 @@ public class TalkBoxApp extends Application {
 				.setDefault(this::readFile)
 				.setOtherwise(() -> open(null))
 				.run();
-
-		audioFolder = new File(file.getParent().concat(AUDIO_PATH));
 
 		buttons = new Button[ts.numberOfAudioButtons];
 
@@ -307,7 +307,7 @@ public class TalkBoxApp extends Application {
 			if (ts.audioList[page][i] == null) {
 				setAudio(null, page, i);
 				String caption2 = (ts.audioList[page][i] != null)
-						? ts.audioList[page][i].getValue()
+						? ts.audioList[page][i].getKey()
 						: "Empty";
 
 				buttons[i].setText(caption2);
@@ -315,8 +315,8 @@ public class TalkBoxApp extends Application {
 				added = true;
 			}
 
-			if (ts.audioList[page][i] != null) {
-				File soundFile = new File(getFullPath(ts.audioList[page][i].getValue()));
+			if (ts.audioList[page][i].getKey() != null) {
+				File soundFile = new File(getFullPath(ts.audioList[page][i].getKey()));
 				boolean finalAdded = added;
 
 				Try.newBuilder().setDefault(() -> {
@@ -394,9 +394,15 @@ public class TalkBoxApp extends Application {
 	 * @param j    the audio button
 	 */
 	private void remove(int page, int j) {
+		String filename = getFullPath(ts.audioList[page][j].getKey());
+
 		ts.audioList[page][j] = null;
 		buttons[j].setText("Empty");
 		setIsChanged(true);
+
+		Try.newBuilder().setDefault(() -> {
+			Files.delete(new File(filename).toPath());
+		}).run();
 
 		ImageView blank = new ImageView();
 		blank.setImage(null);
@@ -425,7 +431,7 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Sets the audio file located at [page, j] to the file the user chooses
+	 * Sets the audio file located at  [page, j] to the file the user chooses
 	 *
 	 * @param page the audio set
 	 * @param j    the audio button
@@ -437,6 +443,12 @@ public class TalkBoxApp extends Application {
 
 		audioFile.setTitle("Select Audio File");
 		File audio = audioFile.showOpenDialog(primaryStage);
+		if (audio == null) return;
+
+		Try.newBuilder().setDefault(() -> {
+			FileOutputStream copied = new FileOutputStream(getFullPath(audio.getName()));
+			Files.copy(audio.toPath(), copied);
+		}).run();
 
 		if (audio != null) {
 			ts.audioList[page][j] = new Mapping(audio.getName(), audio.getName());

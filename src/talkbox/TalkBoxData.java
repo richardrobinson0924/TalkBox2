@@ -1,20 +1,19 @@
 package talkbox;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
  * The base data structure of the TalkBox data is a double array of <code>Mapping</code>s, in which each Mapping contains the audio filename and the audio file's alias (by default, the file name). To retrieve the double array of only the filenames, use <code>getAudioFilenames</code> to produce a shallow copy.
  * <p>
  * The file system structure assumes there exists an /Audio folder in the same parent directory as the source .tbc file.
+ *
+ * Precondition for TalkBoxApp: There exists a directory in which there is a *.tbc file and another directory entitled "Audio"
  */
 public class TalkBoxData implements TalkBoxConfiguration {
     public int numberOfAudioButtons = 0;
     public int numberOfAudioSets = 0;
     public int totalNumberOfButtons = 0;
     public Path relativePathToAudioFiles = null;
-    public String[][] audioFilenames = new String[0][0];
-
     public Mapping[][] audioList = new Mapping[numberOfAudioSets][numberOfAudioButtons];
 
     @Override
@@ -58,7 +57,6 @@ public class TalkBoxData implements TalkBoxConfiguration {
                 ", numberOfAudioSets=" + numberOfAudioSets +
                 ", totalNumberOfButtons=" + totalNumberOfButtons +
                 ", relativePathToAudioFiles=" + relativePathToAudioFiles +
-                ", audioFilenames=" + Arrays.toString(audioFilenames) +
                 '}';
     }
 }

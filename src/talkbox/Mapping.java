@@ -11,9 +11,9 @@ public class Mapping implements Serializable {
 	private Object key;
 	private Object value;
 
-	public Mapping(Object key, Object value) {
+	public <T, V> Mapping(T key, V value) {
 		this.setKey(key);
-		this.setValue(value);
+		this.setKey(value);
 	}
 
 	public <T> T getKey() {
