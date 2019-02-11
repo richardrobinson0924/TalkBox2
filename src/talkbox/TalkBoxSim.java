@@ -182,10 +182,11 @@ public class TalkBoxSim extends Application {
         // on button press
         IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 
-            File soundFile = new File(getFullPath(ts.audioList[page][i].getValue()));
+	        File soundFile = new File(getFullPath(ts.audioList[page][i].getKey()));
             Try.newBuilder().setDefault(() -> {
                 Media media = new Media(soundFile.toURI().toString());
                 MediaPlayer player = new MediaPlayer(media);
+	            player.play();
             }).run();
         }));
 
