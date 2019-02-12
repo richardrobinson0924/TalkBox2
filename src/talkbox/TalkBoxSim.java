@@ -102,6 +102,12 @@ public class TalkBoxSim extends Application {
 		newFileBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				try {
+					createNewTBC();
+					simStage.setTitle("TalkBox Configurator — " + file.getName());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
 			}
 		});
