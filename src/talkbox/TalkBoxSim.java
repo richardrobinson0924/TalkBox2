@@ -105,6 +105,13 @@ public class TalkBoxSim extends Application {
 				try {
 					createNewTBC();
 					simStage.setTitle("TalkBox Configurator — " + file.getName());
+
+					buttons = new Button[ts.numberOfAudioButtons];
+
+					Pagination pagination = new Pagination(ts.numberOfAudioSets);
+					box.getChildren().add(pagination);
+
+					pagination.setPageFactory(TalkBoxSim.this::configButtons);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
