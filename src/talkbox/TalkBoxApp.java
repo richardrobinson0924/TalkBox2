@@ -324,6 +324,7 @@ public class TalkBoxApp extends Application {
 				makeContextMenu(page, i);
 
 				setGraphic(i);
+				setIsChanged(true);
 				added = true;
 			}
 
@@ -331,14 +332,11 @@ public class TalkBoxApp extends Application {
 				final File soundFile = ts.audioList[page][i].getKey();
 				boolean finalAdded = added;
 
-				Try.newBuilder()
-						.setDefault(() -> {
-							final Media media = new Media(soundFile.toURI().toString());
-							final MediaPlayer player = new MediaPlayer(media);
-							if (!finalAdded) player.play();
-						})
-						.setOtherwise(() -> remove(page, i))
-						.run();
+				Try.newBuilder().setDefault(() -> {
+					final Media media = new Media(soundFile.toURI().toString());
+					final MediaPlayer player = new MediaPlayer(media);
+					if (!finalAdded) player.play();
+				}).setOtherwise(() -> remove(page, i)).run();
 			}
 		});
 	}
@@ -502,7 +500,7 @@ public class TalkBoxApp extends Application {
 		fis = new FileInputStream(file);
 		oin = new ObjectInputStream(fis);
 
-		ts = (TalkBoxData) oin.readObject();
+		this.ts = (TalkBoxData) oin.readObject();
 	}
 
 	/**

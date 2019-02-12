@@ -1,5 +1,6 @@
 package talkbox;
 
+import java.io.File;
 import java.nio.file.Path;
 
 /**
@@ -42,7 +43,7 @@ public class TalkBoxData implements TalkBoxConfiguration {
 
         for (int i = 0; i < getNumberOfAudioSets(); i++) {
             for (int j = 0; j < getTotalNumberOfButtons(); j++) {
-                fileNames[i][j] = audioList[i][j].getKey();
+                fileNames[i][j] = ((File) audioList[i][j].getKey()).getPath();
             }
         }
 

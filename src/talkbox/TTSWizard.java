@@ -18,6 +18,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -40,6 +42,16 @@ class TTSWizard {
 	 */
 	static AudioInputStream launch(Stage primaryStage) {
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
+
+		try {
+			final URL url = new URL("https://cloud.google.com/");
+			URLConnection connection = url.openConnection();
+			connection.connect();
+		} catch (Exception e) {
+			TalkBoxApp.setFailSafe(e);
+			return null;
+		}
+
 		Clip[] clip = new Clip[]{null};
 
 		Dialog<ButtonType> dialog1 = new Dialog<>();
