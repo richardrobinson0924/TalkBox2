@@ -112,6 +112,9 @@ public class TalkBoxSim extends Application {
 					box.getChildren().add(pagination);
 
 					pagination.setPageFactory(TalkBoxSim.this::configButtons);
+
+					Scene newTBCscene = new Scene(box);
+					simStage.setScene(newTBCscene);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -209,7 +212,8 @@ public class TalkBoxSim extends Application {
 	}
 
 	public void createNewTBC() throws IOException {
-		FileOutputStream fos = new FileOutputStream("test.tbc");
+		File testTBC = new File("test.tbc");
+		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();
 		ts.numberOfAudioButtons = 5;
@@ -227,6 +231,9 @@ public class TalkBoxSim extends Application {
 		oos.writeObject(ts);
 		oos.flush();
 		oos.close();
+
+		file = testTBC;
+		this.ts = ts;
 	}
 
 	private void readFile() throws Exception {
