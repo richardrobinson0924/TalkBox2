@@ -59,7 +59,7 @@ class TTSWizard {
 		dialog1.setHeaderText("Set Button Audio");
 
 		/* Use custom dialog graphic */
-		final ImageView imageView = new ImageView(TTSWizard.class.getResource("magic-wand-2.png").toString());
+		final ImageView imageView = new ImageView(TTSWizard.class.getResource("/Resources/magic-wand-2.png").toString());
 		imageView.setFitHeight(40);
 		imageView.setPreserveRatio(true);
 		dialog1.setGraphic(imageView);
@@ -142,7 +142,7 @@ class TTSWizard {
 	 */
 	public static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		final GoogleCredentials credentials = GoogleCredentials
-				.fromStream(TTSWizard.class.getResourceAsStream("/TalkBox-0d25e5d8c6d7.json"))
+				.fromStream(TTSWizard.class.getResourceAsStream("/Resources/TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
 		final TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()

@@ -93,7 +93,7 @@ public class TalkBoxSim extends Application {
 		simStage.setTitle("TalkBox Simulator");
 		simStage.setWidth(500);
 		simStage.setHeight(400);
-		simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
+		simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
 		/* Added the Creating a new file button */
 		Button newFileBtn = new Button("Create a New File");

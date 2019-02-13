@@ -11,17 +11,21 @@ import java.nio.file.Path;
  * Precondition for TalkBoxApp: There exists a directory in which there is a *.tbc file and another directory entitled "Audio"
  */
 public class TalkBoxData implements TalkBoxConfiguration {
-    public int numberOfAudioButtons = 0;
-    public int numberOfAudioSets = 0;
-    public int totalNumberOfButtons = 0;
-    public Path relativePathToAudioFiles = null;
-    public Mapping[][] audioList = new Mapping[numberOfAudioSets][numberOfAudioButtons];
+	private static final long serialVersionUID = 8212102884308029986L;
 
-	public File getFile(int i, int j) {
+    int numberOfAudioButtons = 0;
+    int numberOfAudioSets = 0;
+
+    private int totalNumberOfButtons = 0;
+    private Path relativePathToAudioFiles = null;
+
+    Mapping[][] audioList = new Mapping[numberOfAudioSets][numberOfAudioButtons];
+
+	File getFile(int i, int j) {
 		return audioList[i][j].getKey();
 	}
 
-	public String getAlias(int i, int j) {
+	String getAlias(int i, int j) {
 		return audioList[i][j].getValue();
 	}
 
@@ -29,11 +33,11 @@ public class TalkBoxData implements TalkBoxConfiguration {
 		audioList[i][j].setKey(key);
 	}
 
-	public void setAlias(int i, int j, String value) {
+	void setAlias(int i, int j, String value) {
 		audioList[i][j].setValue(value);
 	}
 
-	public boolean isNull(int i, int j) {
+	boolean isNull(int i, int j) {
 		return audioList[i][j] == null;
 	}
 

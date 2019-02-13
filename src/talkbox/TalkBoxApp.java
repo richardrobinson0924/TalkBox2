@@ -46,10 +46,10 @@ import java.util.stream.IntStream;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	private static File file;
-	private static TalkBoxData ts;
-	private static Button[] buttons;
-	private static File audioFolder;
+	private File file;
+	private TalkBoxData ts;
+	private Button[] buttons;
+	private File audioFolder;
 
 	private Stage primaryStage;
 	private MenuItem save;
@@ -59,7 +59,7 @@ public class TalkBoxApp extends Application {
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
-	private final static Image GRAPHIC = new Image(TalkBoxApp.class.getResource("button_graphic.png").toString());
+	private final static Image GRAPHIC = new Image(TalkBoxApp.class.getResource("/Resources/button_graphic.png").toString());
 	private final static String AUDIO_PATH = "/Audio";
 
 	/**
@@ -89,7 +89,7 @@ public class TalkBoxApp extends Application {
 		primaryStage.setTitle("TalkBox Config");
 		primaryStage.setWidth(500);
 		primaryStage.setHeight(400);
-		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("icon2.png")));
+		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
 		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
 		final VBox box = new VBox();
@@ -113,6 +113,8 @@ public class TalkBoxApp extends Application {
 		final MenuItem about = new MenuItem("About");
 		final MenuItem help = new MenuItem("Help");
 
+		final MenuItem custom = new MenuItem("Custom Phrase List");
+
 		/* Creates main scene */
 		final Scene scene = new Scene(box);
 
@@ -130,6 +132,15 @@ public class TalkBoxApp extends Application {
 		// show menu bar
 		menuFile.getItems().addAll(open, save);
 		menuHelp.getItems().addAll(about, help);
+		menuView.getItems().add(custom);
+
+		custom.setOnAction(event -> {
+			final CustomDataView c = new CustomDataView(ts);
+			Try.newBuilder()
+					.setDefault(() -> c.start(new Stage()))
+					.setOtherwise(event::consume)
+					.run();
+		});
 
 		box.getChildren().addAll(menuBar);
 
@@ -149,7 +160,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param ex the exception that is thrown
 	 */
-	public static void setFailSafe(Exception ex) {
+	static void setFailSafe(Exception ex) {
 		final Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("An Error has Occurred");
 		alert.setHeaderText(alert.getTitle());
@@ -453,15 +464,13 @@ public class TalkBoxApp extends Application {
 			Files.copy(audio.toPath(), copied);
 		}).run();
 
-		if (audio != null) {
-			ts.audioList[page][j] = new <File, String>Mapping(audio, audio.getName());
-			setIsChanged(true);
+		ts.audioList[page][j] = new <File, String>Mapping(audio, audio.getName());
+		setIsChanged(true);
 
-			if (contextMenu != null)
-				contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
+		if (contextMenu != null)
+			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
 
-			setGraphic(j);
-		}
+		setGraphic(j);
 	}
 
 	/**

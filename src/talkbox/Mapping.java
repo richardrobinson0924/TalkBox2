@@ -8,6 +8,8 @@ import java.io.Serializable;
  * @author Richard Robinson
  */
 public class Mapping implements Serializable {
+	private static final long serialVersionUID = 6582190898809790391L;
+
 	private Object key;
 	private Object value;
 
