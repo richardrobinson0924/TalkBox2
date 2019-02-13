@@ -17,6 +17,26 @@ public class TalkBoxData implements TalkBoxConfiguration {
     public Path relativePathToAudioFiles = null;
     public Mapping[][] audioList = new Mapping[numberOfAudioSets][numberOfAudioButtons];
 
+	public File getFile(int i, int j) {
+		return audioList[i][j].getKey();
+	}
+
+	public String getAlias(int i, int j) {
+		return audioList[i][j].getValue();
+	}
+
+	public void setKey(int i, int j, File key) {
+		audioList[i][j].setKey(key);
+	}
+
+	public void setAlias(int i, int j, String value) {
+		audioList[i][j].setValue(value);
+	}
+
+	public boolean isNull(int i, int j) {
+		return audioList[i][j] == null;
+	}
+
     @Override
     public int getNumberOfAudioButtons() {
         return this.numberOfAudioButtons;
@@ -43,7 +63,7 @@ public class TalkBoxData implements TalkBoxConfiguration {
 
         for (int i = 0; i < getNumberOfAudioSets(); i++) {
             for (int j = 0; j < getTotalNumberOfButtons(); j++) {
-                fileNames[i][j] = ((File) audioList[i][j].getKey()).getPath();
+	            fileNames[i][j] = audioList[i][j].<File>getKey().getPath();
             }
         }
 

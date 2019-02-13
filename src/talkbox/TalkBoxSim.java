@@ -99,27 +99,24 @@ public class TalkBoxSim extends Application {
 		Button newFileBtn = new Button("Create a New File");
 
 		// FYI: when code appears grey (like in the next line) press Alt-Enter and intelliJ will let you convert to lambda expression :)
-		newFileBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					createNewTBC();
-					simStage.setTitle("TalkBox Configurator — " + file.getName());
+		newFileBtn.setOnAction(event -> {
+			try {
+				createNewTBC();
+				simStage.setTitle("TalkBox Configurator — " + file.getName());
 
-					buttons = new Button[ts.numberOfAudioButtons];
+				buttons = new Button[ts.numberOfAudioButtons];
 
-					Pagination pagination = new Pagination(ts.numberOfAudioSets);
-					box.getChildren().add(pagination);
+				Pagination pagination = new Pagination(ts.numberOfAudioSets);
+				box.getChildren().add(pagination);
 
-					pagination.setPageFactory(TalkBoxSim.this::configButtons);
+				pagination.setPageFactory(TalkBoxSim.this::configButtons);
 
-					Scene newTBCscene = new Scene(box);
-					simStage.setScene(newTBCscene);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				Scene newTBCscene = new Scene(box);
+				simStage.setScene(newTBCscene);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+
 		});
 		newFileBtn.setPrefSize(100, 100);
 		newFileBtn.setWrapText(true);
@@ -212,7 +209,7 @@ public class TalkBoxSim extends Application {
 	}
 
 	public void createNewTBC() throws IOException {
-		File testTBC = new File("test.tbc");
+		File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();

@@ -45,7 +45,7 @@ class TTSWizard {
 
 		try {
 			final URL url = new URL("https://cloud.google.com/");
-			URLConnection connection = url.openConnection();
+			final URLConnection connection = url.openConnection();
 			connection.connect();
 		} catch (Exception e) {
 			TalkBoxApp.setFailSafe(e);
@@ -54,13 +54,13 @@ class TTSWizard {
 
 		Clip[] clip = new Clip[]{null};
 
-		Dialog<ButtonType> dialog1 = new Dialog<>();
-		dialog1.setTitle("Text to Speech Wizard");
-		dialog1.setHeaderText("TTS Wizard");
+		final Dialog<ButtonType> dialog1 = new Dialog<>();
+		dialog1.setTitle("Text to Speech");
+		dialog1.setHeaderText("Set Button Audio");
 
 		/* Use custom dialog graphic */
-		ImageView imageView = new ImageView(TTSWizard.class.getResource("magic-wand-2.png").toString());
-		imageView.setFitHeight(50);
+		final ImageView imageView = new ImageView(TTSWizard.class.getResource("magic-wand-2.png").toString());
+		imageView.setFitHeight(40);
 		imageView.setPreserveRatio(true);
 		dialog1.setGraphic(imageView);
 
@@ -68,20 +68,20 @@ class TTSWizard {
 				.getButtonTypes()
 				.addAll(ButtonType.OK, ButtonType.CANCEL);
 
-		GridPane grid = new GridPane();
+		final GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		TextField phrase = new TextField();
+		final TextField phrase = new TextField();
 		phrase.setPromptText("Hello");
 
-		ObservableList<Voice> options = FXCollections.observableArrayList(EnumSet.allOf(Voice.class));
+		final ObservableList<Voice> options = FXCollections.observableArrayList(EnumSet.allOf(Voice.class));
 
 		final ComboBox<Voice> comboBox = new ComboBox<>(options);
 		comboBox.setValue(EnumSet.allOf(Voice.class).iterator().next());
 
-		Button b = new Button("Play");
+		final Button b = new Button("Play");
 		b.setDisable(true);
 		b.setOnAction(event1 -> {
 			if (clip[0] != null && clip[0].isRunning()) {
@@ -95,7 +95,7 @@ class TTSWizard {
 			}).setOtherwise(dialog1::close).run();
 		});
 
-		HBox box2 = new HBox(phrase, b);
+		final HBox box2 = new HBox(phrase, b);
 		box2.setSpacing(10);
 
 		grid.add(new Label("Phrase:"), 0, 0);
@@ -103,7 +103,7 @@ class TTSWizard {
 		grid.add(new Label("Voice:"), 0, 1);
 		grid.add(comboBox, 1, 1);
 
-		Node authorize = dialog1.getDialogPane().lookupButton(ButtonType.OK);
+		final Node authorize = dialog1.getDialogPane().lookupButton(ButtonType.OK);
 		authorize.setDisable(true);
 
 		phrase.textProperty().addListener((observable, oldVal, newVal) -> {
@@ -116,7 +116,7 @@ class TTSWizard {
 
 		dialog1.getDialogPane().setContent(grid);
 
-		Optional<ButtonType> result = dialog1.showAndWait();
+		final Optional<ButtonType> result = dialog1.showAndWait();
 
 		if (!result.isPresent() || result.get() == ButtonType.CANCEL) {
 			dialog1.close();
@@ -124,6 +124,7 @@ class TTSWizard {
 			try {
 				return generateAudio(phrase.getText(), comboBox.getValue());
 			} catch (Exception e) {
+				TalkBoxApp.setFailSafe(e);
 				e.printStackTrace();
 			}
 		}
@@ -140,34 +141,40 @@ class TTSWizard {
 	 * @throws Exception if any exception occurs
 	 */
 	public static AudioInputStream generateAudio(String text, Voice v) throws Exception {
-		GoogleCredentials credentials = GoogleCredentials
+		final GoogleCredentials credentials = GoogleCredentials
 				.fromStream(TTSWizard.class.getResourceAsStream("/TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
-		TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()
+		final TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()
 				.setCredentialsProvider(() -> credentials)
 				.build();
 
-		TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(auth);
+		AudioInputStream stream;
 
-		SynthesisInput input = SynthesisInput.newBuilder()
-				.setText(text)
-				.build();
+		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(auth)) {
+			final SynthesisInput input = SynthesisInput.newBuilder()
+					.setText(text)
+					.build();
 
-		VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
-				.setLanguageCode("en-US")
-				.setName("en-US-Wavenet-" + v.variant)
-				.build();
+			final VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
+					.setLanguageCode("en-US")
+					.setName("en-US-Wavenet-" + v.variant)
+					.build();
 
-		AudioConfig audioConfig = AudioConfig.newBuilder()
-				.setAudioEncoding(AudioEncoding.LINEAR16)
-				.build();
+			final AudioConfig audioConfig = AudioConfig.newBuilder()
+					.setAudioEncoding(AudioEncoding.LINEAR16)
+					.build();
 
-		SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice,
-				audioConfig);
+			final SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice,
+					audioConfig);
 
-		ByteArrayInputStream bin = new ByteArrayInputStream(response.getAudioContent().toByteArray());
-		return AudioSystem.getAudioInputStream(bin);
+			final ByteArrayInputStream bin = new ByteArrayInputStream(response.getAudioContent().toByteArray());
+
+			stream = AudioSystem.getAudioInputStream(bin);
+			textToSpeechClient.shutdown();
+		}
+
+		return stream;
 	}
 
 	public enum Voice {

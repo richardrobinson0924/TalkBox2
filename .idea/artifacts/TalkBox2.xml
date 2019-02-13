@@ -1,18 +1,22 @@
 <component name="ArtifactManager">
   <artifact type="javafx" name="TalkBox2">
-    <output-path>$USER_HOME$/Desktop/test</output-path>
+    <output-path>$USER_HOME$/Desktop/test5</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="alias" value="" />
-        <option name="appClass" value="TalkBoxApp.main" />
+        <option name="appClass" value="talkbox.TalkBoxApp" />
         <option name="description" value="" />
-        <option name="enabledSigning" value="true" />
         <option name="htmlPlaceholderId" value="" />
-        <option name="keystore" value="" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="linuxIcon" value="$PROJECT_DIR$/src/talkbox/icon2.png" />
+            <option name="macIcon" value="$PROJECT_DIR$/src/talkbox/icon2.png" />
+            <option name="windowsIcon" value="$PROJECT_DIR$/src/talkbox/icon2.png" />
+          </JavaFxApplicationIcons>
+        </option>
         <option name="nativeBundle" value="image" />
-        <option name="title" value="" />
+        <option name="title" value="TalkBox" />
         <option name="vendor" value="" />
-        <option name="version" value="" />
+        <option name="version" value="1.0" />
       </options>
     </properties>
     <root id="root">
@@ -21,8 +25,6 @@
         <element id="library" level="project" name="com.google.auth:google-auth-library-oauth2-http:0.13.0" />
         <element id="library" level="project" name="com.google.cloud:google-cloud-core:1.61.0" />
         <element id="library" level="project" name="com.google.cloud:google-cloud-texttospeech:0.79.0-beta" />
-        <element id="module-source" name="TalkBox2" />
-        <element id="dir-copy" path="$PROJECT_DIR$/config" />
       </element>
     </root>
   </artifact>
