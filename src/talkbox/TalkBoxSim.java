@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.swing.*;
@@ -218,7 +219,10 @@ public class TalkBoxSim extends Application {
 	public void createNewTBC() throws IOException {
 		// File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
 
-		// whenever a new file is created, it replaces the test.tbc file here.
+		// whenever a new file is created, it replaces the test.tbc file here
+
+        openWizardDialog();
+
 		File testTBC = new File("test.tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -258,6 +262,31 @@ public class TalkBoxSim extends Application {
 		file = testTBC;
 		this.ts = ts;
 	}
+
+	private void openWizardDialog() {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(simStage);
+        dialog.setTitle("Creating new TalkBox");
+
+        FlowPane dialogPane = new FlowPane();
+        dialogPane.setPadding(new Insets(30, 20, 30, 20));
+        dialogPane.setVgap(10);
+        dialogPane.setHgap(10);
+        dialogPane.setAlignment(Pos.CENTER);
+
+        Button saveInDirectoryBtn = new Button();
+        saveInDirectoryBtn.setPrefSize(100, 100);
+        saveInDirectoryBtn.setWrapText(true);
+        saveInDirectoryBtn.setAlignment(Pos.CENTER);
+
+        VBox dialogVbox = new VBox(20);
+        dialogPane.getChildren().add(saveInDirectoryBtn);
+        dialogVbox.getChildren().add(dialogPane);
+        Scene dialogScene = new Scene(dialogVbox, 500, 300);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
 
 	private void readFile() throws Exception {
 		FileInputStream fis;
