@@ -8,18 +8,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -46,13 +43,13 @@ import java.util.stream.IntStream;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	private File file;
 	private TalkBoxData ts;
 	private Button[] buttons;
 	private File audioFolder;
 
-	private Stage primaryStage;
-	private MenuItem save;
+	private static File file;
+	private static Stage primaryStage;
+	private static MenuItem save;
 
 	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
 	private static boolean fileIsChanged = false;
@@ -79,7 +76,7 @@ public class TalkBoxApp extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		this.primaryStage = primaryStage;
+		TalkBoxApp.primaryStage = primaryStage;
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
 		/* Sets the UI */
@@ -135,7 +132,7 @@ public class TalkBoxApp extends Application {
 		menuView.getItems().add(custom);
 
 		custom.setOnAction(event -> {
-			final CustomDataView c = new CustomDataView(ts);
+			final CustomDataView c = new CustomDataView(ts, primaryStage);
 			Try.newBuilder()
 					.setDefault(() -> c.start(new Stage()))
 					.setOtherwise(event::consume)
@@ -282,8 +279,8 @@ public class TalkBoxApp extends Application {
 		flowPane.setAlignment(Pos.CENTER);
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			final String caption = (!ts.isNull(page, i))
-					? ts.getAlias(page, i)
+			final String caption = (ts.audioList.get(page).get(i) != null)
+					? ts.audioList.get(page).getValue(i)
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -300,7 +297,7 @@ public class TalkBoxApp extends Application {
 		setDragAndDrop(page);
 
 		IntStream.range(0, ts.getNumberOfAudioButtons())
-				.filter(i -> !ts.isNull(page, i))
+				.filter(i -> ts.audioList.get(page).get(i) != null)
 				.forEach(this::setGraphic);
 
 		return flowPane;
@@ -310,7 +307,7 @@ public class TalkBoxApp extends Application {
 		buttons[i].setOnAction(event2 -> {
 			boolean added = false;
 
-			if (ts.isNull(page, i)) {
+			if (ts.audioList.get(page).get(i) == null) {
 				final AudioInputStream audio = TTSWizard.launch(primaryStage);
 				if (audio == null) return;
 
@@ -321,7 +318,7 @@ public class TalkBoxApp extends Application {
 						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
 						.run();
 
-				ts.audioList[page][i] = new <File, String>Mapping(f, f.getName());
+				ts.set(page, i, new Pair<>(f, f.getName()));
 
 				buttons[i].setText(f.getName());
 				makeContextMenu(page, i);
@@ -331,8 +328,8 @@ public class TalkBoxApp extends Application {
 				added = true;
 			}
 
-			if (!ts.isNull(page, i)) {
-				final File soundFile = ts.getFile(page, i);
+			if (ts.audioList.get(page).get(i) != null) {
+				final File soundFile = ts.audioList.get(page).getKey(i);
 				boolean finalAdded = added;
 
 				Try.newBuilder().setDefault(() -> {
@@ -364,7 +361,7 @@ public class TalkBoxApp extends Application {
 				final File file = dragboard.getFiles().get(0);
 				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				ts.audioList[page][i] = new <File, String>Mapping(file, file.getName());
+				ts.set(page, i, new Pair<>(file, file.getName()));
 
 				buttons[i].setText(file.getName());
 				setIsChanged(true);
@@ -388,7 +385,7 @@ public class TalkBoxApp extends Application {
 
 		change.setOnAction(event -> {
 			setAudio(contextMenu, page, j);
-			buttons[j].setText(ts.getAlias(page, j));
+			buttons[j].setText(ts.audioList.get(page).getValue(j));
 		});
 
 		rename.setOnAction(event -> changeName(page, j));
@@ -397,7 +394,7 @@ public class TalkBoxApp extends Application {
 		buttons[j].setContextMenu(contextMenu);
 
 		// if button has no file, disable context menu items
-		if (ts.isNull(page, j)) {
+		if (ts.audioList.get(page).get(j) == null) {
 			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
 	}
@@ -409,9 +406,9 @@ public class TalkBoxApp extends Application {
 	 * @param j    the audio button
 	 */
 	private void remove(int page, int j) {
-		final File f = ts.getFile(page, j);
+		final File f = ts.audioList.get(page).getKey(j);
 
-		ts.audioList[page][j] = null;
+		ts.set(page, j, null);
 		buttons[j].setText("Empty");
 		setIsChanged(true);
 
@@ -439,7 +436,7 @@ public class TalkBoxApp extends Application {
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
 
-			ts.setAlias(page, j, name);
+			ts.setValue(page, j, name);
 			setIsChanged(true);
 		});
 	}
@@ -464,7 +461,7 @@ public class TalkBoxApp extends Application {
 			Files.copy(audio.toPath(), copied);
 		}).run();
 
-		ts.audioList[page][j] = new <File, String>Mapping(audio, audio.getName());
+		ts.set(page, j, new Pair<>(audio, audio.getName()));
 		setIsChanged(true);
 
 		if (contextMenu != null)
@@ -478,7 +475,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param isChanged set to true if a property is modified; set to false upon file save
 	 */
-	private void setIsChanged(boolean isChanged) {
+	static void setIsChanged(boolean isChanged) {
 		if (fileIsChanged == isChanged) return;
 		fileIsChanged = isChanged;
 

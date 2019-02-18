@@ -1,6 +1,8 @@
 package talkbox;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -18,6 +20,9 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 import java.util.stream.IntStream;
 
 /**
@@ -185,8 +190,8 @@ public class TalkBoxSim extends Application {
 
 		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			String caption = (ts.audioList[page][i] != null)
-					? ts.audioList[page][i].getValue()
+			String caption = (ts.audioList.get(page).get(i) != null)
+					? ts.audioList.get(page).getValue(i)
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -197,12 +202,12 @@ public class TalkBoxSim extends Application {
 		// on button press
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 
-			File soundFile = new File(getFullPath(ts.audioList[page][i].getKey()));
-			Try.newBuilder().setDefault(() -> {
-				Media media = new Media(soundFile.toURI().toString());
-				MediaPlayer player = new MediaPlayer(media);
-				player.play();
-			}).run();
+			//File soundFile = new File(getFullPath(ts.audioList[page][i].getKey()));
+//			Try.newBuilder().setDefault(() -> {
+//				Media media = new Media(soundFile.toURI().toString());
+//				MediaPlayer player = new MediaPlayer(media);
+//				player.play();
+//			}).run();
 		}));
 
 		return flowPane;
@@ -215,15 +220,34 @@ public class TalkBoxSim extends Application {
 		TalkBoxData ts = new TalkBoxData();
 		ts.numberOfAudioButtons = 5;
 		ts.numberOfAudioSets = 8;
+		ts.totalNumberOfButtons = ts.numberOfAudioButtons * ts.numberOfAudioSets;
 		// testing to see the branch
 
-		ts.audioList = new Mapping[ts.numberOfAudioSets][ts.numberOfAudioButtons];
+		ts.audioList = new Vector<>(ts.totalNumberOfButtons);
 
 		for (int i = 0; i < ts.numberOfAudioSets; i++) {
+			VectorMap<File, String> map = new VectorMap<>(ts.getNumberOfAudioButtons());
 			for (int j = 0; j < ts.getNumberOfAudioButtons(); j++) {
-				ts.audioList[i][j] = null;
+				map.add(null);
 			}
+			ts.audioList.add(map);
 		}
+
+		List<String> list = new ArrayList<>();
+		list.add("hi");
+
+		List<String> list1 = new ArrayList<>();
+		list1.add("bye");
+
+		List<String> list2 = new ArrayList<>();
+		list2.add("sigh");
+
+		List<List<String>> master = new ArrayList<>();
+		master.add(list);
+		master.add(list1);
+		master.add(list2);
+
+		ts.customWords = master;
 
 		oos.writeObject(ts);
 		oos.flush();
