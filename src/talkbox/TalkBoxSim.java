@@ -217,13 +217,15 @@ public class TalkBoxSim extends Application {
 
 	public void createNewTBC() throws IOException {
 		// File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
+
+		// whenever a new file is created, it replaces the test.tbc file here.
 		File testTBC = new File("test.tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();
 		ts.numberOfAudioButtons = 5;
 		ts.numberOfAudioSets = 8;
-		// testing to see the branch
+
 
 		ts.database = new TalkBoxData.AudioPair[ts.numberOfAudioSets][ts.numberOfAudioButtons];
 
