@@ -264,26 +264,44 @@ public class TalkBoxSim extends Application {
 	}
 
 	private void openWizardDialog() {
+	    // opens up a pop-up dialog with a wizard-like interface using a stage. Uses a Vbox (children added vertically), which
+        // multiple flow panes are added to it and then the Vbox is added to the scene
+	    // creates a dialog for the
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(simStage);
         dialog.setTitle("Creating new TalkBox");
 
+        // set the size of the pane
         FlowPane dialogPane = new FlowPane();
-        dialogPane.setPadding(new Insets(30, 20, 30, 20));
-        dialogPane.setVgap(10);
+        dialogPane.setPrefSize(500,100);
+        dialogPane.setPadding(new Insets(10, 20, 10, 20));
         dialogPane.setHgap(10);
         dialogPane.setAlignment(Pos.CENTER);
+
+        //second pane
+        FlowPane dialogPane2 = new FlowPane();
+        dialogPane2.setPrefSize(500,100);
+        dialogPane2.setPadding(new Insets(10, 20, 10, 20));
+        dialogPane2.setHgap(10);
+        dialogPane2.setAlignment(Pos.CENTER);
 
         Button saveInDirectoryBtn = new Button();
         saveInDirectoryBtn.setPrefSize(100, 100);
         saveInDirectoryBtn.setWrapText(true);
         saveInDirectoryBtn.setAlignment(Pos.CENTER);
 
+        Button saveInDirectoryBtn2 = new Button();
+        saveInDirectoryBtn2.setPrefSize(100, 100);
+        saveInDirectoryBtn2.setWrapText(true);
+        saveInDirectoryBtn2.setAlignment(Pos.CENTER);
+
         VBox dialogVbox = new VBox(20);
         dialogPane.getChildren().add(saveInDirectoryBtn);
-        dialogVbox.getChildren().add(dialogPane);
-        Scene dialogScene = new Scene(dialogVbox, 500, 300);
+        dialogPane2.getChildren().add(saveInDirectoryBtn2);
+
+        dialogVbox.getChildren().addAll(dialogPane,dialogPane2);
+        Scene dialogScene = new Scene(dialogVbox);
         dialog.setScene(dialogScene);
         dialog.show();
     }
