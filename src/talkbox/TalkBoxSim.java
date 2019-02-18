@@ -157,6 +157,8 @@ public class TalkBoxSim extends Application {
 
 	private void open(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		fileChooser.setInitialDirectory(workingDirectory);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
 		fileChooser.getExtensionFilters().add(filter); // specifies file type
 
@@ -214,7 +216,8 @@ public class TalkBoxSim extends Application {
 	}
 
 	public void createNewTBC() throws IOException {
-		File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
+		// File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
+		File testTBC = new File("test.tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();
