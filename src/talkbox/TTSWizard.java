@@ -87,7 +87,7 @@ class TTSWizard {
 			if (clip[0] != null && clip[0].isRunning()) {
 				clip[0].stop();
 			} else Try.newBuilder().setDefault(() -> {
-				AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
+				final AudioInputStream audio = generateAudio(phrase.getText(), comboBox.getValue());
 				clip[0] = AudioSystem.getClip();
 
 				clip[0].open(audio);

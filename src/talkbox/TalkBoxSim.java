@@ -190,8 +190,8 @@ public class TalkBoxSim extends Application {
 
 		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			String caption = (ts.audioList.get(page).get(i) != null)
-					? ts.audioList.get(page).getValue(i)
+			String caption = (ts.database[page][i] != null)
+					? ts.database[page][i].getValue()
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -220,17 +220,14 @@ public class TalkBoxSim extends Application {
 		TalkBoxData ts = new TalkBoxData();
 		ts.numberOfAudioButtons = 5;
 		ts.numberOfAudioSets = 8;
-		ts.totalNumberOfButtons = ts.numberOfAudioButtons * ts.numberOfAudioSets;
 		// testing to see the branch
 
-		ts.audioList = new Vector<>(ts.totalNumberOfButtons);
+		ts.database = new TalkBoxData.AudioPair[ts.numberOfAudioSets][ts.numberOfAudioButtons];
 
 		for (int i = 0; i < ts.numberOfAudioSets; i++) {
-			VectorMap<File, String> map = new VectorMap<>(ts.getNumberOfAudioButtons());
 			for (int j = 0; j < ts.getNumberOfAudioButtons(); j++) {
-				map.add(null);
+				ts.database[i][j] = null;
 			}
-			ts.audioList.add(map);
 		}
 
 		List<String> list = new ArrayList<>();

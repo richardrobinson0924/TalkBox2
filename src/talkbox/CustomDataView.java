@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -22,7 +24,7 @@ public final class CustomDataView extends Application {
 	private TalkBoxData ts;
 	private Stage owner;
 
-	public CustomDataView(TalkBoxData tbd, Stage s) {
+	CustomDataView(TalkBoxData tbd, Stage s) {
 		this.ts = tbd;
 		this.owner = s;
 	}
@@ -52,10 +54,10 @@ public final class CustomDataView extends Application {
 	private Tab makeTab(String name, int index) {
 		final Tab tab = new Tab(name);
 
-		final TableView<String> table = new TableView<>();
-		table.setEditable(true);
+		final List<String> rawData = ts.customWords.get(index);
+		final ObservableList<String> data = FXCollections.observableArrayList(rawData);
 
-		final TableColumn<String, String> col = new TableColumn<>(name);
+		final TableView<String> table = getTable(name, index, data);
 
 		final VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER_RIGHT);
@@ -66,18 +68,39 @@ public final class CustomDataView extends Application {
 
 		tab.setContent(vbox);
 
-		final List<String> rawData = ts.customWords.get(index);
-		final ObservableList<String> data = FXCollections.observableArrayList(rawData);
-
-		col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		table.setItems(data);
-		table.getColumns().add(col);
-
-
 		final HBox hbox = makeAddField(name.substring(0, name.length() - 1), table, index, data);
 		vbox.getChildren().add(hbox);
 
 		return tab;
+	}
+
+	private TableView<String> getTable(String name, int index, ObservableList<String> data) {
+		final TableView<String> table = new TableView<>();
+		table.setEditable(true);
+
+		final TableColumn<String, String> col = new TableColumn<>(name);
+
+		col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+
+		col.setCellFactory(TextFieldTableCell.forTableColumn());
+		col.setOnEditCommit(event -> event.getTableView()
+				.getItems()
+				.set(event.getTablePosition().getRow(), event.getNewValue())
+		);
+
+		table.setOnKeyPressed(event -> {
+			final int cell = table.getSelectionModel().getSelectedIndex();
+
+			if (event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.DELETE)) {
+				col.getTableView().getItems().remove(cell);
+				TalkBoxApp.setIsChanged(true);
+			}
+		});
+
+		table.setItems(data);
+		table.getColumns().add(col);
+
+		return table;
 	}
 
 	private HBox makeAddField(String name, TableView<String> table, int index, ObservableList<String> data) {

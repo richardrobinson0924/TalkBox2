@@ -27,6 +27,8 @@ import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static talkbox.TalkBoxData.*;
+
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
  * <p>
@@ -279,8 +281,8 @@ public class TalkBoxApp extends Application {
 		flowPane.setAlignment(Pos.CENTER);
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			final String caption = (ts.audioList.get(page).get(i) != null)
-					? ts.audioList.get(page).getValue(i)
+			final String caption = (ts.database[page][i] != null)
+					? ts.database[page][i].getValue()
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -297,7 +299,7 @@ public class TalkBoxApp extends Application {
 		setDragAndDrop(page);
 
 		IntStream.range(0, ts.getNumberOfAudioButtons())
-				.filter(i -> ts.audioList.get(page).get(i) != null)
+				.filter(i -> ts.database[page][i] != null)
 				.forEach(this::setGraphic);
 
 		return flowPane;
@@ -307,7 +309,7 @@ public class TalkBoxApp extends Application {
 		buttons[i].setOnAction(event2 -> {
 			boolean added = false;
 
-			if (ts.audioList.get(page).get(i) == null) {
+			if (ts.database[page][i] == null) {
 				final AudioInputStream audio = TTSWizard.launch(primaryStage);
 				if (audio == null) return;
 
@@ -318,7 +320,7 @@ public class TalkBoxApp extends Application {
 						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
 						.run();
 
-				ts.set(page, i, new Pair<>(f, f.getName()));
+				ts.database[page][i] = new AudioPair(f, f.getName());
 
 				buttons[i].setText(f.getName());
 				makeContextMenu(page, i);
@@ -328,8 +330,8 @@ public class TalkBoxApp extends Application {
 				added = true;
 			}
 
-			if (ts.audioList.get(page).get(i) != null) {
-				final File soundFile = ts.audioList.get(page).getKey(i);
+			if (ts.database[page][i] != null) {
+				final File soundFile = ts.database[page][i].getKey();
 				boolean finalAdded = added;
 
 				Try.newBuilder().setDefault(() -> {
@@ -355,13 +357,12 @@ public class TalkBoxApp extends Application {
 			});
 
 			buttons[i].setOnDragDropped(event -> {
-				System.out.println("dragged");
 				final Dragboard dragboard = event.getDragboard();
 
 				final File file = dragboard.getFiles().get(0);
 				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				ts.set(page, i, new Pair<>(file, file.getName()));
+				ts.database[page][i] = new AudioPair(file, file.getName());
 
 				buttons[i].setText(file.getName());
 				setIsChanged(true);
@@ -385,7 +386,7 @@ public class TalkBoxApp extends Application {
 
 		change.setOnAction(event -> {
 			setAudio(contextMenu, page, j);
-			buttons[j].setText(ts.audioList.get(page).getValue(j));
+			buttons[j].setText(ts.database[page][j].getValue());
 		});
 
 		rename.setOnAction(event -> changeName(page, j));
@@ -394,7 +395,7 @@ public class TalkBoxApp extends Application {
 		buttons[j].setContextMenu(contextMenu);
 
 		// if button has no file, disable context menu items
-		if (ts.audioList.get(page).get(j) == null) {
+		if (ts.database[page][j] == null) {
 			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
 	}
@@ -406,9 +407,9 @@ public class TalkBoxApp extends Application {
 	 * @param j    the audio button
 	 */
 	private void remove(int page, int j) {
-		final File f = ts.audioList.get(page).getKey(j);
+		final File f = ts.database[page][j].getKey();
 
-		ts.set(page, j, null);
+		ts.database[page][j] = null;
 		buttons[j].setText("Empty");
 		setIsChanged(true);
 
@@ -436,7 +437,7 @@ public class TalkBoxApp extends Application {
 		result.ifPresent(name -> {
 			buttons[j].setText(name);
 
-			ts.setValue(page, j, name);
+			ts.database[page][j].setValue(name);
 			setIsChanged(true);
 		});
 	}
@@ -461,7 +462,7 @@ public class TalkBoxApp extends Application {
 			Files.copy(audio.toPath(), copied);
 		}).run();
 
-		ts.set(page, j, new Pair<>(audio, audio.getName()));
+		ts.database[page][j] = new AudioPair(audio, audio.getName());
 		setIsChanged(true);
 
 		if (contextMenu != null)
