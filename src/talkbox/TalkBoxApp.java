@@ -16,7 +16,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
+import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -27,6 +27,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static talkbox.Commands.History.*;
 import static talkbox.TalkBoxData.*;
 
 /**
@@ -45,9 +46,11 @@ import static talkbox.TalkBoxData.*;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	private TalkBoxData ts;
-	private Button[] buttons;
-	private File audioFolder;
+	public TalkBoxData ts;
+	public Button[] buttons;
+	public File audioFolder;
+
+	private History commands;
 
 	private static File file;
 	private static Stage primaryStage;
@@ -99,20 +102,19 @@ public class TalkBoxApp extends Application {
 
 		/* Creates the sole menu in the menu bar, `File` */
 		final Menu menuFile = new Menu("File");
-		final Menu menuHelp = new Menu("Help");
+		final Menu menuEdit = new Menu("Edit");
 		final Menu menuView = new Menu("View");
-		menuBar.getMenus().addAll(menuFile, menuView, menuHelp);
+		menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
 		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		final MenuItem open = new MenuItem("Open");
 		save = new MenuItem("Save");
 		save.setDisable(true);
 
-		/* Creates about and help menus */
-		final MenuItem about = new MenuItem("About");
-		final MenuItem help = new MenuItem("Help");
-
 		final MenuItem custom = new MenuItem("Custom Phrase List");
+		final MenuItem undo = new MenuItem("Undo");
+
+		undo.setOnAction(event -> History.getInstance().undo());
 
 		/* Creates main scene */
 		final Scene scene = new Scene(box);
@@ -125,13 +127,10 @@ public class TalkBoxApp extends Application {
 		/* Configures the `open` action, which attempts to execute the `open()` method */
 		open.setOnAction((event) -> open(box, open, scene));
 
-		about.setOnAction(this::about);
-		help.setOnAction(this::help);
-
 		// show menu bar
 		menuFile.getItems().addAll(open, save);
-		menuHelp.getItems().addAll(about, help);
 		menuView.getItems().add(custom);
+		menuEdit.getItems().add(undo);
 
 		custom.setOnAction(event -> {
 			final CustomDataView c = new CustomDataView(ts, primaryStage);
@@ -252,6 +251,7 @@ public class TalkBoxApp extends Application {
 				.run();
 
 		buttons = new Button[ts.numberOfAudioButtons];
+		setTalkBoxData(this);
 
 		scene.setOnKeyTyped(e -> {
 			final int index = Integer.parseInt(e.getCharacter()) - 1;
@@ -338,7 +338,7 @@ public class TalkBoxApp extends Application {
 					final Media media = new Media(soundFile.toURI().toString());
 					final MediaPlayer player = new MediaPlayer(media);
 					if (!finalAdded) player.play();
-				}).setOtherwise(() -> remove(page, i)).run();
+				}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(page, i))).run();
 			}
 		});
 	}
@@ -390,7 +390,7 @@ public class TalkBoxApp extends Application {
 		});
 
 		rename.setOnAction(event -> changeName(page, j));
-		remove.setOnAction(event -> remove(page, j));
+		remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(page, j)));
 
 		buttons[j].setContextMenu(contextMenu);
 
@@ -398,28 +398,6 @@ public class TalkBoxApp extends Application {
 		if (ts.database[page][j] == null) {
 			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 		}
-	}
-
-	/**
-	 * Removes an audio file
-	 *
-	 * @param page the audio set
-	 * @param j    the audio button
-	 */
-	private void remove(int page, int j) {
-		final File f = ts.database[page][j].getKey();
-
-		ts.database[page][j] = null;
-		buttons[j].setText("Empty");
-		setIsChanged(true);
-
-		Try.newBuilder().setDefault(() -> {
-			if (f.exists()) Files.delete(f.toPath());
-		}).run();
-
-		final ImageView blank = new ImageView();
-		blank.setImage(null);
-		buttons[j].setGraphic(blank);
 	}
 
 	/**
@@ -476,7 +454,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param isChanged set to true if a property is modified; set to false upon file save
 	 */
-	static void setIsChanged(boolean isChanged) {
+	public static void setIsChanged(boolean isChanged) {
 		if (fileIsChanged == isChanged) return;
 		fileIsChanged = isChanged;
 
@@ -521,7 +499,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param i index of the button
 	 */
-	private void setGraphic(int i) {
+	public void setGraphic(int i) {
 		final ImageView graphic = new ImageView(GRAPHIC);
 
 		graphic.setFitHeight(GRAPHIC_SIZE);

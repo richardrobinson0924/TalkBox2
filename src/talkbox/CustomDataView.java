@@ -94,6 +94,8 @@ public final class CustomDataView extends Application {
 			if (event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.DELETE)) {
 				col.getTableView().getItems().remove(cell);
 				TalkBoxApp.setIsChanged(true);
+
+				ts.customWords.set(index, new ArrayList<>(data));
 			}
 		});
 
