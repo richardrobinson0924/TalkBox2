@@ -3,15 +3,13 @@ package talkbox;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -78,6 +76,8 @@ public class TalkBoxSim extends Application {
 
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
+	private final int MINOR_BUTTON_HEIGHT = 20;
+	private final int MINOR_BUTTON_WIDTH = 85;
 
 	public static void main(String... args) {
 		launch(args);
@@ -269,20 +269,27 @@ public class TalkBoxSim extends Application {
 	private void openWizardDialog() {
 	    // opens up a pop-up dialog with a wizard-like interface using a stage. Uses a Vbox (children added vertically), which
         // multiple flow panes are added to it and then the Vbox is added to the scene
-	    // creates a dialog for the
+	    // creates a dialog after the create new talkbox is pressed
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(simStage);
-        dialog.setTitle("Creating new TalkBox");
+        dialog.setTitle("New TalkBox");
         dialog.setResizable(false);
         dialog.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
+        // 0th pane
+		FlowPane dialogPane0 = new FlowPane();
+		dialogPane0.setPrefSize(500,50);
+		dialogPane0.setPadding(new Insets(10, 20, 10, 35));
+		dialogPane0.setHgap(10);
+		dialogPane0.setAlignment(Pos.CENTER_LEFT);
+
         // first pane
-        FlowPane dialogPane = new FlowPane();
-        dialogPane.setPrefSize(500,100);
-        dialogPane.setPadding(new Insets(10, 20, 10, 35));
-        dialogPane.setHgap(10);
-        dialogPane.setAlignment(Pos.CENTER_LEFT);
+        FlowPane dialogPane1 = new FlowPane();
+        dialogPane1.setPrefSize(500,100);
+        dialogPane1.setPadding(new Insets(10, 20, 10, 35));
+        dialogPane1.setHgap(10);
+        dialogPane1.setAlignment(Pos.CENTER_LEFT);
 
         // second pane
         FlowPane dialogPane2 = new FlowPane();
@@ -298,6 +305,18 @@ public class TalkBoxSim extends Application {
 		dialogPane3.setHgap(10);
 		dialogPane3.setAlignment(Pos.CENTER);
 
+		// fourth pane
+		FlowPane dialogPane4 = new FlowPane();
+		dialogPane4.setPrefSize(500,100);
+		dialogPane4.setPadding(new Insets(10, 20, 10, 35));
+		dialogPane4.setHgap(10);
+		dialogPane4.setAlignment(Pos.CENTER);
+
+
+		// The following "nodes" are to be added to the 0th pane
+		Label enterNameLbl = new Label();
+		enterNameLbl.setText("Creating a New TalkBox\n\tEnter a TalkBox name.");
+
         // The following "nodes" are to be added to the first pane
         Label nameLbl = new Label();
         nameLbl.setText("TextBox file name: ");
@@ -306,21 +325,59 @@ public class TalkBoxSim extends Application {
 		nameTxtField.setPrefWidth(300);
 
         // The following "nodes are to be added to the second pane"
-        Button saveInDirectoryBtn = new Button();
-        saveInDirectoryBtn.setPrefSize(100, 100);
-        saveInDirectoryBtn.setWrapText(true);
-        saveInDirectoryBtn.setAlignment(Pos.CENTER);
+		Label locationLbl = new Label();
+		locationLbl.setText("Location:");
+
+		TextField locationTxtField = new TextField();
+		locationTxtField.setEditable(false);
+		locationTxtField.setPrefWidth(300);
+		locationTxtField.setMouseTransparent(true);
+
+		Button browseBtn = new Button();
+		browseBtn.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+		browseBtn.setText("Browse...");
+		browseBtn.setWrapText(true);
+		browseBtn.setAlignment(Pos.CENTER);
 
 		// The following "nodes are to be added to the third pane"
+		Label numBtnsLbl = new Label();
+		numBtnsLbl.setText("Number of Buttons: ");
 
+		Label numSetsLbl = new Label();
+		numSetsLbl.setText("Number of Sets: ");
+
+		String [] numBtnsChoices = {"1","2","3","4","5"};
+		String [] numSetsChoices = {"1","2","3","4","5","6","7","8"};
+		ComboBox <String> numBtnsComboBox = new ComboBox<String>(FXCollections.observableArrayList(numBtnsChoices));
+		ComboBox <String> numSetsComboBox = new ComboBox<String>(FXCollections.observableArrayList(numSetsChoices));
+
+		// how to get a selected item from the combobox
+		//numBtnsComboBox.getSelectionModel().getSelectedItem().toString();
+
+
+		// The following "nodes are to be added to the fourth pane"
+        Button finishBtn = new Button();
+        finishBtn.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+        finishBtn.setText("Finish");
+        finishBtn.setWrapText(true);
+        finishBtn.setAlignment(Pos.CENTER);
+
+        Button cancelBtn = new Button();
+        cancelBtn.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+        cancelBtn.setText("Cancel");
+        cancelBtn.setWrapText(true);
+        cancelBtn.setAlignment(Pos.CENTER);
 
 		// add all the panes to a Vbox
         VBox dialogVbox = new VBox(20);
-        dialogPane.getChildren().addAll(nameLbl, nameTxtField);
-        dialogPane2.getChildren().add(saveInDirectoryBtn);
+        dialogPane0.getChildren().add(enterNameLbl);
+        dialogPane1.getChildren().addAll(nameLbl, nameTxtField);
+        dialogPane2.getChildren().addAll(locationLbl, locationTxtField, browseBtn);
+        dialogPane3.getChildren().addAll(numBtnsLbl,numBtnsComboBox,numSetsLbl,numSetsComboBox);
+        dialogPane4.getChildren().addAll(finishBtn,cancelBtn);
 
 		// add the Vbox to the dialog scene and show it
-        dialogVbox.getChildren().addAll(dialogPane,dialogPane2,dialogPane3);
+        dialogVbox.getChildren().addAll(dialogPane0,dialogPane1,dialogPane2,dialogPane3,dialogPane4);
         Scene dialogScene = new Scene(dialogVbox);
         dialog.setScene(dialogScene);
         dialog.show();
