@@ -9,7 +9,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -99,6 +101,7 @@ public class TalkBoxSim extends Application {
 		simStage.setTitle("TalkBox Simulator");
 		simStage.setWidth(500);
 		simStage.setHeight(400);
+		simStage.setResizable(false);
 		simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
 		/* Added the Creating a new file button */
@@ -271,36 +274,53 @@ public class TalkBoxSim extends Application {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(simStage);
         dialog.setTitle("Creating new TalkBox");
+        dialog.setResizable(false);
+        dialog.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
-        // set the size of the pane
+        // first pane
         FlowPane dialogPane = new FlowPane();
         dialogPane.setPrefSize(500,100);
-        dialogPane.setPadding(new Insets(10, 20, 10, 20));
+        dialogPane.setPadding(new Insets(10, 20, 10, 35));
         dialogPane.setHgap(10);
-        dialogPane.setAlignment(Pos.CENTER);
+        dialogPane.setAlignment(Pos.CENTER_LEFT);
 
-        //second pane
+        // second pane
         FlowPane dialogPane2 = new FlowPane();
         dialogPane2.setPrefSize(500,100);
-        dialogPane2.setPadding(new Insets(10, 20, 10, 20));
+        dialogPane2.setPadding(new Insets(10, 20, 10, 35));
         dialogPane2.setHgap(10);
         dialogPane2.setAlignment(Pos.CENTER);
 
+		// third pane
+		FlowPane dialogPane3 = new FlowPane();
+		dialogPane3.setPrefSize(500,100);
+		dialogPane3.setPadding(new Insets(10, 20, 10, 35));
+		dialogPane3.setHgap(10);
+		dialogPane3.setAlignment(Pos.CENTER);
+
+        // The following "nodes" are to be added to the first pane
+        Label nameLbl = new Label();
+        nameLbl.setText("TextBox file name: ");
+
+		TextField nameTxtField = new TextField();
+		nameTxtField.setPrefWidth(300);
+
+        // The following "nodes are to be added to the second pane"
         Button saveInDirectoryBtn = new Button();
         saveInDirectoryBtn.setPrefSize(100, 100);
         saveInDirectoryBtn.setWrapText(true);
         saveInDirectoryBtn.setAlignment(Pos.CENTER);
 
-        Button saveInDirectoryBtn2 = new Button();
-        saveInDirectoryBtn2.setPrefSize(100, 100);
-        saveInDirectoryBtn2.setWrapText(true);
-        saveInDirectoryBtn2.setAlignment(Pos.CENTER);
+		// The following "nodes are to be added to the third pane"
 
+
+		// add all the panes to a Vbox
         VBox dialogVbox = new VBox(20);
-        dialogPane.getChildren().add(saveInDirectoryBtn);
-        dialogPane2.getChildren().add(saveInDirectoryBtn2);
+        dialogPane.getChildren().addAll(nameLbl, nameTxtField);
+        dialogPane2.getChildren().add(saveInDirectoryBtn);
 
-        dialogVbox.getChildren().addAll(dialogPane,dialogPane2);
+		// add the Vbox to the dialog scene and show it
+        dialogVbox.getChildren().addAll(dialogPane,dialogPane2,dialogPane3);
         Scene dialogScene = new Scene(dialogVbox);
         dialog.setScene(dialogScene);
         dialog.show();
