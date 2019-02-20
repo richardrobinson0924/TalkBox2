@@ -80,6 +80,7 @@ public class TalkBoxSim extends Application {
 	private File audioFolder;
 	private final int MINOR_BUTTON_HEIGHT = 20;
 	private final int MINOR_BUTTON_WIDTH = 85;
+	private boolean canContinue = false;
 
 	public static void main(String... args) {
 		launch(args);
@@ -124,6 +125,7 @@ public class TalkBoxSim extends Application {
 
 				Scene newTBCscene = new Scene(box);
 				simStage.setScene(newTBCscene);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -228,6 +230,10 @@ public class TalkBoxSim extends Application {
 
         openWizardDialog();
 
+        if (!canContinue) {
+        	return;
+		}
+
 		File testTBC = new File("test.tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -272,6 +278,8 @@ public class TalkBoxSim extends Application {
 	    // opens up a pop-up dialog with a wizard-like interface using a stage. Uses a Vbox (children added vertically), which
         // multiple flow panes are added to it and then the Vbox is added to the scene
 	    // creates a dialog after the create new talkbox is pressed
+		// uses a canContinue boolean variable to decide whether the program is ready to move on to the next stage
+
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(simStage);
@@ -339,8 +347,8 @@ public class TalkBoxSim extends Application {
 		browseBtn.setText("Browse...");
 		browseBtn.setWrapText(true);
 		browseBtn.setAlignment(Pos.CENTER);
-		browseBtn.setOnAction(event -> {
 
+		browseBtn.setOnAction(event -> {
 			// input action after browse button is clicked here
 			DirectoryChooser dir = new DirectoryChooser();
 			dir.setTitle("Browse for a folder");
@@ -348,16 +356,7 @@ public class TalkBoxSim extends Application {
 			dir.setInitialDirectory(defaultDirectory);
 			File selectedDirectory = dir.showDialog(dialog);
 
-			try {
-				if (selectedDirectory.getPath() == null) {
-					throw new Exception();
-				}
-				locationTxtField.setText(selectedDirectory.getPath());
-			}
-			catch (Exception e) {
-
-			}
-
+			locationTxtField.setText(selectedDirectory.getPath());
 		});
 
 		// The following "nodes are to be added to the third pane"
@@ -382,8 +381,24 @@ public class TalkBoxSim extends Application {
         finishBtn.setText("Finish");
         finishBtn.setWrapText(true);
         finishBtn.setAlignment(Pos.CENTER);
+
         finishBtn.setOnAction(event -> {
         	// input action after finish button is clicked here
+			try {
+				int numBtns = Integer.parseInt(numBtnsComboBox.getSelectionModel().getSelectedItem().toString());
+				int numSets = Integer.parseInt(numSetsComboBox.getSelectionModel().getSelectedItem().toString());
+				String selectedDir = locationTxtField.getText();
+				String talkBoxName = nameTxtField.getText().trim();
+				if (selectedDir == null) {
+					throw new Exception();
+				}
+
+
+				dialog.close();
+			}
+			catch (Exception e) {
+
+			}
 		});
 
         Button cancelBtn = new Button();
@@ -408,7 +423,7 @@ public class TalkBoxSim extends Application {
         dialogVbox.getChildren().addAll(dialogPane0,dialogPane1,dialogPane2,dialogPane3,dialogPane4);
         Scene dialogScene = new Scene(dialogVbox);
         dialog.setScene(dialogScene);
-        dialog.show();
+        dialog.showAndWait();
     }
 
 	private void readFile() throws Exception {
