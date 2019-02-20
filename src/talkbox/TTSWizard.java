@@ -30,7 +30,7 @@ import java.util.Optional;
  * @author Richard Robinson
  * @apiNote This class is fully independent, and can be launched from any JavaFX stage
  */
-class TTSWizard {
+public class TTSWizard {
 
 	private TTSWizard() {
 	}
@@ -40,7 +40,7 @@ class TTSWizard {
 	 *
 	 * @param primaryStage the stage from which the TTSWizard instance is launched from
 	 */
-	static AudioInputStream launch(Stage primaryStage) {
+	public static AudioInputStream launch(Stage primaryStage) {
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 
 		try {

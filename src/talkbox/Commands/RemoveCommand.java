@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;;
+import java.nio.file.StandardCopyOption;
 
 import static talkbox.Commands.History.appInstance;
 
@@ -33,7 +33,6 @@ public final class RemoveCommand implements History.Command {
 
 		appInstance.ts.database[i][j] = null;
 		appInstance.buttons[j].setText("Empty");
-		TalkBoxApp.setIsChanged(true);
 
 		Try.newBuilder().setDefault(() -> {
 			if (f.exists()) Files.delete(f.toPath());
@@ -46,15 +45,12 @@ public final class RemoveCommand implements History.Command {
 
 	@Override
 	public void undo() {
-		System.out.println("h");
 		appInstance.ts.database[i][j] = oldPair;
 		appInstance.buttons[j].setText(oldPair.getValue());
 
 		Try.newBuilder()
 				.setDefault(() -> Files.copy(oldPath, new FileOutputStream(oldPair.getKey().getPath())))
 				.run();
-
-		TalkBoxApp.setIsChanged(true);
 
 		appInstance.setGraphic(j);
 	}

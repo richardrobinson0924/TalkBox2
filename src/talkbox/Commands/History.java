@@ -1,7 +1,6 @@
 package talkbox.Commands;
 
 import talkbox.TalkBoxApp;
-import talkbox.Try;
 
 import java.util.Stack;
 
@@ -13,10 +12,12 @@ public final class History {
 
 	public interface Command {
 		void execute();
+
 		void undo();
 	}
 
-	private History() {}
+	private History() {
+	}
 
 	public boolean isEmpty() {
 		return stack.empty();
@@ -37,9 +38,7 @@ public final class History {
 	}
 
 	public void undo() {
-		Try.newBuilder()
-				.setDefault(stack.pop()::undo)
-				.run();
+		if (!isEmpty()) stack.pop().undo();
 		TalkBoxApp.setIsChanged(true);
 	}
 
