@@ -3,6 +3,7 @@ package talkbox;
 import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,13 +49,10 @@ import static talkbox.TalkBoxData.*;
 public class TalkBoxApp extends Application {
 	public TalkBoxData ts;
 	public Button[] buttons;
-	public File audioFolder;
-
-	private History commands;
+	private File audioFolder;
 
 	private static File file;
 	private static Stage primaryStage;
-	private static MenuItem save;
 
 	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
 	private static boolean fileIsChanged = false;
@@ -77,7 +75,6 @@ public class TalkBoxApp extends Application {
 	 * @param primaryStage cuz Java needs this
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 * @see #warnBeforeExit() method to warn user before exit
-	 * @see #open(VBox, MenuItem, Scene) method to open file
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -95,42 +92,48 @@ public class TalkBoxApp extends Application {
 
 		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
 		final VBox box = new VBox();
+		final Scene scene = new Scene(box);
 
 		/* Creates the menu bar */
-		final MenuBar menuBar = new MenuBar();
+		final MenuBar menuBar = makeMenuBar(box, scene);
+		box.getChildren().addAll(menuBar);
+
+		// show window
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+		/* start app by opening a file with `open()` */
+		open(box, scene);
+
+		/* Upon exit, call method to prompt user to save */
+		warnBeforeExit();
+	}
+
+	private MenuBar makeMenuBar(VBox box, Scene scene) {
+		MenuBar menuBar = new MenuBar();
+
 		menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
 
-		/* Creates the sole menu in the menu bar, `File` */
 		final Menu menuFile = new Menu("File");
 		final Menu menuEdit = new Menu("Edit");
 		final Menu menuView = new Menu("View");
-		menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
-		/* Adds an Open and Save action to the File menu. The latter is initially disabled. */
 		final MenuItem open = new MenuItem("Open");
-		save = new MenuItem("Save");
-		save.setDisable(true);
-
+		final MenuItem save = new MenuItem("Save");
 		final MenuItem custom = new MenuItem("Custom Phrase List");
 		final MenuItem undo = new MenuItem("Undo");
 
+		SimpleObjectProperty<TalkBoxData> p = new SimpleObjectProperty<>();
+		p.setValue(ts);
+		p.addListener((observable, oldValue, newValue) -> save.setDisable(false));
+
 		undo.setOnAction(event -> History.getInstance().undo());
 
-		/* Creates main scene */
-		final Scene scene = new Scene(box);
-
-		/* Configures the `save` action, which attempts to execute the `save()` method */
 		save.setOnAction(e -> Try.newBuilder()
 				.setDefault(this::save)
 				.run());
 
-		/* Configures the `open` action, which attempts to execute the `open()` method */
-		open.setOnAction((event) -> open(box, open, scene));
-
-		// show menu bar
-		menuFile.getItems().addAll(open, save);
-		menuView.getItems().add(custom);
-		menuEdit.getItems().add(undo);
+		open.setOnAction((event) -> open(box, scene));
 
 		custom.setOnAction(event -> {
 			final CustomDataView c = new CustomDataView(ts, primaryStage);
@@ -140,17 +143,13 @@ public class TalkBoxApp extends Application {
 					.run();
 		});
 
-		box.getChildren().addAll(menuBar);
+		menuFile.getItems().addAll(open, save);
+		menuView.getItems().add(custom);
+		menuEdit.getItems().add(undo);
 
-		// show window
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
-		/* start app by opening a file with `open()` */
-		open(box, open, scene);
-
-		/* Upon exit, call method to prompt user to save */
-		warnBeforeExit();
+		return menuBar;
 	}
 
 	/**
@@ -187,12 +186,6 @@ public class TalkBoxApp extends Application {
 
 		alert.getDialogPane().setExpandableContent(expContent);
 		alert.showAndWait();
-	}
-
-	private void help(ActionEvent event) {
-	}
-
-	private void about(ActionEvent event) {
 	}
 
 	/**
@@ -233,7 +226,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @see #configButtons(int)
 	 */
-	private void open(VBox box, MenuItem openMenu, Scene scene) {
+	private void open(VBox box, Scene scene) {
 		final FileChooser fileChooser = new FileChooser();
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
 		fileChooser.getExtensionFilters().add(filter); // specifies file type
@@ -247,7 +240,7 @@ public class TalkBoxApp extends Application {
 
 		Try.newBuilder()
 				.setDefault(this::readFile)
-				.setOtherwise(() -> open(box, openMenu, scene))
+				.setOtherwise(() -> open(box, scene))
 				.run();
 
 		buttons = new Button[ts.numberOfAudioButtons];
@@ -263,8 +256,6 @@ public class TalkBoxApp extends Application {
 		box.getChildren().add(pagination);
 
 		pagination.setPageFactory(this::configButtons);
-
-		openMenu.setDisable(true);
 	}
 
 	/**
@@ -307,37 +298,25 @@ public class TalkBoxApp extends Application {
 
 	private void setButtonAction(int page, int i) {
 		buttons[i].setOnAction(event2 -> {
-			boolean added = false;
-
 			if (ts.database[page][i] == null) {
-				final AudioInputStream audio = TTSWizard.launch(primaryStage);
+				final AudioInputStream audio = TTSWizard.launch(TalkBoxApp.primaryStage);
 				if (audio == null) return;
 
 				final WaveFileWriter w = new WaveFileWriter();
-				final File f = new File(getFullPath("Audio_" + i + ".wav"));
+				final File f = new File(appInstance.getFullPath("Audio_" + page + i + ".wav"));
 
 				Try.newBuilder()
 						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
 						.run();
 
-				ts.database[page][i] = new AudioPair(f, f.getName());
-
-				buttons[i].setText(f.getName());
-				makeContextMenu(page, i);
-
-				setGraphic(i);
-				setIsChanged(true);
-				added = true;
-			}
-
-			if (ts.database[page][i] != null) {
+				History.getInstance().execute(new AddCommand(page, i, f));
+			} else if (ts.database[page][i] != null) {
 				final File soundFile = ts.database[page][i].getKey();
-				boolean finalAdded = added;
 
 				Try.newBuilder().setDefault(() -> {
 					final Media media = new Media(soundFile.toURI().toString());
 					final MediaPlayer player = new MediaPlayer(media);
-					if (!finalAdded) player.play();
+					player.play();
 				}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(page, i))).run();
 			}
 		});
@@ -362,10 +341,7 @@ public class TalkBoxApp extends Application {
 				final File file = dragboard.getFiles().get(0);
 				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				ts.database[page][i] = new AudioPair(file, file.getName());
-
-				buttons[i].setText(file.getName());
-				setIsChanged(true);
+				History.getInstance().execute(new AddCommand(page, i, file));
 			});
 		});
 	}
@@ -376,7 +352,7 @@ public class TalkBoxApp extends Application {
 	 * @param page the audio set
 	 * @param j    the audio button
 	 */
-	private void makeContextMenu(int page, int j) {
+	public void makeContextMenu(int page, int j) {
 		final ContextMenu contextMenu = new ContextMenu();
 
 		final MenuItem rename = new MenuItem("Rename");
@@ -384,40 +360,11 @@ public class TalkBoxApp extends Application {
 		final MenuItem change = new MenuItem("Change");
 		contextMenu.getItems().addAll(rename, remove, change);
 
-		change.setOnAction(event -> {
-			setAudio(contextMenu, page, j);
-			buttons[j].setText(ts.database[page][j].getValue());
-		});
-
-		rename.setOnAction(event -> changeName(page, j));
+		change.setOnAction(event -> setAudio(page, j));
+		rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(page, j)));
 		remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(page, j)));
 
 		buttons[j].setContextMenu(contextMenu);
-
-		// if button has no file, disable context menu items
-		if (ts.database[page][j] == null) {
-			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
-		}
-	}
-
-	/**
-	 * Displays an input dialog box to change the name of the button text
-	 *
-	 * @param j the button whose text to change
-	 */
-	private void changeName(int page, int j) {
-		final TextInputDialog dialog = new TextInputDialog(buttons[j].getText());
-		dialog.setTitle("Change Button Name");
-		dialog.setHeaderText("Change Button Name");
-		dialog.setContentText("Please enter the new name:");
-
-		final Optional<String> result = dialog.showAndWait();
-		result.ifPresent(name -> {
-			buttons[j].setText(name);
-
-			ts.database[page][j].setValue(name);
-			setIsChanged(true);
-		});
 	}
 
 	/**
@@ -426,7 +373,7 @@ public class TalkBoxApp extends Application {
 	 * @param page the audio set
 	 * @param j    the audio button
 	 */
-	private void setAudio(ContextMenu contextMenu, int page, int j) {
+	private void setAudio(int page, int j) {
 		final FileChooser audioFile = new FileChooser();
 		final FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
 		audioFile.getExtensionFilters().add(filter2);
@@ -440,13 +387,7 @@ public class TalkBoxApp extends Application {
 			Files.copy(audio.toPath(), copied);
 		}).run();
 
-		ts.database[page][j] = new AudioPair(audio, audio.getName());
-		setIsChanged(true);
-
-		if (contextMenu != null)
-			contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
-
-		setGraphic(j);
+		History.getInstance().execute(new AddCommand(page, j, audio));
 	}
 
 	/**
@@ -457,8 +398,6 @@ public class TalkBoxApp extends Application {
 	public static void setIsChanged(boolean isChanged) {
 		if (fileIsChanged == isChanged) return;
 		fileIsChanged = isChanged;
-
-		save.setDisable(!isChanged);
 
 		primaryStage.setTitle(MessageFormat.format("TalkBox Configurator \u2014 {0}{1}",
 				file.getName(),
@@ -507,7 +446,7 @@ public class TalkBoxApp extends Application {
 		buttons[i].setGraphic(graphic);
 	}
 
-	private String getFullPath(String s) {
+	public String getFullPath(String s) {
 		return audioFolder.getPath().concat('/' + s);
 	}
 }
