@@ -15,6 +15,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -78,9 +79,14 @@ public class TalkBoxSim extends Application {
 
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
+
 	private final int MINOR_BUTTON_HEIGHT = 20;
 	private final int MINOR_BUTTON_WIDTH = 85;
 	private boolean canContinue = false;
+	private String savedDir;
+	private String savedName;
+	private int numAudioBtns;
+	private int numAudioSets;
 
 	public static void main(String... args) {
 		launch(args);
@@ -223,7 +229,7 @@ public class TalkBoxSim extends Application {
 		return flowPane;
 	}
 
-	public void createNewTBC() throws IOException {
+	private void createNewTBC() throws IOException {
 		// File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
 
 		// whenever a new file is created, it replaces the test.tbc file here
@@ -234,12 +240,12 @@ public class TalkBoxSim extends Application {
         	return;
 		}
 
-		File testTBC = new File("test.tbc");
+		File testTBC = new File(savedDir + "\\" + savedName +  ".tbc");
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();
-		ts.numberOfAudioButtons = 5;
-		ts.numberOfAudioSets = 8;
+		ts.numberOfAudioButtons = numAudioBtns;
+		ts.numberOfAudioSets = numAudioSets;
 
 
 		ts.database = new TalkBoxData.AudioPair[ts.numberOfAudioSets][ts.numberOfAudioButtons];
@@ -279,6 +285,8 @@ public class TalkBoxSim extends Application {
         // multiple flow panes are added to it and then the Vbox is added to the scene
 	    // creates a dialog after the create new talkbox is pressed
 		// uses a canContinue boolean variable to decide whether the program is ready to move on to the next stage
+        // uses the errorLbl to display an error message for missing info
+        // add more instructions before the specific pane
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -290,8 +298,8 @@ public class TalkBoxSim extends Application {
         // 0th pane
 		FlowPane dialogPane0 = new FlowPane();
 		dialogPane0.setPrefSize(500,25);
-		dialogPane0.setPadding(new Insets(10, 20, 10, 35));
-		dialogPane0.setAlignment(Pos.CENTER_LEFT);
+		dialogPane0.setPadding(new Insets(10, 20, 5, 35));
+		dialogPane0.setAlignment(Pos.BOTTOM_LEFT);
 
         // first pane
         FlowPane dialogPane1 = new FlowPane();
@@ -325,6 +333,11 @@ public class TalkBoxSim extends Application {
 		// The following "nodes" are to be added to the 0th pane
 		Label enterNameLbl = new Label();
 		enterNameLbl.setText("Creating a New TalkBox\n\tEnter a TalkBox name.");
+		enterNameLbl.setStyle("-fx-font-weight: bold;");
+
+        Label errorLbl = new Label();
+        errorLbl.setTextFill(Color.RED);
+
 
         // The following "nodes" are to be added to the first pane
         Label nameLbl = new Label();
@@ -332,6 +345,7 @@ public class TalkBoxSim extends Application {
 
 		TextField nameTxtField = new TextField();
 		nameTxtField.setPrefWidth(300);
+
 
         // The following "nodes are to be added to the second pane"
 		Label locationLbl = new Label();
@@ -354,10 +368,11 @@ public class TalkBoxSim extends Application {
 			dir.setTitle("Browse for a folder");
 			File defaultDirectory = new File(System.getProperty("user.dir"));
 			dir.setInitialDirectory(defaultDirectory);
-			File selectedDirectory = dir.showDialog(dialog);
+			file = dir.showDialog(dialog);
 
-			locationTxtField.setText(selectedDirectory.getPath());
+			locationTxtField.setText(file.getPath());
 		});
+
 
 		// The following "nodes are to be added to the third pane"
 		Label numBtnsLbl = new Label();
@@ -368,8 +383,8 @@ public class TalkBoxSim extends Application {
 
 		String [] numBtnsChoices = {"1","2","3","4","5"};
 		String [] numSetsChoices = {"1","2","3","4","5","6","7","8"};
-		ComboBox <String> numBtnsComboBox = new ComboBox<String>(FXCollections.observableArrayList(numBtnsChoices));
-		ComboBox <String> numSetsComboBox = new ComboBox<String>(FXCollections.observableArrayList(numSetsChoices));
+		ComboBox <String> numBtnsComboBox = new ComboBox<>(FXCollections.observableArrayList(numBtnsChoices));
+		ComboBox <String> numSetsComboBox = new ComboBox<>(FXCollections.observableArrayList(numSetsChoices));
 
 		// how to get a selected item from the combobox
 		//numBtnsComboBox.getSelectionModel().getSelectedItem().toString();
@@ -385,19 +400,26 @@ public class TalkBoxSim extends Application {
         finishBtn.setOnAction(event -> {
         	// input action after finish button is clicked here
 			try {
-				int numBtns = Integer.parseInt(numBtnsComboBox.getSelectionModel().getSelectedItem().toString());
-				int numSets = Integer.parseInt(numSetsComboBox.getSelectionModel().getSelectedItem().toString());
+				int numBtns = Integer.parseInt(numBtnsComboBox.getSelectionModel().getSelectedItem());
+				int numSets = Integer.parseInt(numSetsComboBox.getSelectionModel().getSelectedItem());
 				String selectedDir = locationTxtField.getText();
 				String talkBoxName = nameTxtField.getText().trim();
 				if (selectedDir == null) {
 					throw new Exception();
 				}
+                if (talkBoxName == null) {
+                    throw new Exception();
+                }
 
-
+                numAudioBtns = numBtns;
+                numAudioSets = numSets;
+                savedDir = selectedDir;
+                savedName = talkBoxName;
+                canContinue = true;
 				dialog.close();
 			}
 			catch (Exception e) {
-
+                e.printStackTrace();
 			}
 		});
 
@@ -410,6 +432,7 @@ public class TalkBoxSim extends Application {
         	// input action after cancel button is clicked here
         	dialog.close();
 		});
+
 
 		// add all the panes to a Vbox
         VBox dialogVbox = new VBox(20);
