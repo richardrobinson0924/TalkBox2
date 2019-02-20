@@ -4,7 +4,6 @@ import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,6 +16,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sun.misc.IOUtils;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -24,12 +24,13 @@ import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static talkbox.Commands.History.*;
-import static talkbox.TalkBoxData.*;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
@@ -51,7 +52,7 @@ public class TalkBoxApp extends Application {
 	public Button[] buttons;
 	private File audioFolder;
 
-	private static File file;
+	private static Path path;
 	private static Stage primaryStage;
 
 	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
@@ -61,13 +62,6 @@ public class TalkBoxApp extends Application {
 	private final static int BUTTON_SIZE = 100;
 	private final static Image GRAPHIC = new Image(TalkBoxApp.class.getResource("/Resources/button_graphic.png").toString());
 	private final static String AUDIO_PATH = "/Audio";
-
-	/**
-	 * The main method to launch the application
-	 */
-	public static void main(String[] args) {
-		launch(args);
-	}
 
 	/**
 	 * Initializes the app.
@@ -80,6 +74,7 @@ public class TalkBoxApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		TalkBoxApp.primaryStage = primaryStage;
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
+		path = Paths.get(this.getParameters().getRaw().get(0));
 
 		/* Sets the UI */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -121,6 +116,7 @@ public class TalkBoxApp extends Application {
 		final MenuItem open = new MenuItem("Open");
 		final MenuItem save = new MenuItem("Save");
 		final MenuItem custom = new MenuItem("Custom Phrase List");
+		final MenuItem openSim = new MenuItem("Open in Simulator");
 		final MenuItem undo = new MenuItem("Undo");
 
 		SimpleObjectProperty<TalkBoxData> p = new SimpleObjectProperty<>();
@@ -144,7 +140,7 @@ public class TalkBoxApp extends Application {
 		});
 
 		menuFile.getItems().addAll(open, save);
-		menuView.getItems().add(custom);
+		menuView.getItems().addAll(custom);
 		menuEdit.getItems().add(undo);
 
 		menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
@@ -227,16 +223,10 @@ public class TalkBoxApp extends Application {
 	 * @see #configButtons(int)
 	 */
 	private void open(VBox box, Scene scene) {
-		final FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
-		fileChooser.getExtensionFilters().add(filter); // specifies file type
-
-		fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
-		file = fileChooser.showOpenDialog(primaryStage); // displays file chooser window
-		audioFolder = new File(file.getParent().concat(AUDIO_PATH));
+		audioFolder = new File(path.getParent().toString().concat(AUDIO_PATH));
 
 		// adds file name to Window title
-		primaryStage.setTitle("TalkBox Configurator — " + file.getName());
+		primaryStage.setTitle("TalkBox Configurator — " + path.getFileName().toString());
 
 		Try.newBuilder()
 				.setDefault(this::readFile)
@@ -400,7 +390,7 @@ public class TalkBoxApp extends Application {
 		fileIsChanged = isChanged;
 
 		primaryStage.setTitle(MessageFormat.format("TalkBox Configurator \u2014 {0}{1}",
-				file.getName(),
+				path.getFileName(),
 				(isChanged) ? " (Edited)" : ""));
 	}
 
@@ -413,7 +403,7 @@ public class TalkBoxApp extends Application {
 		FileInputStream fis;
 		ObjectInputStream oin;
 
-		fis = new FileInputStream(file);
+		fis = new FileInputStream(path.toFile());
 		oin = new ObjectInputStream(fis);
 
 		ts = (TalkBoxData) oin.readObject();
@@ -425,7 +415,7 @@ public class TalkBoxApp extends Application {
 	 * @throws Exception exception
 	 */
 	private void save() throws Exception {
-		final FileOutputStream fos = new FileOutputStream(file.toString());
+		final FileOutputStream fos = new FileOutputStream(path.toFile());
 		final ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(ts);
 		oos.flush();
