@@ -15,6 +15,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -280,38 +281,37 @@ public class TalkBoxSim extends Application {
 
         // 0th pane
 		FlowPane dialogPane0 = new FlowPane();
-		dialogPane0.setPrefSize(500,50);
+		dialogPane0.setPrefSize(500,25);
 		dialogPane0.setPadding(new Insets(10, 20, 10, 35));
-		dialogPane0.setHgap(10);
 		dialogPane0.setAlignment(Pos.CENTER_LEFT);
 
         // first pane
         FlowPane dialogPane1 = new FlowPane();
-        dialogPane1.setPrefSize(500,100);
-        dialogPane1.setPadding(new Insets(10, 20, 10, 35));
-        dialogPane1.setHgap(10);
+        dialogPane1.setPrefSize(500,50);
+        dialogPane1.setPadding(new Insets(0, 20, 10, 35));
+		dialogPane1.setHgap(10);
         dialogPane1.setAlignment(Pos.CENTER_LEFT);
 
         // second pane
         FlowPane dialogPane2 = new FlowPane();
-        dialogPane2.setPrefSize(500,100);
+        dialogPane2.setPrefSize(500,50);
         dialogPane2.setPadding(new Insets(10, 20, 10, 35));
-        dialogPane2.setHgap(10);
+		dialogPane2.setHgap(10);
         dialogPane2.setAlignment(Pos.CENTER);
 
 		// third pane
 		FlowPane dialogPane3 = new FlowPane();
-		dialogPane3.setPrefSize(500,100);
+		dialogPane3.setPrefSize(500,50);
 		dialogPane3.setPadding(new Insets(10, 20, 10, 35));
-		dialogPane3.setHgap(10);
+		dialogPane3.setHgap(30);
 		dialogPane3.setAlignment(Pos.CENTER);
 
 		// fourth pane
 		FlowPane dialogPane4 = new FlowPane();
-		dialogPane4.setPrefSize(500,100);
-		dialogPane4.setPadding(new Insets(10, 20, 10, 35));
+		dialogPane4.setPrefSize(500,50);
+		dialogPane4.setPadding(new Insets(10, 20, 0, 35));
 		dialogPane4.setHgap(10);
-		dialogPane4.setAlignment(Pos.CENTER);
+		dialogPane4.setAlignment(Pos.BOTTOM_RIGHT);
 
 
 		// The following "nodes" are to be added to the 0th pane
@@ -339,6 +339,26 @@ public class TalkBoxSim extends Application {
 		browseBtn.setText("Browse...");
 		browseBtn.setWrapText(true);
 		browseBtn.setAlignment(Pos.CENTER);
+		browseBtn.setOnAction(event -> {
+
+			// input action after browse button is clicked here
+			DirectoryChooser dir = new DirectoryChooser();
+			dir.setTitle("Browse for a folder");
+			File defaultDirectory = new File(System.getProperty("user.dir"));
+			dir.setInitialDirectory(defaultDirectory);
+			File selectedDirectory = dir.showDialog(dialog);
+
+			try {
+				if (selectedDirectory.getPath() == null) {
+					throw new Exception();
+				}
+				locationTxtField.setText(selectedDirectory.getPath());
+			}
+			catch (Exception e) {
+
+			}
+
+		});
 
 		// The following "nodes are to be added to the third pane"
 		Label numBtnsLbl = new Label();
@@ -362,12 +382,19 @@ public class TalkBoxSim extends Application {
         finishBtn.setText("Finish");
         finishBtn.setWrapText(true);
         finishBtn.setAlignment(Pos.CENTER);
+        finishBtn.setOnAction(event -> {
+        	// input action after finish button is clicked here
+		});
 
         Button cancelBtn = new Button();
         cancelBtn.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
         cancelBtn.setText("Cancel");
         cancelBtn.setWrapText(true);
         cancelBtn.setAlignment(Pos.CENTER);
+        cancelBtn.setOnAction(event -> {
+        	// input action after cancel button is clicked here
+        	dialog.close();
+		});
 
 		// add all the panes to a Vbox
         VBox dialogVbox = new VBox(20);
