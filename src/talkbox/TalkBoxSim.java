@@ -341,7 +341,7 @@ public class TalkBoxSim extends Application {
 
         // The following "nodes" are to be added to the first pane
         Label nameLbl = new Label();
-        nameLbl.setText("TextBox file name (.tbc): ");
+        nameLbl.setText("TextBox file name (file type: .tbc): ");
 
 		TextField nameTxtField = new TextField();
 		nameTxtField.setPrefWidth(300);
