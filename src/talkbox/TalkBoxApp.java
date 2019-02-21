@@ -40,13 +40,18 @@ import static talkbox.Commands.History.*;
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
  * <p>
- * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code> buttons may be removed, renamed, or have an audio file added to them.
+ * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the
+ * buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code>
+ * buttons may be removed, renamed, or have an audio file added to them.
  * <p>
- * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to select an audio file to use. The configuration may then be saved via <code>File > Save</code>
+ * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to
+ * select an audio file to use. The configuration may then be saved via <code>File > Save</code>
  * <p>
- * The backend of the app uses a FlowPane of buttons in addition to a Pagination control, wrapped together in a VBox. Upon exit, a dialog is presented to ask the user to save the file before exit, or discard its state.
+ * The backend of the app uses a FlowPane of buttons in addition to a Pagination control, wrapped together in a VBox.
+ * Upon exit, a dialog is presented to ask the user to save the file before exit, or discard its state.
  * <p>
- * Furthermore, the TalkBoxApp communicates with a TalkBoxSimulator or TalkBoxDevice via the use of TalkBoxInfo serialized objects described via *.tbc files. As of 01/27/19, TalkBoxApp is a minimum viable product.
+ * Furthermore, the TalkBoxApp communicates with a TalkBoxSimulator or TalkBoxDevice via the use of TalkBoxInfo
+ * serialized objects described via *.tbc files. As of 01/27/19, TalkBoxApp is a minimum viable product.
  * <p>
  *
  * @author EECS 2311 W2019 Z, Group 2
@@ -72,7 +77,8 @@ public class TalkBoxApp extends Application {
 	 * Initializes the app.
 	 *
 	 * @param primaryStage cuz Java needs this
-	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
+	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each
+     * data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 * @see #warnBeforeExit() method to warn user before exit
 	 */
 	@Override
@@ -152,7 +158,8 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * The method that is called whenever an exception is thrown. When an error occurs, an error dialog appears presenting the error and the exception's stacktrace, and consumes the excepted action.
+	 * The method that is called whenever an exception is thrown. When an error occurs, an error dialog appears
+     * presenting the error and the exception's stacktrace, and consumes the excepted action.
 	 *
 	 * @param ex the exception that is thrown
 	 */
@@ -188,7 +195,8 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Upon application close, presents a warning dialog asking the user if they wish to (a) save changes, (b) do not save changes, or (c) cancel
+	 * Upon application close, presents a warning dialog asking the user if they wish to (a) save changes, (b)
+     * do not save changes, or (c) cancel
 	 */
 	private void warnBeforeExit() {
 		primaryStage.setOnCloseRequest(event -> {
@@ -252,7 +260,8 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets. Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method of a pagination
+	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets.
+     * Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method of a pagination
 	 *
 	 * @param page a generalized audio set
 	 * @return the FlowPane created with the buttons
@@ -322,7 +331,8 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Configures the drag and drop operation to allow a user to drag a *.wav file onto a button to change its file. If a non wav file is dragged, the event is consumed and no action occurs
+	 * Configures the drag and drop operation to allow a user to drag a *.wav file onto a button to change its file,
+     * If a non wav file is dragged, the event is consumed and no action occurs
 	 *
 	 * @param page the audio set
 	 */

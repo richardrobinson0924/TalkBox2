@@ -3,7 +3,8 @@ package talkbox;
 import java.util.function.Consumer;
 
 /**
- * Try is a Runnable-like static builder class to assure <code>failSafe.accept()</code> is executed upon failure with a possible additional(s) failure statement executions, such that
+ * Try is a Runnable-like static builder class to assure <code>failSafe.accept()</code> is executed upon failure with a possible
+ * additional(s) failure statement executions, such that
  *
  * <pre>{@code
  * Try.newBuilder().setDefault(() -> {
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
  * }
  * }</pre>
  *
- * Note the <code>otherwise</code> actions are optional. The <code>to()</code> method must be included and <code>run()</code> always last.
+ * Note the <code>otherwise</code> actions are optional. The <code>to()</code> method must be included and <code>run()</code>always last.
  *
  * @author Richard Robinson
  * @apiNote The <code>failSafe</code> method should be implemented in the calling class via
@@ -81,11 +82,14 @@ public final class Try {
 	}
 
 	/**
-	 * Statically sets the failSafe statement(s) to always execute upon an exception being caught in the form of a <code>Consumer</code>. By default, the stack trace is printed. The fail safe should be set before any other methods are called, via
+	 * Statically sets the failSafe statement(s) to always execute upon an exception being caught in the form of a
+	 * <code>Consumer</code>. By default, the stack trace is printed. The fail safe should be set before any other
+	 * methods are called, via
 	 *
 	 * <pre> Try.setFailSafe(ClassName::methodName); </pre>
 	 *
-	 * in which <code>methodName</code> is the method with signature <code> void methodName(Exception e)</code> which includes the statements to be executed
+	 * in which <code>methodName</code> is the method with signature <code> void methodName(Exception e)</code> which
+	 * includes the statements to be executed
 	 *
 	 * @param ex The exception parameter
 	 */

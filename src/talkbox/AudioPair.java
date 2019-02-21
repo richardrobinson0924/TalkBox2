@@ -61,7 +61,8 @@ public class AudioPair implements Serializable {
     }
 
     /**
-     * When serializing, only serialize the wrapped value of the transient fields, and if there's nothing to serialize, serialize null values.
+     * When serializing, only serialize the wrapped value of the transient fields, and if there's nothing to
+     * serialize, serialize null values.
      *
      * @param out the serialization voodoo
      * @throws IOException if it fails

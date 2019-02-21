@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The base data structure of the TalkBox data is a double array of <code>Mapping</code>s, in which each Mapping contains the audio filename (the key) and the audio file's alias (the value; by default, the file name). To retrieve the double array of only the filenames, use <code>getAudioFilenames</code> to produce a shallow copy.
+ * The base data structure of the TalkBox data is a double array of <code>Mapping</code>s, in which each Mapping contains the audio
+ * filename (the key) and the audio file's alias (the value; by default, the file name). To retrieve the double array of only the
+ * filenames, use <code>getAudioFilenames</code> to produce a shallow copy.
  * <p>
  * The file system structure assumes there exists an /Audio folder in the same parent directory as the source .tbc file.
  *

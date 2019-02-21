@@ -36,7 +36,8 @@ public class TTSWizard {
 	}
 
 	/**
-	 * The only public TTS Wizard Dialog launcher and configurator method. If any exceptions occur, the Dialog window is closed and view returns to <code>primaryStage</code>
+	 * The only public TTS Wizard Dialog launcher and configurator method. If any exceptions occur, the Dialog window is
+	 * closed and view returns to <code>primaryStage</code>
 	 *
 	 * @param primaryStage the stage from which the TTSWizard instance is launched from
 	 */
@@ -133,11 +134,13 @@ public class TTSWizard {
 	}
 
 	/**
-	 * DO NOT MODIFY. Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
+	 * DO NOT MODIFY. Independent method to generate an AudioInputStream of <code>text</code>, with the speech variant
+	 * indicated by <code>Voices</code>, with acceptable values of 'A' through 'F', inclusive.
 	 *
 	 * @param text the text to be converted to audio
 	 * @param v    the voice to be used
-	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file or use with <code>Clip</code> class to play directly.
+	 * @return an AudioInputStream of the TTS translation of <code>text</code>. Intended to be used to output to a file
+	 * or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */
 	static AudioInputStream generateAudio(String text, Voice v) throws Exception {
