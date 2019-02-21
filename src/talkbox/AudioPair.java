@@ -69,13 +69,8 @@ public class AudioPair implements Serializable {
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
-        if (isNull()) {
-            out.writeObject(null);
-            out.writeUTF("");
-        } else {
-            out.writeObject(file.get());
-            out.writeUTF(str.get());
-        }
+        out.writeObject(file.getValue());
+        out.writeUTF(str.getValueSafe());
     }
 
     /**

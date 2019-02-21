@@ -254,7 +254,7 @@ public class TalkBoxSim extends Application {
 		for (int i = 0; i < ts.numberOfAudioSets; i++) {
 			List<AudioPair> list = new ArrayList<>();
 			for (int j = 0; j < ts.getNumberOfAudioButtons(); j++) {
-				ts.database.get(i).add(new AudioPair());
+				list.add(new AudioPair());
 			}
 			ts.database.add(list);
 		}

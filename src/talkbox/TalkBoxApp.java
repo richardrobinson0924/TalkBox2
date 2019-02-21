@@ -9,6 +9,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
@@ -52,7 +53,7 @@ import static talkbox.Commands.History.*;
  * @version 0.1
  */
 public class TalkBoxApp extends Application {
-	public TalkBoxData ts;
+	private TalkBoxData ts;
 	public Button[] buttons;
 	private File audioFolder;
 	private MenuItem save;
@@ -289,6 +290,12 @@ public class TalkBoxApp extends Application {
 	}
 
 	private void setButtonAction(int page, int i) {
+		buttons[i].setCursor(Cursor.HAND);
+
+		buttons[i].setTooltip(new Tooltip(data.get(page).get(i).isNull() ? "Click to Add Audio" : "Click to Play Audio"));
+
+		data.get(page).get(i).file.addListener((observable, oldValue, newValue) -> buttons[i].setTooltip(new Tooltip(newValue == null ? "Click to Add Audio" : "Click to Play Audio")));
+
 		buttons[i].setOnAction(event2 -> {
 			if (data.get(page).get(i).isNull()) {
 				final AudioInputStream audio = TTSWizard.launch(TalkBoxApp.primaryStage);
@@ -402,6 +409,9 @@ public class TalkBoxApp extends Application {
 			inner.addListener((ListChangeListener<AudioPair>) c -> save.setDisable(false));
 			data.add(inner);
 		}
+
+		fis.close();
+		oin.close();
 	}
 
 	/**
@@ -418,6 +428,8 @@ public class TalkBoxApp extends Application {
 		oos.writeObject(ts);
 		oos.flush();
 		oos.close();
+		fos.flush();
+		fos.close();
 
 		save.setDisable(true);
 	}
@@ -435,7 +447,7 @@ public class TalkBoxApp extends Application {
 		buttons[i].setGraphic(graphic);
 	}
 
-	public String getFullPath(String s) {
+	private String getFullPath(String s) {
 		return audioFolder.getPath().concat('/' + s);
 	}
 }
