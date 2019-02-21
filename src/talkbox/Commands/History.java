@@ -1,6 +1,7 @@
 package talkbox.Commands;
 
 import talkbox.TalkBoxApp;
+import talkbox.TalkBoxData;
 
 import java.util.Stack;
 
@@ -34,12 +35,10 @@ public final class History {
 	public void execute(final Command command) {
 		stack.push(command);
 		command.execute();
-		TalkBoxApp.setIsChanged(true);
 	}
 
 	public void undo() {
 		if (!isEmpty()) stack.pop().undo();
-		TalkBoxApp.setIsChanged(true);
 	}
 
 	public static void setTalkBoxData(TalkBoxApp tba) {

@@ -14,13 +14,13 @@ import static talkbox.Commands.History.appInstance;
 public final class RemoveCommand implements History.Command {
 	private final int i;
 	private final int j;
-	private TalkBoxData.AudioPair oldPair;
+	private AudioPair oldPair;
 	private Path oldPath;
 
 	public RemoveCommand(int i, int j) {
 		this.i = i;
 		this.j = j;
-		this.oldPair = appInstance.ts.database[i][j];
+		this.oldPair = appInstance.data.get(i).get(j);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public final class RemoveCommand implements History.Command {
 			Files.copy(f.toPath(), oldPath, StandardCopyOption.REPLACE_EXISTING);
 		}).run();
 
-		appInstance.ts.database[i][j] = null;
+		appInstance.data.get(i).get(j).set(null, "");
 		appInstance.buttons[j].setText("Empty");
 
 		Try.newBuilder().setDefault(() -> {
@@ -45,7 +45,7 @@ public final class RemoveCommand implements History.Command {
 
 	@Override
 	public void undo() {
-		appInstance.ts.database[i][j] = oldPair;
+		appInstance.data.get(i).get(j).set(oldPair.getKey(), oldPair.getValue());
 		appInstance.buttons[j].setText(oldPair.getValue());
 
 		Try.newBuilder()

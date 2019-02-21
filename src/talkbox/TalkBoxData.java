@@ -1,7 +1,5 @@
 package talkbox;
 
-import java.io.File;
-import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,42 +14,14 @@ import java.util.List;
 public class TalkBoxData implements TalkBoxConfiguration {
 	private static final long serialVersionUID = 3102272785185579993L;
 
-	public static class AudioPair implements Serializable {
-	    private File file;
-	    private String str;
-
-        public AudioPair(File key, String value) {
-            this.file = key;
-            this.str = value;
-        }
-
-        public File getKey() {
-            return this.file;
-        }
-
-        public File setKey(File file) {
-            this.file = file;
-            return file;
-        }
-
-        public String getValue() {
-            return this.str;
-        }
-
-        public String setValue(String str) {
-            this.str = str;
-            return str;
-        }
-    }
-
     int numberOfAudioButtons = 0;
     int numberOfAudioSets = 0;
     private int totalNumberOfButtons = 0;
     private Path relativePathToAudioFiles = null;
 
-    public AudioPair[][] database = new AudioPair[numberOfAudioSets][numberOfAudioButtons];
+    public List<List<AudioPair>> database = new ArrayList<>();
 
-    List<List<String>> customWords = new ArrayList<>();
+    public List<List<String>> customWords = new ArrayList<>();
 
     @Override
     public int getNumberOfAudioButtons() {
@@ -79,7 +49,7 @@ public class TalkBoxData implements TalkBoxConfiguration {
 
         for (int i = 0; i < getNumberOfAudioSets(); i++) {
             for (int j = 0; j < getTotalNumberOfButtons(); j++) {
-	            fileNames[i][j] = database[i][j].getKey().getName();
+	            fileNames[i][j] = database.get(i).get(j).getKey().getName();
             }
         }
 

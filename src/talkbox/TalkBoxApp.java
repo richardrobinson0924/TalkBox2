@@ -3,7 +3,10 @@ package talkbox;
 import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +19,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sun.misc.IOUtils;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -26,8 +28,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static talkbox.Commands.History.*;
@@ -51,12 +55,12 @@ public class TalkBoxApp extends Application {
 	public TalkBoxData ts;
 	public Button[] buttons;
 	private File audioFolder;
+	private MenuItem save;
+
+	public List<ObservableList<AudioPair>> data = new ArrayList<>();
 
 	private static Path path;
 	private static Stage primaryStage;
-
-	/* DO NOT modify this field directly. Instead, use the `setIsChanged()` method */
-	private static boolean fileIsChanged = false;
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
@@ -114,17 +118,15 @@ public class TalkBoxApp extends Application {
 		final Menu menuView = new Menu("View");
 
 		final MenuItem open = new MenuItem("Open");
-		final MenuItem save = new MenuItem("Save");
+		save = new MenuItem("Save");
+
 		final MenuItem custom = new MenuItem("Custom Phrase List");
 		final MenuItem openSim = new MenuItem("Open in Simulator");
 		final MenuItem undo = new MenuItem("Undo");
 
-		SimpleObjectProperty<TalkBoxData> p = new SimpleObjectProperty<>();
-		p.setValue(ts);
-		p.addListener((observable, oldValue, newValue) -> save.setDisable(false));
-
 		undo.setOnAction(event -> History.getInstance().undo());
 
+		save.setDisable(true);
 		save.setOnAction(e -> Try.newBuilder()
 				.setDefault(this::save)
 				.run());
@@ -189,7 +191,7 @@ public class TalkBoxApp extends Application {
 	 */
 	private void warnBeforeExit() {
 		primaryStage.setOnCloseRequest(event -> {
-			if (!fileIsChanged) return;
+			if (save.isDisable()) return;
 
 			final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("Confirm Exit");
@@ -262,8 +264,8 @@ public class TalkBoxApp extends Application {
 		flowPane.setAlignment(Pos.CENTER);
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			final String caption = (ts.database[page][i] != null)
-					? ts.database[page][i].getValue()
+			final String caption = (!data.get(page).get(i).isNull())
+					? data.get(page).get(i).getValue()
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -280,7 +282,7 @@ public class TalkBoxApp extends Application {
 		setDragAndDrop(page);
 
 		IntStream.range(0, ts.getNumberOfAudioButtons())
-				.filter(i -> ts.database[page][i] != null)
+				.filter(i -> !data.get(page).get(i).isNull())
 				.forEach(this::setGraphic);
 
 		return flowPane;
@@ -288,7 +290,7 @@ public class TalkBoxApp extends Application {
 
 	private void setButtonAction(int page, int i) {
 		buttons[i].setOnAction(event2 -> {
-			if (ts.database[page][i] == null) {
+			if (data.get(page).get(i).isNull()) {
 				final AudioInputStream audio = TTSWizard.launch(TalkBoxApp.primaryStage);
 				if (audio == null) return;
 
@@ -300,8 +302,8 @@ public class TalkBoxApp extends Application {
 						.run();
 
 				History.getInstance().execute(new AddCommand(page, i, f));
-			} else if (ts.database[page][i] != null) {
-				final File soundFile = ts.database[page][i].getKey();
+			} else if (!data.get(page).get(i).isNull()) {
+				final File soundFile = data.get(page).get(i).getKey();
 
 				Try.newBuilder().setDefault(() -> {
 					final Media media = new Media(soundFile.toURI().toString());
@@ -381,20 +383,6 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * An intermediary method to change the state of <code>fileIsChanged</code>. If a file is saved, disable the Save menu item, and don't warn upon application exit. If a file is edited, add <code>(Edited)</code> to the title bar
-	 *
-	 * @param isChanged set to true if a property is modified; set to false upon file save
-	 */
-	public static void setIsChanged(boolean isChanged) {
-		if (fileIsChanged == isChanged) return;
-		fileIsChanged = isChanged;
-
-		primaryStage.setTitle(MessageFormat.format("TalkBox Configurator \u2014 {0}{1}",
-				path.getFileName(),
-				(isChanged) ? " (Edited)" : ""));
-	}
-
-	/**
 	 * Helper method to deserialize <code>file</code> into <code>ts</code>
 	 *
 	 * @throws Exception if an exception occurs
@@ -407,6 +395,13 @@ public class TalkBoxApp extends Application {
 		oin = new ObjectInputStream(fis);
 
 		ts = (TalkBoxData) oin.readObject();
+
+		for (List<AudioPair> list : ts.database) {
+			final ObservableList<AudioPair> inner = FXCollections.observableList(list, (AudioPair p) -> new Observable[]{p.file, p.str});
+
+			inner.addListener((ListChangeListener<AudioPair>) c -> save.setDisable(false));
+			data.add(inner);
+		}
 	}
 
 	/**
@@ -417,10 +412,14 @@ public class TalkBoxApp extends Application {
 	private void save() throws Exception {
 		final FileOutputStream fos = new FileOutputStream(path.toFile());
 		final ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+		ts.database = data.stream().map(ArrayList::new).collect(Collectors.toList());
+
 		oos.writeObject(ts);
 		oos.flush();
 		oos.close();
-		setIsChanged(false);
+
+		save.setDisable(true);
 	}
 
 	/**

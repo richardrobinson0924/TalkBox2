@@ -93,7 +93,6 @@ public final class CustomDataView extends Application {
 
 			if (event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.DELETE)) {
 				col.getTableView().getItems().remove(cell);
-				TalkBoxApp.setIsChanged(true);
 
 				ts.customWords.set(index, new ArrayList<>(data));
 			}
@@ -118,7 +117,6 @@ public final class CustomDataView extends Application {
 			ts.customWords.set(index, new ArrayList<>(data));
 
 			addString.clear();
-			TalkBoxApp.setIsChanged(true);
 		});
 
 		final Label label = new Label("Add " + name + ": ");

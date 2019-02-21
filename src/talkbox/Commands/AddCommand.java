@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import talkbox.*;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import static talkbox.Commands.History.appInstance;
 
@@ -18,7 +19,7 @@ public final class AddCommand implements History.Command {
 		this.i = i;
 		this.j = j;
 		this.file = f;
-		this.isNull = appInstance.ts.database[i][j] == null;
+		this.isNull = appInstance.data.get(i).get(j).isNull();
 		this.r = new RemoveCommand(i, j);
 	}
 
@@ -26,7 +27,7 @@ public final class AddCommand implements History.Command {
 	public void execute() {
 		if (!isNull) r.execute();
 
-		appInstance.ts.database[i][j] = new TalkBoxData.AudioPair(file, file.getName());
+		appInstance.data.get(i).get(j).set(file, file.getName());
 		appInstance.buttons[j].setText(file.getName());
 
 		appInstance.makeContextMenu(i, j);
@@ -37,12 +38,16 @@ public final class AddCommand implements History.Command {
 	public void undo() {
 		if (!isNull) r.undo();
 		else {
-			appInstance.ts.database[i][j] = null;
+			appInstance.data.get(i).get(j).set(null, "");
 			appInstance.buttons[j].setText("Empty");
 
 			final ImageView blank = new ImageView();
 			blank.setImage(null);
 			appInstance.buttons[j].setGraphic(blank);
+
+			Try.newBuilder().setDefault(() -> {
+				if (file.exists()) Files.delete(file.toPath());
+			}).run();
 		}
 	}
 }

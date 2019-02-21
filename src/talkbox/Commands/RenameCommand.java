@@ -13,7 +13,7 @@ public final class RenameCommand implements History.Command {
 	public RenameCommand(int i, int j) {
 		this.i = i;
 		this.j = j;
-		this.oldName = appInstance.ts.database[i][j].getValue();
+		this.oldName = appInstance.data.get(i).get(j).getValue();
 	}
 
 	@Override
@@ -27,13 +27,13 @@ public final class RenameCommand implements History.Command {
 		result.ifPresent(name -> {
 			appInstance.buttons[j].setText(name);
 
-			appInstance.ts.database[i][j].setValue(name);
+			appInstance.data.get(i).get(j).setValue(name);
 		});
 	}
 
 	@Override
 	public void undo() {
 		appInstance.buttons[j].setText(oldName);
-		appInstance.ts.database[i][j].setValue(oldName);
+		appInstance.data.get(i).get(j).setValue(oldName);
 	}
 }
