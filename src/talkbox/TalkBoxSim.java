@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -206,8 +207,8 @@ public class TalkBoxSim extends Application {
 
 		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			String caption = (ts.database[page][i] != null)
-					? ts.database[page][i].getValue()
+			String caption = (!ts.database.get(page).get(i).isNull())
+					? ts.database.get(page).get(i).getValue()
 					: "Empty";
 
 			buttons[i] = new Button(caption);
@@ -240,7 +241,7 @@ public class TalkBoxSim extends Application {
         	return;
 		}
 
-		File testTBC = new File(savedDir + "\\" + savedName +  ".tbc");
+		File testTBC = Paths.get(savedDir, savedName + ".tbc").toFile();
 		FileOutputStream fos = new FileOutputStream(testTBC);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		TalkBoxData ts = new TalkBoxData();
@@ -248,22 +249,21 @@ public class TalkBoxSim extends Application {
 		ts.numberOfAudioSets = numAudioSets;
 
 
-		ts.database = new TalkBoxData.AudioPair[ts.numberOfAudioSets][ts.numberOfAudioButtons];
+		ts.database = new ArrayList<>();
 
 		for (int i = 0; i < ts.numberOfAudioSets; i++) {
+			List<AudioPair> list = new ArrayList<>();
 			for (int j = 0; j < ts.getNumberOfAudioButtons(); j++) {
-				ts.database[i][j] = null;
+				ts.database.get(i).add(new AudioPair());
 			}
+			ts.database.add(list);
 		}
 
 		List<String> list = new ArrayList<>();
-		list.add("hi");
 
 		List<String> list1 = new ArrayList<>();
-		list1.add("bye");
 
 		List<String> list2 = new ArrayList<>();
-		list2.add("sigh");
 
 		List<List<String>> master = new ArrayList<>();
 		master.add(list);
