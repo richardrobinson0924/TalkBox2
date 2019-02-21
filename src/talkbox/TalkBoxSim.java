@@ -31,7 +31,9 @@ import java.util.Vector;
 import java.util.stream.IntStream;
 
 /**
- * The TalkBox Simulator simulates the physical device. When the app is launched, the user is prompted to either (a) create a new .tbc file or (b) open an existing file. At any point in the application, the user can launch the TalkBox configurator with the current .tbc file pre-loaded in the Configurator.
+ * The TalkBox Simulator simulates the physical device. When the app is launched, the user is prompted to either (a)
+ * create a new .tbc file or (b) open an existing file. At any point in the application, the user can launch the TalkBox
+ * configurator with the current .tbc file pre-loaded in the Configurator.
  *
  * <p>
  *     <b>Creating a new file:</b>
@@ -41,7 +43,8 @@ import java.util.stream.IntStream;
  * <ul>
  *     <li> Asks where to save file on the disk
  *     <li> Asks how many audio buttons and swap buttons it should have
- *     <li> Once done, on backend creates a TalkBox directory in the location specified. Within the directory, there will be the .tbc file, as well as another directory entitled "Audio" to contain the audio files
+ *     <li> Once done, on backend creates a TalkBox directory in the location specified. Within the directory, there
+ *     will be the .tbc file, as well as another directory entitled "Audio" to contain the audio files
  * </ul>
  *
  * Afterwards, the user will have the option of opening the Configurator with this newly created .tbc file
@@ -50,7 +53,8 @@ import java.util.stream.IntStream;
  *     <b>Opening an Existing File</b>
  * <p>
  *
- * This presents a FileChooser allowing a user to select a .tbc TalkBox Configuration file. Then, an  interface will appear with the following presentation:
+ * This presents a FileChooser allowing a user to select a .tbc TalkBox Configuration file. Then, an  interface will
+ * appear with the following presentation:
  * <ul>
  *     <li> All the required specifications as described on the project outline (buttons with swap buttons acting accordingly
  *     <li> There shall also exist a <code>Custom</code> button with a <code>Play</code> button beside it.
@@ -67,7 +71,9 @@ import java.util.stream.IntStream;
  * <code>simplenlg</code> API creates a new sentence out of the different words.
  *
  * <p>
- * The list of different options for each sentence structure will be provided in a list of lists within the directory (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
+ * The list of different options for each sentence structure will be provided in a list of lists within the directory
+ * (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then
+ * press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
  */
 
 public class TalkBoxSim extends Application {
@@ -121,7 +127,8 @@ public class TalkBoxSim extends Application {
 		/* Added the Creating a new file button */
 		Button newFileBtn = new Button("Create a New File");
 
-		// FYI: when code appears grey (like in the next line) press Alt-Enter and intelliJ will let you convert to lambda expression :)
+		// FYI: when code appears grey (like in the next line) press Alt-Enter and intelliJ will let you convert
+        // to lambda expression :)
 		newFileBtn.setOnAction(event -> {
 			try {
 				createNewTBC();
@@ -178,7 +185,8 @@ public class TalkBoxSim extends Application {
 		FileChooser fileChooser = new FileChooser();
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		fileChooser.setInitialDirectory(workingDirectory);
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)", "*.tbc"); // specifies file type
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TalkBox Config File (.tbc)",
+                "*.tbc"); // specifies file type
 		fileChooser.getExtensionFilters().add(filter); // specifies file type
 
 		fileChooser.setTitle("Open TalkBox File"); // specifies file prompt
@@ -285,7 +293,7 @@ public class TalkBoxSim extends Application {
 	}
 
 	private void openWizardDialog() {
-	    // opens up a pop-up dialog with a wizard-like interface using a stage. Uses a Vbox (children added vertically), which
+	    // opens up a pop-up dialog with a wizard-like interface using a stage. Uses a Vbox (children added vertically),
         // multiple flow panes are added to it and then the Vbox is added to the scene
 	    // creates a dialog after the create new talkbox is pressed
 		// uses a canContinue boolean variable to decide whether the program is ready to move on to the next stage
