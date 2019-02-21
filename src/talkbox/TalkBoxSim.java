@@ -63,7 +63,7 @@ import java.util.stream.IntStream;
  * The custom button is an on-board sentence TTS generator. Upon pressing the button, each audio button transforms into a sentence Subject word (for example, "Richard", "Myself", "You"). Once the user selects the Subject, the audio buttons again transform into Verbs. This process continues for the following sentence structures: subjects, verbs, objects, tenses, and propositional meanings. After the final selection, the <code>simplenlg</code> API creates a new sentence out of the different words.
  *
  * <p>
- * The list of different options for each sentence structure will be provided in a CSV file within the directory (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
+ * The list of different options for each sentence structure will be provided in a list of lists within the directory (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
  */
 
 public class TalkBoxSim extends Application {
