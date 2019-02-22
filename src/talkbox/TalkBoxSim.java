@@ -296,6 +296,9 @@ public class TalkBoxSim extends Application {
 		//set height of play button
 		int playHeight;
 		playHeight=100;
+		//set size of play button
+		play.setPrefSize(playWidth,playHeight);
+		flowPane.getChildren().add(play);
 
 
 		return flowPane;
