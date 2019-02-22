@@ -74,6 +74,37 @@ import java.util.stream.IntStream;
  * The list of different options for each sentence structure will be provided in a list of lists within the directory
  * (first column is Subject, next is Verbs, etc...), which must first be parsed by the Simulator. The user can then
  * press <code>Play</code> to play the newly generated sentence using the Google Cloud TTS service.
+ *
+ * <p>
+ *     <b>Operation</b>
+ * </p>
+ *
+ * The actual device will only have single LED text panel. Hence, the device and simulator should operate precisely as follows:
+ * <ul>
+ *     <li>On the simulator, the buttons will not have labels so as to mimic the device</li>
+ *     <li>The simulator will have a single (decorated) text label centered above the buttons</li>
+ *     <li>When clicking a button, the text label will change to that button's label / caption</li>
+ *     <li>Only after clicking the button again will the audio play</li>
+ *     <li>If the user clicks the 'Custom' button, the text label ill temporarily (~2 seconds) show the text 'Custom'</li>
+ *     <li>Furthermore within custom, clicking a button once will again make the label that of the button's temporarily</li>
+ *     <li>Clicking twice will add the button's label / text to the text label in addition to any other labels that may be there</li>
+ * </ul>
+ *
+ * <p>
+ * The following example highlights how the text label works with the Custom button:
+ * <ul>
+ *     <li>User clicks Custom. (Text Label: "Custom" for ~2 seconds, then blank)</li>
+ *     <li>User selects a subject (Bob). (Text Label: "Bob" for ~1 seconds, then blank)</li>
+ *     <li>User selects the button again. (Text Label: "Bob" [persistant])</li>
+ *
+ *     <li>User selects a verb (run) (Text Label: "Run" for ~2 seconds, then previous state ("Bob")</li>
+ *     <li>User selects button again. (Text Label: "Bob, Run" [persistent])</li>
+ *     <li>...</li>
+ *     <li>Upon selecting last option (tense), the sentence is created and generated onto the text label.</li>
+ *     <li>Clicking the "Play" button plays the sentence and ends the 'custom' creation</li>
+ * </ul>
+ *
+ * <b>Note:</b> If the device is not connected to internet, the device / Simulator should not use the Google TTS service; instead, it should switch to an offline service.
  */
 
 public class TalkBoxSim extends Application {
