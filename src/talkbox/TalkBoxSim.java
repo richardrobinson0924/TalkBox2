@@ -293,6 +293,9 @@ public class TalkBoxSim extends Application {
 		//set width of coustom button
 		int playWidth;
 		playWidth=100;
+		//set height of play button
+		int playHeight;
+		playHeight=100;
 
 
 		return flowPane;
