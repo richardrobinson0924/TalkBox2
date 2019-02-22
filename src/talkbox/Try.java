@@ -1,5 +1,8 @@
 package talkbox;
 
+import com.sun.istack.internal.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

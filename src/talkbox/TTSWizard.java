@@ -3,6 +3,7 @@ package talkbox;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import java.util.Optional;
  * @apiNote This class is fully independent, and can be launched from any JavaFX stage
  */
 public class TTSWizard {
+	public static String text;
 
 	private TTSWizard() {
 	}
@@ -118,15 +120,16 @@ public class TTSWizard {
 		dialog1.getDialogPane().setContent(grid);
 
 		final Optional<ButtonType> result = dialog1.showAndWait();
+		AudioInputStream stream;
 
 		if (!result.isPresent() || result.get() == ButtonType.CANCEL) {
 			dialog1.close();
 		} else if (result.get() == ButtonType.OK) {
 			try {
+				text = phrase.getText();
 				return generateAudio(phrase.getText(), comboBox.getValue());
 			} catch (Exception e) {
 				TalkBoxApp.setFailSafe(e);
-				e.printStackTrace();
 			}
 		}
 
@@ -143,7 +146,7 @@ public class TTSWizard {
 	 * or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */
-	static AudioInputStream generateAudio(String text, Voice v) throws Exception {
+	static AudioInputStream generateAudio(@NotNull String text, Voice v) throws Exception {
 		final GoogleCredentials credentials = GoogleCredentials
 				.fromStream(TTSWizard.class.getResourceAsStream("/Resources/TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));

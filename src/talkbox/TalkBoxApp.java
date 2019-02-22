@@ -1,12 +1,16 @@
 package talkbox;
 
+import com.google.api.client.util.Beta;
 import com.sun.media.sound.WaveFileWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -20,6 +24,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import org.apache.http.annotation.Contract;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -57,6 +63,7 @@ import static talkbox.Commands.History.*;
  * @author EECS 2311 W2019 Z, Group 2
  * @version 0.1
  */
+@Beta
 public class TalkBoxApp extends Application {
 	private TalkBoxData ts;
 	public Button[] buttons;
@@ -65,8 +72,8 @@ public class TalkBoxApp extends Application {
 
 	public List<ObservableList<AudioPair>> data = new ArrayList<>();
 
-	private static Path path;
-	private static Stage primaryStage;
+	private Path path;
+	private Stage primaryStage;
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
@@ -79,11 +86,10 @@ public class TalkBoxApp extends Application {
 	 * @param primaryStage cuz Java needs this
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each
      * data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
-	 * @see #warnBeforeExit() method to warn user before exit
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		TalkBoxApp.primaryStage = primaryStage;
+		this.primaryStage = primaryStage;
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
 		path = Paths.get(this.getParameters().getRaw().get(0));
 
@@ -112,7 +118,35 @@ public class TalkBoxApp extends Application {
 		open(box, scene);
 
 		/* Upon exit, call method to prompt user to save */
-		warnBeforeExit();
+		primaryStage.setOnCloseRequest(this::warnBeforeExit);
+	}
+
+	private void warnBeforeExit(WindowEvent event) {
+		if (save.isDisable()) return;
+
+		final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Confirm Exit");
+		alert.setHeaderText("Save File?");
+		alert.setContentText("Please choose an option.");
+
+		final ButtonType yesButton = new ButtonType("Yes");
+		final ButtonType noButton = new ButtonType("No");
+		final ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+		alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+
+		final Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent() && result.get() == yesButton) {
+			event.consume();
+			Try.newBuilder()
+					.setDefault(TalkBoxApp.this::save)
+					.run();
+			Platform.exit();
+		} else if (result.isPresent() && result.get() == noButton) {
+			Platform.exit();
+		} else if (result.isPresent() && result.get() == cancelButton) {
+			event.consume();
+		}
 	}
 
 	private MenuBar makeMenuBar(VBox box, Scene scene) {
@@ -195,40 +229,6 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Upon application close, presents a warning dialog asking the user if they wish to (a) save changes, (b)
-     * do not save changes, or (c) cancel
-	 */
-	private void warnBeforeExit() {
-		primaryStage.setOnCloseRequest(event -> {
-			if (save.isDisable()) return;
-
-			final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-			alert.setTitle("Confirm Exit");
-			alert.setHeaderText("Save File?");
-			alert.setContentText("Please choose an option.");
-
-			final ButtonType yesButton = new ButtonType("Yes");
-			final ButtonType noButton = new ButtonType("No");
-			final ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-			alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
-
-			final Optional<ButtonType> result = alert.showAndWait();
-			if (result.isPresent() && result.get() == yesButton) {
-				event.consume();
-				Try.newBuilder()
-						.setDefault(this::save)
-						.run();
-				Platform.exit();
-			} else if (result.isPresent() && result.get() == noButton) {
-				Platform.exit();
-			} else if (result.isPresent() && result.get() == cancelButton) {
-				event.consume();
-			}
-		});
-	}
-
-	/**
 	 * Method reference to open a file, then passes control to <code>configButtons</code>
 	 *
 	 * @see #configButtons(int)
@@ -282,10 +282,20 @@ public class TalkBoxApp extends Application {
 
 			buttons[i].setContentDisplay(ContentDisplay.TOP);
 			buttons[i].setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
+			buttons[i].setCursor(Cursor.HAND);
+
+			buttons[i].textProperty().bind(
+					Bindings.when(data.get(page).get(i).str.isEmpty().not())
+							.then(data.get(page).get(i).str)
+							.otherwise("Empty")
+			);
+
+			int finalI = i;
+			data.get(page).get(i).file.addListener((observable, oldValue, newValue) -> buttons[finalI].setTooltip(new Tooltip(newValue == null ? "Click to Add Audio" : "Click to Play Audio")));
 
 			flowPane.getChildren().add(buttons[i]);
 
-			setButtonAction(page, i);
+			buttons[i].setOnAction(event -> setAction(page, finalI));
 			makeContextMenu(page, i);
 		}
 
@@ -298,36 +308,29 @@ public class TalkBoxApp extends Application {
 		return flowPane;
 	}
 
-	private void setButtonAction(int page, int i) {
-		buttons[i].setCursor(Cursor.HAND);
+	private void setAction(int page, int i) {
+		if (data.get(page).get(i).isNull()) {
+			final AudioInputStream audio = TTSWizard.launch(primaryStage);
+			if (audio == null) return;
 
-		buttons[i].setTooltip(new Tooltip(data.get(page).get(i).isNull() ? "Click to Add Audio" : "Click to Play Audio"));
+			final WaveFileWriter w = new WaveFileWriter();
+			final File f = new File(appInstance.getFullPath("Audio_" + page + i + ".wav"));
 
-		data.get(page).get(i).file.addListener((observable, oldValue, newValue) -> buttons[i].setTooltip(new Tooltip(newValue == null ? "Click to Add Audio" : "Click to Play Audio")));
+			Try.newBuilder()
+					.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
+					.run();
 
-		buttons[i].setOnAction(event2 -> {
-			if (data.get(page).get(i).isNull()) {
-				final AudioInputStream audio = TTSWizard.launch(TalkBoxApp.primaryStage);
-				if (audio == null) return;
+			History.getInstance().execute(new AddCommand(page, i, f));
 
-				final WaveFileWriter w = new WaveFileWriter();
-				final File f = new File(appInstance.getFullPath("Audio_" + page + i + ".wav"));
+		} else if (!data.get(page).get(i).isNull()) {
+			final File soundFile = data.get(page).get(i).getKey();
 
-				Try.newBuilder()
-						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
-						.run();
-
-				History.getInstance().execute(new AddCommand(page, i, f));
-			} else if (!data.get(page).get(i).isNull()) {
-				final File soundFile = data.get(page).get(i).getKey();
-
-				Try.newBuilder().setDefault(() -> {
-					final Media media = new Media(soundFile.toURI().toString());
-					final MediaPlayer player = new MediaPlayer(media);
-					player.play();
-				}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(page, i))).run();
-			}
-		});
+			Try.newBuilder().setDefault(() -> {
+				final Media media = new Media(soundFile.toURI().toString());
+				final MediaPlayer player = new MediaPlayer(media);
+				player.play();
+			}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(page, i))).run();
+		}
 	}
 
 	/**

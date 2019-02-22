@@ -32,7 +32,6 @@ public final class RemoveCommand implements History.Command {
 		}).run();
 
 		appInstance.data.get(i).get(j).set(null, "");
-		appInstance.buttons[j].setText("Empty");
 
 		Try.newBuilder().setDefault(() -> {
 			if (f.exists()) Files.delete(f.toPath());
@@ -46,7 +45,6 @@ public final class RemoveCommand implements History.Command {
 	@Override
 	public void undo() {
 		appInstance.data.get(i).get(j).set(oldPair.getKey(), oldPair.getValue());
-		appInstance.buttons[j].setText(oldPair.getValue());
 
 		Try.newBuilder()
 				.setDefault(() -> Files.copy(oldPath, new FileOutputStream(oldPair.getKey().getPath())))

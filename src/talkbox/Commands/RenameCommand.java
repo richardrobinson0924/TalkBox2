@@ -24,11 +24,7 @@ public final class RenameCommand implements History.Command {
 		dialog.setContentText("Please enter the new name:");
 
 		final Optional<String> result = dialog.showAndWait();
-		result.ifPresent(name -> {
-			appInstance.buttons[j].setText(name);
-
-			appInstance.data.get(i).get(j).setValue(name);
-		});
+		result.ifPresent(name -> appInstance.data.get(i).get(j).setValue(name));
 	}
 
 	@Override

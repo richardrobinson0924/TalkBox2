@@ -27,8 +27,7 @@ public final class AddCommand implements History.Command {
 	public void execute() {
 		if (!isNull) r.execute();
 
-		appInstance.data.get(i).get(j).set(file, file.getName());
-		appInstance.buttons[j].setText(file.getName());
+		appInstance.data.get(i).get(j).set(file, TTSWizard.text);
 
 		appInstance.makeContextMenu(i, j);
 		appInstance.setGraphic(j);
@@ -39,7 +38,6 @@ public final class AddCommand implements History.Command {
 		if (!isNull) r.undo();
 		else {
 			appInstance.data.get(i).get(j).set(null, "");
-			appInstance.buttons[j].setText("Empty");
 
 			final ImageView blank = new ImageView();
 			blank.setImage(null);
