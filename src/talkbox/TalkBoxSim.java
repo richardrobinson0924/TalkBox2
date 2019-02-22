@@ -285,9 +285,15 @@ public class TalkBoxSim extends Application {
 		coustom.setPrefSize(coustomWidth,coustomHeight);
 		flowPane.getChildren().add(coustom);
 
-		Button Play;
+		Button play;
 		String titlePlay;
 		titlePlay="Play";
+		//create new instance of button called play
+		play = new Button (titleCoustom);
+		//set width of coustom button
+		int playWidth;
+		playWidth=100;
+
 
 		return flowPane;
 	}
