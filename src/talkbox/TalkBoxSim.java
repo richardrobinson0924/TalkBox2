@@ -258,7 +258,6 @@ public class TalkBoxSim extends Application {
 			buttons[i].setPrefSize(100, 100);
 			flowPane.getChildren().add(buttons[i]);
 		}
-
 		// on button press
 		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> buttons[i].setOnAction(event2 -> {
 
@@ -269,6 +268,22 @@ public class TalkBoxSim extends Application {
 //				player.play();
 //			}).run();
 		}));
+
+		//Coustom Button
+		Button coustom;
+		String titleCoustom;
+		titleCoustom="coustom";
+		//create new isntance of button called coustom
+		coustom = new Button (titleCoustom);
+		//set width of coustom button
+		int coustomWidth;
+		coustomWidth=100;
+		//set height of coustom button
+		int coustomHeight;
+		coustomHeight=100;
+		//set size of coustom button
+		coustom.setPrefSize(coustomWidth,coustomHeight);
+		flowPane.getChildren().add(coustom);
 
 		return flowPane;
 	}
