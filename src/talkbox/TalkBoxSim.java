@@ -2,8 +2,6 @@ package talkbox;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,21 +11,19 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
-import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.IntStream;
 
 /**
@@ -389,7 +385,7 @@ public class TalkBoxSim extends Application {
         // 0th pane
 		FlowPane dialogPane0 = new FlowPane();
 		dialogPane0.setPrefSize(500,25);
-		dialogPane0.setPadding(new Insets(10, 20, 5, 35));
+		dialogPane0.setPadding(new Insets(30, 20, 5, 35));
 		dialogPane0.setAlignment(Pos.BOTTOM_LEFT);
 
         // first pane
@@ -404,14 +400,14 @@ public class TalkBoxSim extends Application {
         dialogPane2.setPrefSize(500,50);
         dialogPane2.setPadding(new Insets(10, 20, 10, 35));
 		dialogPane2.setHgap(10);
-        dialogPane2.setAlignment(Pos.CENTER);
+		dialogPane2.setAlignment(Pos.CENTER_LEFT);
 
 		// third pane
 		FlowPane dialogPane3 = new FlowPane();
 		dialogPane3.setPrefSize(500,50);
-		dialogPane3.setPadding(new Insets(10, 20, 10, 35));
-		dialogPane3.setHgap(30);
-		dialogPane3.setAlignment(Pos.CENTER);
+		dialogPane3.setPadding(new Insets(10, 35, 10, 35));
+		dialogPane3.setHgap(20);
+		dialogPane3.setAlignment(Pos.CENTER_LEFT);
 
 		// fourth pane
 		FlowPane dialogPane4 = new FlowPane();
@@ -437,6 +433,10 @@ public class TalkBoxSim extends Application {
 		TextField nameTxtField = new TextField();
 		nameTxtField.setPrefWidth(300);
 
+		ValidationSupport nameValidation = new ValidationSupport();
+		nameValidation.registerValidator(nameTxtField, Validator.createEmptyValidator("Name is required"));
+		nameValidation.setErrorDecorationEnabled(true);
+
 
         // The following "nodes are to be added to the second pane"
 		Label locationLbl = new Label();
@@ -446,6 +446,7 @@ public class TalkBoxSim extends Application {
 		locationTxtField.setEditable(false);
 		locationTxtField.setPrefWidth(300);
 		locationTxtField.setMouseTransparent(true);
+		locationTxtField.setText(System.getProperty("user.dir"));
 
 		Button browseBtn = new Button();
 		browseBtn.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
@@ -472,10 +473,23 @@ public class TalkBoxSim extends Application {
 		Label numSetsLbl = new Label();
 		numSetsLbl.setText("Number of Sets: ");
 
-		String [] numBtnsChoices = {"1","2","3","4","5"};
-		String [] numSetsChoices = {"1","2","3","4","5","6","7","8"};
-		ComboBox <String> numBtnsComboBox = new ComboBox<>(FXCollections.observableArrayList(numBtnsChoices));
-		ComboBox <String> numSetsComboBox = new ComboBox<>(FXCollections.observableArrayList(numSetsChoices));
+		TextField numBtnsTxtField = new TextField();
+		TextField numSetsTxtField = new TextField();
+		numBtnsTxtField.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+		numSetsTxtField.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+
+		ValidationSupport numBtnsValidation = new ValidationSupport();
+		numBtnsValidation.registerValidator(numBtnsTxtField, Validator.createEmptyValidator("Enter a number"));
+		numBtnsValidation.setErrorDecorationEnabled(true);
+
+		ValidationSupport numSetsValidation = new ValidationSupport();
+		numSetsValidation.registerValidator(numSetsTxtField, Validator.createEmptyValidator("Enter a number"));
+		numSetsValidation.setErrorDecorationEnabled(true);
+
+//		String [] numBtnsChoices = {"1","2","3","4","5"};
+//		String [] numSetsChoices = {"1","2","3","4","5","6","7","8"};
+//		ComboBox <String> numBtnsComboBox = new ComboBox<>(FXCollections.observableArrayList(numBtnsChoices));
+//		ComboBox <String> numSetsComboBox = new ComboBox<>(FXCollections.observableArrayList(numSetsChoices));
 
 		// how to get a selected item from the combobox
 		//numBtnsComboBox.getSelectionModel().getSelectedItem().toString();
@@ -491,14 +505,15 @@ public class TalkBoxSim extends Application {
         finishBtn.setOnAction(event -> {
         	// input action after finish button is clicked here
 			try {
-				int numBtns = Integer.parseInt(numBtnsComboBox.getSelectionModel().getSelectedItem());
-				int numSets = Integer.parseInt(numSetsComboBox.getSelectionModel().getSelectedItem());
-				String selectedDir = locationTxtField.getText();
+				int numBtns = Integer.parseInt(numBtnsTxtField.getText().trim());
+				int numSets = Integer.parseInt(numBtnsTxtField.getText().trim());
+				String selectedDir = locationTxtField.getText().trim();
 				String talkBoxName = nameTxtField.getText().trim();
-				if (selectedDir == null) {
+				if (isValidFilePath(selectedDir)) {
 					throw new Exception();
 				}
                 if (talkBoxName == null) {
+					nameValidation.initInitialDecoration();
                     throw new Exception();
                 }
 
@@ -530,7 +545,7 @@ public class TalkBoxSim extends Application {
         dialogPane0.getChildren().add(enterNameLbl);
         dialogPane1.getChildren().addAll(nameLbl, nameTxtField);
         dialogPane2.getChildren().addAll(locationLbl, locationTxtField, browseBtn);
-        dialogPane3.getChildren().addAll(numBtnsLbl,numBtnsComboBox,numSetsLbl,numSetsComboBox);
+        dialogPane3.getChildren().addAll(numBtnsLbl,numBtnsTxtField,numSetsLbl,numSetsTxtField);
         dialogPane4.getChildren().addAll(finishBtn,cancelBtn);
 
 		// add the Vbox to the dialog scene and show it
@@ -552,5 +567,14 @@ public class TalkBoxSim extends Application {
 
 	private String getFullPath(String s) {
 		return audioFolder.getPath().concat('/' + s);
+	}
+
+	private boolean isValidFilePath(String path) {
+		File currentPath = new File(path);
+		return currentPath.isDirectory();
+	}
+
+	private boolean isValidFileName (String name){
+		return false;
 	}
 }
