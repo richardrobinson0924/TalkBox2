@@ -509,10 +509,10 @@ public class TalkBoxSim extends Application {
 				int numSets = Integer.parseInt(numBtnsTxtField.getText().trim());
 				String selectedDir = locationTxtField.getText().trim();
 				String talkBoxName = nameTxtField.getText().trim();
-				if (isValidFilePath(selectedDir)) {
+				if (!isValidFilePath(selectedDir)) {
 					throw new Exception();
 				}
-                if (talkBoxName == null) {
+                if (nameTxtField.getText().trim().isEmpty()) {
 					nameValidation.initInitialDecoration();
                     throw new Exception();
                 }
@@ -574,7 +574,11 @@ public class TalkBoxSim extends Application {
 		return currentPath.isDirectory();
 	}
 
+	// make many of the Nodes to be field (global) variables to be accessed here in this method for example
 	private boolean isValidFileName (String name){
-		return false;
+		if (name == null) {
+			return false;
+		}
+		return true;
 	}
 }
