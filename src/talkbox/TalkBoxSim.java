@@ -273,7 +273,7 @@ public class TalkBoxSim extends Application {
 		Button coustom;
 		String titleCoustom;
 		titleCoustom="coustom";
-		//create new isntance of button called coustom
+		//create new instance of button called coustom
 		coustom = new Button (titleCoustom);
 		//set width of coustom button
 		int coustomWidth;
@@ -284,6 +284,10 @@ public class TalkBoxSim extends Application {
 		//set size of coustom button
 		coustom.setPrefSize(coustomWidth,coustomHeight);
 		flowPane.getChildren().add(coustom);
+
+		Button Play;
+		String titlePlay;
+		titlePlay="Play";
 
 		return flowPane;
 	}
