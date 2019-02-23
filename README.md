@@ -10,5 +10,7 @@ TalkBox is a simple Text-to-Speech \(TTS\) device for those with difficulty spea
 
 ![TalkBox Configurator Window](.gitbook/assets/screen-shot-2019-02-02-at-11.36.13-am.png)
 
+The TalkBox app itself is accessibility-minded, and compatable with most Screen Readers and Assistive Technologies.
+
 {% page-ref page="using-the-configurator.md" %}
 

@@ -14,13 +14,17 @@ The TalkBox device already comes with a TBC file specifying its number of button
 {% endtab %}
 
 {% tab title="Simulator" %}
-1. On the TCB app, go to `View > Launch Simulator`
-2. On the Simulator, you can either open an existing TBC file or create a new one
-3. If you create a new TBC file, the Set Up Wizard will guide you to customize the number of buttons and audio sets
+1. On the Simulator, you can either open an existing TBC file or create a new one
+2. If you create a new TBC file, the Set Up Wizard will guide you to customize the number of buttons and audio sets
+3. Otherwise, the TBC file is opened in the simulator, which acts like a standard TalkBox Device.
 {% endtab %}
 {% endtabs %}
 
 ## Using TalkBox
 
-Once your TalkBox is set up, it's simple to use. Simply click on any of the assigned audio buttons to play the audio, or click on a swap button to go to the next audio set
+Once your TalkBox is set up, it's simple to use. Simply click on any of the assigned audio buttons once to preview the audio file's name on the display, and twice to play the audio. Or, click a swap button to go to the next audio set.
+
+If you wish to create your own sentences, click the `Custom` button. Each audio set transforms into a part of speech \(nouns, verbs, tense, etc\). For each audio set, select the desired word, and the sentence will be displayed in real time. 
+
+When you are finished, click `Play` to generate and play the custom audio via TTS. Otherwise, click `Custom` again to return to the default mode.
 
