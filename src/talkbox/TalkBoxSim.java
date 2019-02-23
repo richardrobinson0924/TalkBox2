@@ -234,12 +234,71 @@ public class TalkBoxSim extends Application {
 		Pagination pagination = new Pagination(ts.numberOfAudioSets);
 		box.getChildren().add(pagination);
 
+		FlowPane flowPane = new FlowPane();
+		flowPane.setPadding(new Insets(30, 20, 30, 20));
+		flowPane.setPrefSize(100,25);
+		flowPane.setVgap(10);
+		flowPane.setHgap(10);
+		flowPane.setAlignment(Pos.CENTER);
+
+		//custom Button
+		Button custom;
+		String titleCustom;
+		titleCustom="Custom";
+		//create new instance of button called custom
+		custom = new Button (titleCustom);
+		//set width of custom button
+		int customWidth;
+		customWidth=80;
+		//set height of custom button
+		int customHeight;
+		customHeight=50;
+		//set size of custom button
+		custom.setPrefSize(customWidth,customHeight);
+		flowPane.getChildren().add(custom);
+		custom.setAlignment(Pos.CENTER);
+		//translate custom button to bottom left
+		int customX_Translate;
+		customX_Translate=-160;
+		int customY_Translate;
+		customY_Translate=180;
+		custom.setTranslateX(customX_Translate);
+		custom.setTranslateY(customY_Translate);
+
+
+
+		//PLAY BUTTON-------------------------------------------------------
+		Button play;
+		String titlePlay;
+		titlePlay="Play";
+		//create new instance of button called play
+		play = new Button (titlePlay);
+		//set width of play button
+		int playWidth;
+		playWidth=80;
+		//set height of play button
+		int playHeight;
+		playHeight=50;
+		//set size of play button
+		play.setPrefSize(playWidth,playHeight);
+		flowPane.getChildren().add(play);
+		play.setAlignment(Pos.CENTER);
+		//translate play button to bottom left
+		int playX_Translate;
+		playX_Translate=50;
+		int playY_Translate;
+		playY_Translate=180;
+		play.setTranslateX(playX_Translate);
+		play.setTranslateY(playY_Translate);
+
+
 		pagination.setPageFactory(this::configButtons);
 	}
 
 	private FlowPane configButtons(int page) {
 		FlowPane flowPane = new FlowPane();
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
+		flowPane.setPrefSize(100,25);
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
@@ -265,54 +324,56 @@ public class TalkBoxSim extends Application {
 //			}).run();
 		}));
 
-        //custom Button
-        Button custom;
-        String titleCustom;
-        titleCustom="Custom";
-        //create new instance of button called custom
-        custom = new Button (titleCustom);
-        //set width of custom button
-        int customWidth;
-        customWidth=80;
-        //set height of custom button
-        int customHeight;
-        customHeight=50;
-        //set size of custom button
-        custom.setPrefSize(customWidth,customHeight);
-        flowPane.getChildren().add(custom);
-        custom.setAlignment(Pos.CENTER);
-        //translate custom button to bottom left
-        /*int customX_Translate;
-        customX_Translate=-160;
-        int customY_Translate;
-        customY_Translate=180;
-        custom.setTranslateX(customX_Translate);
-        custom.setTranslateY(customY_Translate);*/
+	/*	//TEST custom Button
+		Button custom;
+		String titleCustom;
+		titleCustom="Custom";
+		//create new instance of button called custom
+		custom = new Button (titleCustom);
+		//set width of custom button
+		int customWidth;
+		customWidth=80;
+		//set height of custom button
+		int customHeight;
+		customHeight=50;
+		//set size of custom button
+		custom.setPrefSize(customWidth,customHeight);
+		flowPane.getChildren().add(custom);
+		custom.setAlignment(Pos.CENTER);
+		//translate custom button to bottom left
+		/*int customX_Translate;
+		customX_Translate=-160;
+		int customY_Translate;
+		customY_Translate=180;
+		custom.setTranslateX(customX_Translate);
+		custom.setTranslateY(customY_Translate);*/
 
 
-        //PLAY BUTTON-------------------------------------------------------
-        Button play;
-        String titlePlay;
-        titlePlay="Play";
-        //create new instance of button called play
-        play = new Button (titlePlay);
-        //set width of play button
-        int playWidth;
-        playWidth=80;
-        //set height of play button
-        int playHeight;
-        playHeight=50;
-        //set size of play button
-        play.setPrefSize(playWidth,playHeight);
-        flowPane.getChildren().add(play);
-        play.setAlignment(Pos.CENTER);
-        //translate play button to bottom left
-       /* int playX_Translate;
-        playX_Translate=50;
-        int playY_Translate;
-        playY_Translate=180;
-        play.setTranslateX(playX_Translate);
-        play.setTranslateY(playY_Translate);*/
+/*
+		//PLAY BUTTON-------------------------------------------------------
+		Button play;
+		String titlePlay;
+		titlePlay="Play";
+		//create new instance of button called play
+		play = new Button (titlePlay);
+		//set width of play button
+		int playWidth;
+		playWidth=80;
+		//set height of play button
+		int playHeight;
+		playHeight=50;
+		//set size of play button
+		play.setPrefSize(playWidth,playHeight);
+		flowPane.getChildren().add(play);
+		play.setAlignment(Pos.CENTER);
+		//translate play button to bottom left
+		int playX_Translate;
+		playX_Translate=50;
+		int playY_Translate;
+		playY_Translate=180;
+		play.setTranslateX(playX_Translate);
+		play.setTranslateY(playY_Translate);
+		*/
 
 		return flowPane;
 	}
