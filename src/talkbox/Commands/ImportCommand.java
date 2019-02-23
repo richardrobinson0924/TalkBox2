@@ -26,7 +26,7 @@ public final class ImportCommand implements History.Command {
 		for (int i = 0; i < appInstance.data.size(); i++) {
 			for (int j = 0; j < appInstance.data.get(0).size(); j++) {
 				if (!it.hasNext()) return;
-				if (!appInstance.data.get(i).get(j).isNull()) continue;
+				if (!appInstance.data.get(i).get(j).isNull().get()) continue;
 
 				adds[index] = new AddCommand(i, j, it.next().toFile(), AddCommand.Type.FILE);
 				adds[index++].execute();

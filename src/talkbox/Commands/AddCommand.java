@@ -40,7 +40,7 @@ public final class AddCommand implements History.Command {
 		this.i = i;
 		this.j = j;
 		this.file = f;
-		this.isNull = appInstance.data.get(i).get(j).isNull();
+		this.isNull = appInstance.data.get(i).get(j).isNull().get();
 		this.r = new RemoveCommand(i, j);
 		this.type = type;
 		this.oldPair = appInstance.data.get(i).get(j);
@@ -53,7 +53,7 @@ public final class AddCommand implements History.Command {
 
 	@Override
 	public void execute() {
-		if (!oldPair.isNull()) r.execute();
+		if (!oldPair.isNull().get()) r.execute();
 
 		Try.newBuilder().setDefault(() -> {
 			if (type.equals(Type.FILE)) {
@@ -66,20 +66,11 @@ public final class AddCommand implements History.Command {
 				appInstance.data.get(i).get(j).set(file, TTSWizard.text);
 			}
 		}).run();
-
-		appInstance.makeContextMenu(i, j);
-		appInstance.setGraphic(j);
 	}
 
 	@Override
 	public void undo() {
-		if (isNull) {
-			appInstance.data.get(i).get(j).set(null, null);
-
-			final ImageView blank = new ImageView();
-			blank.setImage(null);
-			appInstance.buttons[j].setGraphic(blank);
-		}
+		if (isNull) appInstance.data.get(i).get(j).set(null, null);
 		else r.undo();
 	}
 }

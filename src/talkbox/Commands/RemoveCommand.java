@@ -37,10 +37,6 @@ public final class RemoveCommand implements History.Command {
 		Try.newBuilder().setDefault(() -> {
 			if (f.exists()) Files.delete(f.toPath());
 		}).run();
-
-		final ImageView blank = new ImageView();
-		blank.setImage(null);
-		appInstance.buttons[j].setGraphic(blank);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package talkbox.Commands;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.*;
 import talkbox.TalkBoxApp;
 
 import java.util.Stack;
@@ -19,6 +21,7 @@ public final class History {
 
 	private static History instance = null;
 	private final Stack<Command> stack = new Stack<>();
+	private final SimpleIntegerProperty size = new SimpleIntegerProperty(0);
 
 	public interface Command {
 		void execute();
@@ -29,10 +32,6 @@ public final class History {
 	private History() {
 	}
 
-	public boolean isEmpty() {
-		return stack.empty();
-	}
-
 	public static History getInstance() {
 		if (History.instance == null) synchronized (History.class) {
 			if (History.instance == null) History.instance = new History();
@@ -41,13 +40,19 @@ public final class History {
 		return History.instance;
 	}
 
+	public BooleanBinding getIsEmptyProperty() {
+		return size.isEqualTo(0);
+	}
+
 	public void execute(final Command command) {
+		size.setValue(size.get() + 1);
 		stack.push(command);
 		command.execute();
 	}
 
 	public void undo() {
-		if (!isEmpty()) stack.pop().undo();
+		if (!stack.empty()) stack.pop().undo();
+		size.setValue(size.get() - 1);
 	}
 
 	public static void setTalkBoxData(TalkBoxApp tba) {
