@@ -118,8 +118,8 @@ public class TalkBoxSim extends Application {
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
 
-	private final int MINOR_BUTTON_HEIGHT = 20;
-	private final int MINOR_BUTTON_WIDTH = 85;
+	private static final int MINOR_BUTTON_HEIGHT = 20;
+	private static final int MINOR_BUTTON_WIDTH = 85;
 	private boolean canContinue = false;
 	private String savedDir;
 	private String savedName;
@@ -239,7 +239,7 @@ public class TalkBoxSim extends Application {
 
 	private FlowPane configButtons(int page) {
 		FlowPane flowPane = new FlowPane();
-		flowPane.setPadding(new Insets(30, 20, 190, 20));
+		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
@@ -265,54 +265,25 @@ public class TalkBoxSim extends Application {
 //			}).run();
 		}));
 
-		//custom Button
+		//Custom Button
 		Button custom;
 		String titleCustom;
-		titleCustom="Custom";
+		titleCustom="custom";
 		//create new instance of button called custom
 		custom = new Button (titleCustom);
 		//set width of custom button
 		int customWidth;
-		customWidth=80;
+		customWidth=100;
 		//set height of custom button
 		int customHeight;
-		customHeight=50;
+		customHeight=100;
 		//set size of custom button
-		custom.setPrefSize(customWidth,customHeight);
+		custom.setPrefSize(customWidth, customHeight);
 		flowPane.getChildren().add(custom);
-		custom.setAlignment(Pos.CENTER);
-		//translate custom button to bottom left
-		int customX_Translate;
-		customX_Translate=-160;
-		int customY_Translate;
-		customY_Translate=180;
-		custom.setTranslateX(customX_Translate);
-		custom.setTranslateY(customY_Translate);
 
-
-		//PLAY BUTTON-------------------------------------------------------
-		Button play;
+		Button Play;
 		String titlePlay;
 		titlePlay="Play";
-		//create new instance of button called play
-		play = new Button (titlePlay);
-		//set width of play button
-		int playWidth;
-		playWidth=80;
-		//set height of play button
-		int playHeight;
-		playHeight=50;
-		//set size of play button
-		play.setPrefSize(playWidth,playHeight);
-		flowPane.getChildren().add(play);
-		play.setAlignment(Pos.CENTER);
-		//translate play button to bottom left
-		int playX_Translate;
-		playX_Translate=50;
-		int playY_Translate;
-		playY_Translate=180;
-		play.setTranslateX(playX_Translate);
-		play.setTranslateY(playY_Translate);
 
 		return flowPane;
 	}

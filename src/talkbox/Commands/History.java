@@ -1,12 +1,21 @@
 package talkbox.Commands;
 
 import talkbox.TalkBoxApp;
-import talkbox.TalkBoxData;
 
 import java.util.Stack;
 
+/**
+ * The parent singleton class for all Command pattern class implementations, so as to enable undo functionality. The
+ * {@code setTalkBoxData(TalkBoxApp tbc)} method should only ever be called once, at the beginning of the {@code
+ * TalkBoxApp} class to associate it.
+ * <p></p>
+ * All modifications to the configuration file should be done via implementations of this class. The {@code execute(), undo()} methods should only be used via this class and no implementing classes, via
+ * <p><code>
+ *     History.getInstance().execute(new CustomCommand());
+ * </code></p>
+ */
 public final class History {
-	public static TalkBoxApp appInstance;
+	static TalkBoxApp appInstance;
 
 	private static History instance = null;
 	private final Stack<Command> stack = new Stack<>();

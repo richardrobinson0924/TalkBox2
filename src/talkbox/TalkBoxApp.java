@@ -10,28 +10,27 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.http.annotation.Contract;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,35 +44,33 @@ import static talkbox.Commands.History.*;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
- * <p>
- * The TalkBox Configuration App. Once a *.tbc file in the app via <code>File > Open</code>, a user may edit any of the
- * buttons on the TalkBox via the context menu. More specifically, the <code>TalkBox.getTotalNumberOfButtons()</code>
- * buttons may be removed, renamed, or have an audio file added to them.
- * <p>
+ * <p></p>
+ * The TalkBox Configuration App. Launched via the TalkBox Simulator, with runtime argument supplied byy the latter
+ * for the path to the *.tbc serialized object data file.
+ * <p></p>
  * Upon clicking any one of the buttons, the button plays the audio if it has any; otherwise, the user is prompted to
- * select an audio file to use. The configuration may then be saved via <code>File > Save</code>
- * <p>
+ * select an audio file to use, or create their own via a TTS Wizard. The configuration may then be saved via
+ * <code>File > Save</code>.
+ * <p></p>
  * The backend of the app uses a FlowPane of buttons in addition to a Pagination control, wrapped together in a VBox.
  * Upon exit, a dialog is presented to ask the user to save the file before exit, or discard its state.
- * <p>
+ * <p></p>
  * Furthermore, the TalkBoxApp communicates with a TalkBoxSimulator or TalkBoxDevice via the use of TalkBoxInfo
- * serialized objects described via *.tbc files. As of 01/27/19, TalkBoxApp is a minimum viable product.
- * <p>
+ * serialized objects described via *.tbc files. As of 02/22/19, TalkBoxApp is fully functional itself.
  *
- * @author EECS 2311 W2019 Z, Group 2
- * @version 0.1
+ * @author EECS 2311 W2019 Z, Group 2 (TalkBoxApp: Richard Robinson)
+ * @version vMidterm
  */
 @Beta
 public class TalkBoxApp extends Application {
 	private TalkBoxData ts;
 	public Button[] buttons;
-	private File audioFolder;
+	private static File audioFolder;
 	private MenuItem save;
-
-	public List<ObservableList<AudioPair>> data = new ArrayList<>();
-
 	private Path path;
 	private Stage primaryStage;
+
+	public List<ObservableList<AudioPair>> data = new ArrayList<>();
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
@@ -121,6 +118,12 @@ public class TalkBoxApp extends Application {
 		primaryStage.setOnCloseRequest(this::warnBeforeExit);
 	}
 
+	/**
+	 * The method to execute upon user close. If the file is saved, the app closes immediately. Otherwise the user is
+	 * prompted to save the file, and then the app closes.
+	 *
+	 * @param event the event triggering the method
+	 */
 	private void warnBeforeExit(WindowEvent event) {
 		if (save.isDisable()) return;
 
@@ -149,6 +152,19 @@ public class TalkBoxApp extends Application {
 		}
 	}
 
+	/**
+	 * Creates the menu bar for the app with the following Menus:
+	 * <ul>
+	 *     <li>File: Save, Import Audio Files</li>
+	 *     <li>Edit: Undo, Custom Phrase List</li>
+	 * </ul>
+	 * Sets all menu item actions and accelerators as needed. The {@code save} item's disabled property is
+	 * initially bound previously so as to be disabled if no new changes have occured.
+	 *
+	 * @param box the box enclosing this menu bar
+	 * @param scene the scene enclosing this menu bar
+	 * @return the generated menu bar
+	 */
 	private MenuBar makeMenuBar(VBox box, Scene scene) {
 		MenuBar menuBar = new MenuBar();
 
@@ -156,23 +172,21 @@ public class TalkBoxApp extends Application {
 
 		final Menu menuFile = new Menu("File");
 		final Menu menuEdit = new Menu("Edit");
-		final Menu menuView = new Menu("View");
 
-		final MenuItem open = new MenuItem("Open");
 		save = new MenuItem("Save");
 
 		final MenuItem custom = new MenuItem("Custom Phrase List");
-		final MenuItem openSim = new MenuItem("Open in Simulator");
 		final MenuItem undo = new MenuItem("Undo");
+		final MenuItem importM = new MenuItem("Import Audio Files");
 
 		undo.setOnAction(event -> History.getInstance().undo());
+		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 
 		save.setDisable(true);
 		save.setOnAction(e -> Try.newBuilder()
 				.setDefault(this::save)
 				.run());
-
-		open.setOnAction((event) -> open(box, scene));
+		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 
 		custom.setOnAction(event -> {
 			final CustomDataView c = new CustomDataView(ts, primaryStage);
@@ -181,19 +195,42 @@ public class TalkBoxApp extends Application {
 					.setOtherwise(event::consume)
 					.run();
 		});
+		custom.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
-		menuFile.getItems().addAll(open, save);
-		menuView.getItems().addAll(custom);
-		menuEdit.getItems().add(undo);
+		importM.setOnAction(this::importFiles);
+		importM.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
 
-		menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
+		menuFile.getItems().addAll(save, importM);
+		menuEdit.getItems().addAll(undo, custom);
+
+		menuBar.getMenus().addAll(menuFile, menuEdit);
 
 		return menuBar;
 	}
 
 	/**
+	 * The action for the {@code Import} menu item. Allows the user to mass import all compatable files from a
+	 * directory to the buttons, filling all empty buttons.
+	 *
+	 * @param actionEvent the event triggering this method
+	 */
+	private void importFiles(ActionEvent actionEvent) {
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		chooser.setTitle("Select a Directory");
+
+		File dir = chooser.showDialog(primaryStage);
+
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(),
+				entry -> entry.toString().matches(".*\\.wav\\s*$"))) {
+			History.getInstance().execute(new ImportCommand(stream));
+		} catch (IOException ignored) {
+		}
+	}
+
+	/**
 	 * The method that is called whenever an exception is thrown. When an error occurs, an error dialog appears
-     * presenting the error and the exception's stacktrace, and consumes the excepted action.
+	 * presenting the error and the exception's stacktrace, and consumes the excepted action.
 	 *
 	 * @param ex the exception that is thrown
 	 */
@@ -229,14 +266,14 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Method reference to open a file, then passes control to <code>configButtons</code>
+	 * Method reference to open a file and sets the page factory method of the Pagination to the
+	 * <code>configButtons</code> method.
 	 *
 	 * @see #configButtons(int)
 	 */
 	private void open(VBox box, Scene scene) {
 		audioFolder = new File(path.getParent().toString().concat(AUDIO_PATH));
 
-		// adds file name to Window title
 		primaryStage.setTitle("TalkBox Configurator — " + path.getFileName().toString());
 
 		Try.newBuilder()
@@ -248,6 +285,8 @@ public class TalkBoxApp extends Application {
 		setTalkBoxData(this);
 
 		scene.setOnKeyTyped(e -> {
+			if (!e.getCode().isDigitKey()) return;
+
 			final int index = Integer.parseInt(e.getCharacter()) - 1;
 			if (index < ts.getNumberOfAudioButtons())
 				buttons[index].fire();
@@ -260,8 +299,10 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets.
-     * Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method of a pagination
+	 * The main process of the app. Asynchronously continuously repeats for each page in the pagination of audio sets
+	 * . Creates a FlowPane for each audio set, to use as a method reference for <code>setPageFactory()</code> method
+	 * of a pagination. Each button has an optional image, a caption, preferred size, cursor property, a bound
+	 * tooltip, and a bound text property.
 	 *
 	 * @param page a generalized audio set
 	 * @return the FlowPane created with the buttons
@@ -308,19 +349,26 @@ public class TalkBoxApp extends Application {
 		return flowPane;
 	}
 
+	/**
+	 * Sets the action for each button. If the button does not contain a file, the TTSWizaed is launched and the
+	 * button is set accordingly. Otherwise, the media loaded in the button's file is played.
+	 *
+	 * @param page the audio set
+	 * @param i the audio button
+	 */
 	private void setAction(int page, int i) {
 		if (data.get(page).get(i).isNull()) {
 			final AudioInputStream audio = TTSWizard.launch(primaryStage);
 			if (audio == null) return;
 
 			final WaveFileWriter w = new WaveFileWriter();
-			final File f = new File(appInstance.getFullPath("Audio_" + page + i + ".wav"));
+			final File f = new File(getFullPath("Audio_" + page + i + ".wav"));
 
 			Try.newBuilder()
 					.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
 					.run();
 
-			History.getInstance().execute(new AddCommand(page, i, f));
+			History.getInstance().execute(new AddCommand(page, i, f, AddCommand.Type.TTS));
 
 		} else if (!data.get(page).get(i).isNull()) {
 			final File soundFile = data.get(page).get(i).getKey();
@@ -353,7 +401,7 @@ public class TalkBoxApp extends Application {
 				final File file = dragboard.getFiles().get(0);
 				if (!file.getPath().endsWith(".wav")) event.consume();
 
-				History.getInstance().execute(new AddCommand(page, i, file));
+				History.getInstance().execute(new AddCommand(page, i, file, AddCommand.Type.FILE));
 			});
 		});
 	}
@@ -387,7 +435,7 @@ public class TalkBoxApp extends Application {
 	 */
 	private void setAudio(int page, int j) {
 		final FileChooser audioFile = new FileChooser();
-		final FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.mp3", "*.wav");
+		final FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.wav");
 		audioFile.getExtensionFilters().add(filter2);
 
 		audioFile.setTitle("Select Audio File");
@@ -399,7 +447,7 @@ public class TalkBoxApp extends Application {
 			Files.copy(audio.toPath(), copied);
 		}).run();
 
-		History.getInstance().execute(new AddCommand(page, j, audio));
+		History.getInstance().execute(new AddCommand(page, j, audio, AddCommand.Type.FILE));
 	}
 
 	/**
@@ -460,7 +508,13 @@ public class TalkBoxApp extends Application {
 		buttons[i].setGraphic(graphic);
 	}
 
-	private String getFullPath(String s) {
+	/**
+	 * Tiny helper methiod to construct a path to a filename {@code s} in the audio directory
+	 *
+	 * @param s the filename
+	 * @return the abstract path of the filename as a string
+	 */
+	public static String getFullPath(String s) {
 		return audioFolder.getPath().concat('/' + s);
 	}
 }

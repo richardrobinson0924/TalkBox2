@@ -33,5 +33,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.controlsfx:controlsfx:11.0.0-SNAPSHOT" level="project" />
   </component>
 </module>

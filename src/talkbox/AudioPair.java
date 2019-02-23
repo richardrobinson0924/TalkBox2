@@ -4,7 +4,17 @@ import javafx.beans.property.*;
 import java.io.*;
 
 /**
- * DO NOT MODIFY. Only use {@code getKey(), getValue(), isNull()}, and {@code AudioPair()}
+ * A beans-based Pair class which implements serializable and allows Listeners to track changes to each field, as they
+ * are encapsulated in transient Property wrappers. Never modify these fields directly; instead, use the getters
+ * and setter methods. The transient properties are manually serialized via {@code readObject(), writeObject()}
+ * <p></p>
+ * When used in an {@code ObservableList<AudioPair>}, the list initially be filled with AudioPairs created via {@code
+ * AudioPair} to set all fields to null. The list should contain no null elements. For single use cases, the
+ * overloaded constructor may be used.
+ * <p></p>
+ * <b>Note:</b> Never test against null directly; instead use {@code isNull()}
+ *
+ * @see javafx.beans.value.ChangeListener
  */
 public class AudioPair implements Serializable {
     private static final long serialVersionUID = -6122359436305270578L;
@@ -48,25 +58,11 @@ public class AudioPair implements Serializable {
         return file.isNull().and(str.isEmpty()).get();
     }
 
-    /**
-     * Reads and re-wraps the transient fields from the serialization
-     *
-     * @param in the serialization voodoo
-     * @throws IOException if it fails
-     * @throws ClassNotFoundException if the types mismatch
-     */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.file = new SimpleObjectProperty<>((File) in.readObject());
         this.str = new SimpleStringProperty(in.readUTF());
     }
 
-    /**
-     * When serializing, only serialize the wrapped value of the transient fields, and if there's nothing to
-     * serialize, serialize null values.
-     *
-     * @param out the serialization voodoo
-     * @throws IOException if it fails
-     */
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
@@ -74,11 +70,6 @@ public class AudioPair implements Serializable {
         out.writeUTF(str.getValueSafe());
     }
 
-    /**
-     * This method does literally nothing but it needs to be here
-     *
-     * @throws ObjectStreamException for absolutely no reason
-     */
     private void readObjectNoData() throws ObjectStreamException {
 
     }

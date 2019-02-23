@@ -4,7 +4,6 @@ import javafx.scene.image.ImageView;
 import talkbox.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -16,11 +15,13 @@ public final class RemoveCommand implements History.Command {
 	private final int j;
 	private AudioPair oldPair;
 	private Path oldPath;
+	private final String oldText;
 
 	public RemoveCommand(int i, int j) {
 		this.i = i;
 		this.j = j;
 		this.oldPair = appInstance.data.get(i).get(j);
+		this.oldText = oldPair.getValue();
 	}
 
 	@Override
@@ -44,12 +45,6 @@ public final class RemoveCommand implements History.Command {
 
 	@Override
 	public void undo() {
-		appInstance.data.get(i).get(j).set(oldPair.getKey(), oldPair.getValue());
-
-		Try.newBuilder()
-				.setDefault(() -> Files.copy(oldPath, new FileOutputStream(oldPair.getKey().getPath())))
-				.run();
-
-		appInstance.setGraphic(j);
+		new AddCommand(i, j, oldPath.toFile(), AddCommand.Type.FILE, oldText).execute();
 	}
 }

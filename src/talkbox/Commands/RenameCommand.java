@@ -29,7 +29,6 @@ public final class RenameCommand implements History.Command {
 
 	@Override
 	public void undo() {
-		appInstance.buttons[j].setText(oldName);
 		appInstance.data.get(i).get(j).setValue(oldName);
 	}
 }
