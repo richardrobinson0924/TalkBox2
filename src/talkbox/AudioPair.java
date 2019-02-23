@@ -1,5 +1,6 @@
 package talkbox;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import java.io.*;
 
@@ -15,6 +16,7 @@ import java.io.*;
  * <b>Note:</b> Never test against null directly; instead use {@code isNull()}
  *
  * @see javafx.beans.value.ChangeListener
+ * @author Richard Robinson
  */
 public class AudioPair implements Serializable {
     private static final long serialVersionUID = -6122359436305270578L;
@@ -54,8 +56,8 @@ public class AudioPair implements Serializable {
         this.str.setValue(value);
     }
 
-    public boolean isNull() {
-        return file.isNull().and(str.isEmpty()).get();
+    public BooleanBinding isNull() {
+        return str.isEmpty();
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

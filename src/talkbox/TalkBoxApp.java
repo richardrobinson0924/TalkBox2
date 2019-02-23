@@ -54,7 +54,7 @@ public class TalkBoxApp extends Application {
 	private static final String WAV = ".*\\.wav$";
 	private TalkBoxData ts;
 	private static File audioFolder;
-	private MenuItem save;
+	static MenuItem save;
 	private Path path;
 	private Stage primaryStage;
 
@@ -417,7 +417,7 @@ public class TalkBoxApp extends Application {
 		}
 
 		private StringBinding generateText() {
-			return Bindings.when(data.get(i).get(j).str.isEmpty())
+			return Bindings.when(data.get(i).get(j).isNull())
 					.then("Empty")
 					.otherwise(data.get(i).get(j).str);
 		}
@@ -454,7 +454,7 @@ public class TalkBoxApp extends Application {
 
 
 			this.onMouseClickedProperty().bind(
-					Bindings.when(data.get(i).get(j).str.isEmpty())
+					Bindings.when(data.get(i).get(j).isNull())
 							.then(ifEmpty)
 							.otherwise(ifNotEmpty)
 			);
@@ -472,7 +472,7 @@ public class TalkBoxApp extends Application {
 			graphic.setPreserveRatio(true);
 
 			this.graphicProperty().bind(
-					Bindings.when(data.get(i).get(j).str.isEmpty().not())
+					Bindings.when(data.get(i).get(j).isNull().not())
 							.then(graphic)
 							.otherwise((ImageView) null)
 			);
@@ -481,7 +481,7 @@ public class TalkBoxApp extends Application {
 			Tooltip t2 = new Tooltip("Click to play audio");
 
 			this.tooltipProperty().bind(
-					Bindings.when(data.get(i).get(j).str.isEmpty())
+					Bindings.when(data.get(i).get(j).isNull())
 					.then(t1)
 					.otherwise(t2)
 			);

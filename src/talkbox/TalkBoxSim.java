@@ -246,7 +246,7 @@ public class TalkBoxSim extends Application {
 
 		// make the buttons
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			String caption = (!ts.database.get(page).get(i).isNull())
+			String caption = (!ts.database.get(page).get(i).isNull().get())
 					? ts.database.get(page).get(i).getValue()
 					: "Empty";
 

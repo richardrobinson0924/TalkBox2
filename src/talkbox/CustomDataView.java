@@ -1,8 +1,10 @@
 package talkbox;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public final class CustomDataView extends Application {
@@ -56,6 +57,9 @@ public final class CustomDataView extends Application {
 
 		final List<String> rawData = ts.customWords.get(index);
 		final ObservableList<String> data = FXCollections.observableArrayList(rawData);
+		Bindings.bindContent(ts.customWords.get(index), data);
+
+		data.addListener((ListChangeListener<String>) c -> TalkBoxApp.save.setDisable(false));
 
 		final TableView<String> table = getTable(name, index, data);
 
@@ -93,8 +97,6 @@ public final class CustomDataView extends Application {
 
 			if (event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.DELETE)) {
 				col.getTableView().getItems().remove(cell);
-
-				ts.customWords.set(index, new ArrayList<>(data));
 			}
 		});
 
@@ -114,8 +116,6 @@ public final class CustomDataView extends Application {
 
 		addString.setOnAction(event -> {
 			data.add(addString.getText());
-			ts.customWords.set(index, new ArrayList<>(data));
-
 			addString.clear();
 		});
 
