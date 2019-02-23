@@ -2,43 +2,31 @@ package talkbox;
 
 import com.google.api.client.util.Beta;
 import com.sun.media.sound.WaveFileWriter;
-import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.application.*;
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.beans.binding.*;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
+import javafx.event.EventHandler;
+import javafx.geometry.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.scene.media.*;
+import javafx.stage.*;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.nio.file.*;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static talkbox.Commands.History.*;
 
@@ -63,8 +51,8 @@ import static talkbox.Commands.History.*;
  */
 @Beta
 public class TalkBoxApp extends Application {
+	private static final String WAV = ".*\\.wav$";
 	private TalkBoxData ts;
-	public Button[] buttons;
 	private static File audioFolder;
 	private MenuItem save;
 	private Path path;
@@ -82,7 +70,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param primaryStage cuz Java needs this
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each
-     * data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
+	 * data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -155,13 +143,13 @@ public class TalkBoxApp extends Application {
 	/**
 	 * Creates the menu bar for the app with the following Menus:
 	 * <ul>
-	 *     <li>File: Save, Import Audio Files</li>
-	 *     <li>Edit: Undo, Custom Phrase List</li>
+	 * <li>File: Save, Import Audio Files</li>
+	 * <li>Edit: Undo, Custom Phrase List</li>
 	 * </ul>
 	 * Sets all menu item actions and accelerators as needed. The {@code save} item's disabled property is
 	 * initially bound previously so as to be disabled if no new changes have occured.
 	 *
-	 * @param box the box enclosing this menu bar
+	 * @param box   the box enclosing this menu bar
 	 * @param scene the scene enclosing this menu bar
 	 * @return the generated menu bar
 	 */
@@ -179,6 +167,7 @@ public class TalkBoxApp extends Application {
 		final MenuItem undo = new MenuItem("Undo");
 		final MenuItem importM = new MenuItem("Import Audio Files");
 
+		undo.disableProperty().bind(getInstance().getIsEmptyProperty());
 		undo.setOnAction(event -> History.getInstance().undo());
 		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 
@@ -196,6 +185,7 @@ public class TalkBoxApp extends Application {
 					.run();
 		});
 		custom.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+
 
 		importM.setOnAction(this::importFiles);
 		importM.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
@@ -221,8 +211,10 @@ public class TalkBoxApp extends Application {
 
 		File dir = chooser.showDialog(primaryStage);
 
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(),
-				entry -> entry.toString().matches(".*\\.wav\\s*$"))) {
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(
+				dir.toPath(),
+				entry -> entry.toString().matches(WAV))
+		) {
 			History.getInstance().execute(new ImportCommand(stream));
 		} catch (IOException ignored) {
 		}
@@ -281,16 +273,7 @@ public class TalkBoxApp extends Application {
 				.setOtherwise(() -> open(box, scene))
 				.run();
 
-		buttons = new Button[ts.numberOfAudioButtons];
 		setTalkBoxData(this);
-
-		scene.setOnKeyTyped(e -> {
-			if (!e.getCode().isDigitKey()) return;
-
-			final int index = Integer.parseInt(e.getCharacter()) - 1;
-			if (index < ts.getNumberOfAudioButtons())
-				buttons[index].fire();
-		});
 
 		final Pagination pagination = new Pagination(ts.numberOfAudioSets);
 		box.getChildren().add(pagination);
@@ -315,116 +298,10 @@ public class TalkBoxApp extends Application {
 		flowPane.setAlignment(Pos.CENTER);
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
-			final String caption = (!data.get(page).get(i).isNull())
-					? data.get(page).get(i).getValue()
-					: "Empty";
-
-			buttons[i] = new Button(caption);
-
-			buttons[i].setContentDisplay(ContentDisplay.TOP);
-			buttons[i].setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
-			buttons[i].setCursor(Cursor.HAND);
-
-			buttons[i].textProperty().bind(
-					Bindings.when(data.get(page).get(i).str.isEmpty().not())
-							.then(data.get(page).get(i).str)
-							.otherwise("Empty")
-			);
-
-			int finalI = i;
-			data.get(page).get(i).file.addListener((observable, oldValue, newValue) -> buttons[finalI].setTooltip(new Tooltip(newValue == null ? "Click to Add Audio" : "Click to Play Audio")));
-
-			flowPane.getChildren().add(buttons[i]);
-
-			buttons[i].setOnAction(event -> setAction(page, finalI));
-			makeContextMenu(page, i);
+			flowPane.getChildren().add(new AudioButton(page, i));
 		}
-
-		setDragAndDrop(page);
-
-		IntStream.range(0, ts.getNumberOfAudioButtons())
-				.filter(i -> !data.get(page).get(i).isNull())
-				.forEach(this::setGraphic);
 
 		return flowPane;
-	}
-
-	/**
-	 * Sets the action for each button. If the button does not contain a file, the TTSWizaed is launched and the
-	 * button is set accordingly. Otherwise, the media loaded in the button's file is played.
-	 *
-	 * @param page the audio set
-	 * @param i the audio button
-	 */
-	private void setAction(int page, int i) {
-		if (data.get(page).get(i).isNull()) {
-			final AudioInputStream audio = TTSWizard.launch(primaryStage);
-			if (audio == null) return;
-
-			final WaveFileWriter w = new WaveFileWriter();
-			final File f = new File(getFullPath("Audio_" + page + i + ".wav"));
-
-			Try.newBuilder()
-					.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
-					.run();
-
-			History.getInstance().execute(new AddCommand(page, i, f, AddCommand.Type.TTS));
-
-		} else if (!data.get(page).get(i).isNull()) {
-			final File soundFile = data.get(page).get(i).getKey();
-
-			Try.newBuilder().setDefault(() -> {
-				final Media media = new Media(soundFile.toURI().toString());
-				final MediaPlayer player = new MediaPlayer(media);
-				player.play();
-			}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(page, i))).run();
-		}
-	}
-
-	/**
-	 * Configures the drag and drop operation to allow a user to drag a *.wav file onto a button to change its file,
-     * If a non wav file is dragged, the event is consumed and no action occurs
-	 *
-	 * @param page the audio set
-	 */
-	private void setDragAndDrop(int page) {
-		IntStream.range(0, ts.getNumberOfAudioButtons()).forEach(i -> {
-			buttons[i].setOnDragOver(event -> {
-				if (event.getGestureSource() != buttons[i] && event.getDragboard().hasFiles())
-					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-				event.consume();
-			});
-
-			buttons[i].setOnDragDropped(event -> {
-				final Dragboard dragboard = event.getDragboard();
-
-				final File file = dragboard.getFiles().get(0);
-				if (!file.getPath().endsWith(".wav")) event.consume();
-
-				History.getInstance().execute(new AddCommand(page, i, file, AddCommand.Type.FILE));
-			});
-		});
-	}
-
-	/**
-	 * Generates the context menu for each button. If button has no file, disable menu items.
-	 *
-	 * @param page the audio set
-	 * @param j    the audio button
-	 */
-	public void makeContextMenu(int page, int j) {
-		final ContextMenu contextMenu = new ContextMenu();
-
-		final MenuItem rename = new MenuItem("Rename");
-		final MenuItem remove = new MenuItem("Remove");
-		final MenuItem change = new MenuItem("Change");
-		contextMenu.getItems().addAll(rename, remove, change);
-
-		change.setOnAction(event -> setAudio(page, j));
-		rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(page, j)));
-		remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(page, j)));
-
-		buttons[j].setContextMenu(contextMenu);
 	}
 
 	/**
@@ -496,19 +373,6 @@ public class TalkBoxApp extends Application {
 	}
 
 	/**
-	 * Creates a new ImageView and sets buttons[i] graphic as such
-	 *
-	 * @param i index of the button
-	 */
-	public void setGraphic(int i) {
-		final ImageView graphic = new ImageView(GRAPHIC);
-
-		graphic.setFitHeight(GRAPHIC_SIZE);
-		graphic.setPreserveRatio(true);
-		buttons[i].setGraphic(graphic);
-	}
-
-	/**
 	 * Tiny helper methiod to construct a path to a filename {@code s} in the audio directory
 	 *
 	 * @param s the filename
@@ -516,5 +380,148 @@ public class TalkBoxApp extends Application {
 	 */
 	public static String getFullPath(String s) {
 		return audioFolder.getPath().concat('/' + s);
+	}
+
+	/**
+	 * Pre-customized button to use for selecting / playing audio with provided data logic. All necessary methods
+	 * implemented appropriately and no further changes needed.
+	 * <p></p>
+	 * If {@code database[i][j]} in the configuration file is null, pressing the button adds audio via TTSWizard.
+	 * Else, the audio is played. An individual {@code *.wav} file may be associated with the button via right
+	 * clicking -> {@code Change} or by dragging and dropping.
+	 * <p></p>
+	 * Comes preconfigured with:
+	 * <ul>
+	 *     <li>Automatically updating text and graphic to represent the button's content</li>
+	 *     <li>Automatically updating tooltip</li>
+	 *     <li>Accessibility options enabled</li>
+	 *     <li>Can be renamed, removed, or changed / added</li>
+	 * </ul>
+	 *
+	 */
+	public final class AudioButton extends Button {
+		private final int i, j;
+
+		AudioButton(int i, int j) {
+			super();
+			this.i = i; this.j = j;
+
+			setUI();
+			setAccessibility();
+			setDragged();
+			setGraphics();
+			setContextMenu();
+
+			setAction();
+			this.textProperty().bind(generateText());
+		}
+
+		private StringBinding generateText() {
+			return Bindings.when(data.get(i).get(j).str.isEmpty())
+					.then("Empty")
+					.otherwise(data.get(i).get(j).str);
+		}
+
+		private void setAction() {
+			final SimpleObjectProperty<EventHandler<MouseEvent>> ifEmpty = new SimpleObjectProperty<>();
+			ifEmpty.set(event -> {
+				if (!event.getButton().equals(MouseButton.PRIMARY)) return;
+				final AudioInputStream audio = TTSWizard.launch(primaryStage);
+				if (audio == null) return;
+
+				final WaveFileWriter w = new WaveFileWriter();
+				final File f = new File(getFullPath(TTSWizard.text + ".wav"));
+
+				Try.newBuilder()
+						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
+						.run();
+
+				History.getInstance().execute(new AddCommand(i, j, f, AddCommand.Type.TTS));
+			});
+
+
+			final SimpleObjectProperty<EventHandler<MouseEvent>> ifNotEmpty = new SimpleObjectProperty<>();
+			ifNotEmpty.set(event -> {
+				if (!event.getButton().equals(MouseButton.PRIMARY)) return;
+				final File soundFile = data.get(i).get(j).getKey();
+
+				Try.newBuilder().setDefault(() -> {
+					final Media media = new Media(soundFile.toURI().toString());
+					final MediaPlayer player = new MediaPlayer(media);
+					player.play();
+				}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(i, j))).run();
+			});
+
+
+			this.onMouseClickedProperty().bind(
+					Bindings.when(data.get(i).get(j).str.isEmpty())
+							.then(ifEmpty)
+							.otherwise(ifNotEmpty)
+			);
+		}
+
+		private void setUI() {
+			this.setContentDisplay(ContentDisplay.TOP);
+			this.setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
+			this.setCursor(Cursor.HAND);
+		}
+
+		private void setGraphics() {
+			final ImageView graphic = new ImageView(GRAPHIC);
+			graphic.setFitHeight(GRAPHIC_SIZE);
+			graphic.setPreserveRatio(true);
+
+			this.graphicProperty().bind(
+					Bindings.when(data.get(i).get(j).str.isEmpty().not())
+							.then(graphic)
+							.otherwise((ImageView) null)
+			);
+
+			Tooltip t1 = new Tooltip("Click to add audio");
+			Tooltip t2 = new Tooltip("Click to play audio");
+
+			this.tooltipProperty().bind(
+					Bindings.when(data.get(i).get(j).str.isEmpty())
+					.then(t1)
+					.otherwise(t2)
+			);
+		}
+
+		private void setDragged() {
+			this.setOnDragOver(event -> {
+				if (event.getGestureSource() != this && event.getDragboard().hasFiles())
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				event.consume();
+			});
+
+			this.setOnDragDropped(event -> {
+				final Dragboard dragboard = event.getDragboard();
+
+				final File file = dragboard.getFiles().get(0);
+
+				if (file.getName().matches(WAV))
+					History.getInstance().execute(new AddCommand(i, j, file, AddCommand.Type.FILE));
+			});
+		}
+
+		private void setAccessibility() {
+			this.setAccessibleRole(AccessibleRole.BUTTON);
+			this.accessibleTextProperty().bind(this.textProperty());
+		}
+
+		private void setContextMenu() {
+			final ContextMenu contextMenu = new ContextMenu();
+
+			final MenuItem rename = new MenuItem("Rename");
+			final MenuItem remove = new MenuItem("Remove");
+			final MenuItem change = new MenuItem("Change");
+			contextMenu.getItems().addAll(rename, remove, change);
+
+			change.setOnAction(event -> setAudio(i, j));
+			rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(i, j)));
+			remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(i, j)));
+
+			this.setContextMenu(contextMenu);
+		}
 	}
 }

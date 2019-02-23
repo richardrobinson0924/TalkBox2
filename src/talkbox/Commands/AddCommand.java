@@ -66,20 +66,11 @@ public final class AddCommand implements History.Command {
 				appInstance.data.get(i).get(j).set(file, TTSWizard.text);
 			}
 		}).run();
-
-		appInstance.makeContextMenu(i, j);
-		appInstance.setGraphic(j);
 	}
 
 	@Override
 	public void undo() {
-		if (isNull) {
-			appInstance.data.get(i).get(j).set(null, null);
-
-			final ImageView blank = new ImageView();
-			blank.setImage(null);
-			appInstance.buttons[j].setGraphic(blank);
-		}
+		if (isNull) appInstance.data.get(i).get(j).set(null, null);
 		else r.undo();
 	}
 }

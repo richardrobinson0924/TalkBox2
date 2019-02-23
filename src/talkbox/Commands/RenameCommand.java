@@ -18,7 +18,7 @@ public final class RenameCommand implements History.Command {
 
 	@Override
 	public void execute() {
-		final TextInputDialog dialog = new TextInputDialog(appInstance.buttons[j].getText());
+		final TextInputDialog dialog = new TextInputDialog(appInstance.data.get(i).get(j).getValue());
 		dialog.setTitle("Change Button Name");
 		dialog.setHeaderText("Change Button Name");
 		dialog.setContentText("Please enter the new name:");
