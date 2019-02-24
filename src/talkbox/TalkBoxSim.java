@@ -120,8 +120,8 @@ public class TalkBoxSim extends Application {
 
 	private static final int MINOR_BUTTON_HEIGHT = 20;
 	private static final int MINOR_BUTTON_WIDTH = 85;
-	private boolean solveMkAudioDirMethod = false;
-	private boolean solveOverwriteFileMethod = false;
+	private boolean solveCanMkAudioDirMethod = false;
+	private boolean solveCanMakeFileMethod = false;
 	private boolean canContinue = false;
 	private String savedDir;
 	private String savedName;
@@ -536,8 +536,8 @@ public class TalkBoxSim extends Application {
 
 		TextField numBtnsTxtField = new TextField();
 		TextField numSetsTxtField = new TextField();
-		numBtnsTxtField.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
-		numSetsTxtField.setPrefSize(MINOR_BUTTON_WIDTH, MINOR_BUTTON_HEIGHT);
+		numBtnsTxtField.setPrefSize(60, MINOR_BUTTON_HEIGHT);
+		numSetsTxtField.setPrefSize(60, MINOR_BUTTON_HEIGHT);
 
 		ValidationSupport numBtnsValidation = new ValidationSupport();
 		numBtnsValidation.registerValidator(numBtnsTxtField, Validator.createEmptyValidator("Enter a number"));
@@ -559,7 +559,7 @@ public class TalkBoxSim extends Application {
         	// input action after finish button is clicked here
 			try {
 				int numBtns = Integer.parseInt(numBtnsTxtField.getText().trim());
-				int numSets = Integer.parseInt(numBtnsTxtField.getText().trim());
+				int numSets = Integer.parseInt(numSetsTxtField.getText().trim());
 				String selectedDir = locationTxtField.getText().trim();
 				String talkBoxName = nameTxtField.getText().trim();
 				if (!isValidFilePath(selectedDir)) {
@@ -574,8 +574,7 @@ public class TalkBoxSim extends Application {
                 numAudioSets = numSets;
                 savedDir = selectedDir;
                 savedName = talkBoxName;
-				makeAudioDirectory();
-				if (solveMkAudioDirMethod && solveOverwriteFileMethod) {
+				if (canMkFileAndCanMkAudioDir()) {
 					canContinue = true;
 					dialog.close();
 				}
@@ -638,33 +637,24 @@ public class TalkBoxSim extends Application {
 		return true;
 	}
 
-	// make the audio directory to hold Audio files
-	private void makeAudioDirectory() {
-		File makeAudioDir = new File(savedDir + "/Audio");
-		ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-		ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-		if (!makeAudioDir.mkdir()) {
-			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
-					"Audio file already exists.\nDo you want to replace it?",
-					yesBtn,
-					noBtn);
-			overwriteAlert.setTitle("Confirm Overwrite Audio File");
-			Optional<ButtonType> result = overwriteAlert.showAndWait();
-
-			if (result.get() == yesBtn) {
-				solveMkAudioDirMethod = true;
-				return;
-			}
-			else if (result.get() == noBtn) {
-				return;
+	// checks if it could make the file (make sure there isn't another copy in the directory) and then
+	// checks if it could make the audio directory
+	private boolean canMkFileAndCanMkAudioDir() {
+		if (canMkFile()) {
+			if (canMkAudioDirectory()) {
+				return true;
 			}
 		}
+		return false;
 	}
 
-	private void overwriteFile() {
-		File tbcFile = new File(savedName);
+	// checks if we could make the .tbc file
+	private boolean canMkFile() {
+		File tbcFile = new File(savedDir, savedName + ".tbc");
 		ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
 		ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+		// only goes through the if statement if the file exists in the directory
 		if (tbcFile.exists()) {
 			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
 					savedName + ".tbc already exists.\nDo you want to replace it?",
@@ -673,14 +663,32 @@ public class TalkBoxSim extends Application {
 			overwriteAlert.setTitle("Confirm Overwrite " + savedName + ".tbc");
 			Optional<ButtonType> result = overwriteAlert.showAndWait();
 
-			if (result.get() == yesBtn) {
-				solveOverwriteFileMethod = true;
-				return;
-			}
-			else if (result.get() == noBtn) {
-				return;
+			if (result.get() == noBtn) {
+				return false;
 			}
 		}
+		return true;
+	}
 
+	// checks if we could make the audio folder
+	private boolean canMkAudioDirectory() {
+		File mkAudioDir = new File(savedDir + "/Audio");
+		ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+		ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+		// only goes through the if statement if the audio directory exists in savedDir
+		if (!mkAudioDir.mkdir()) {
+			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
+					"Audio file already exists in this folder.\nDo you want to replace it?",
+					yesBtn,
+					noBtn);
+			overwriteAlert.setTitle("Confirm Overwrite Audio File");
+			Optional<ButtonType> result = overwriteAlert.showAndWait();
+
+			if (result.get() == noBtn) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
