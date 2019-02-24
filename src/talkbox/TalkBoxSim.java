@@ -167,6 +167,83 @@ public class TalkBoxSim extends Application {
 				box.getChildren().add(pagination);
 
 				pagination.setPageFactory(TalkBoxSim.this::configButtons);
+				//HERE
+
+				//create new flow plane for the buttons
+				FlowPane flowPane = new FlowPane();
+				//to prevent "hard coding"
+				int flowpane_top;
+				flowpane_top=30;
+				int flowpane_right;
+				flowpane_right=20;
+				int flowpane_bottom;
+				flowpane_bottom=30;
+				int flowpane_left;
+				flowpane_left=20;
+				flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
+				int flowpane_width;
+				flowpane_width=100;
+				int flowpane_height;
+				flowpane_height=25;
+				flowPane.setPrefSize(flowpane_width,flowpane_height);
+				int flowpane_vGap;
+				flowpane_vGap=10;
+				int flowpane_hGap;
+				flowpane_hGap=10;
+				flowPane.setVgap(flowpane_vGap);
+				flowPane.setHgap(flowpane_hGap);
+				flowPane.setAlignment(Pos.BOTTOM_RIGHT);
+
+				//custom Button
+				Button custom;
+				String titleCustom;
+				titleCustom="Custom";
+				//create new instance of button called custom
+				custom = new Button (titleCustom);
+				//set width of custom button
+				int customWidth;
+				customWidth=80;
+				//set height of custom button
+				int customHeight;
+				customHeight=50;
+				//set size of custom button
+				custom.setPrefSize(customWidth,customHeight);
+				//add custom button to flowpane
+				flowPane.getChildren().add(custom);
+				custom.setAlignment(Pos.CENTER);
+				//translate custom button to bottom left
+				int customX_Translate;
+				customX_Translate=90;
+				int customY_Translate;
+				customY_Translate=-40;
+				custom.setTranslateX(customX_Translate);
+				custom.setTranslateY(customY_Translate);
+
+				//PLAY BUTTON-------------------------------------------------------
+				Button play;
+				String titlePlay;
+				titlePlay="Play";
+				//create new instance of button called play
+				play = new Button (titlePlay);
+				//set width of play button
+				int playWidth;
+				playWidth=80;
+				//set height of play button
+				int playHeight;
+				playHeight=50;
+				//set size of play button
+				play.setPrefSize(playWidth,playHeight);
+				//add play button to flow pane
+				flowPane.getChildren().add(play);
+				play.setAlignment(Pos.CENTER);
+				//translate play button to bottom left
+				int playX_Translate;
+				playX_Translate=0;
+				int playY_Translate;
+				playY_Translate=20;
+				play.setTranslateX(playX_Translate);
+				play.setTranslateY(playY_Translate);
+				box.getChildren().add(flowPane);
 
 				Scene newTBCscene = new Scene(box);
 				simStage.setScene(newTBCscene);
@@ -233,13 +310,32 @@ public class TalkBoxSim extends Application {
 
 		Pagination pagination = new Pagination(ts.numberOfAudioSets);
 		box.getChildren().add(pagination);
+		pagination.setPageFactory(this::configButtons);
 
+		//create new flow plane for the buttons
 		FlowPane flowPane = new FlowPane();
-		flowPane.setPadding(new Insets(30, 20, 30, 20));
-		flowPane.setPrefSize(100,25);
-		flowPane.setVgap(10);
-		flowPane.setHgap(10);
-		flowPane.setAlignment(Pos.CENTER);
+		//to prevent "hard coding"
+		int flowpane_top;
+		flowpane_top=30;
+		int flowpane_right;
+		flowpane_right=20;
+		int flowpane_bottom;
+		flowpane_bottom=30;
+		int flowpane_left;
+		flowpane_left=20;
+		flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
+		int flowpane_width;
+		flowpane_width=100;
+		int flowpane_height;
+		flowpane_height=25;
+		flowPane.setPrefSize(flowpane_width,flowpane_height);
+		int flowpane_vGap;
+		flowpane_vGap=10;
+		int flowpane_hGap;
+		flowpane_hGap=10;
+		flowPane.setVgap(flowpane_vGap);
+		flowPane.setHgap(flowpane_hGap);
+		flowPane.setAlignment(Pos.BOTTOM_RIGHT);
 
 		//custom Button
 		Button custom;
@@ -255,17 +351,16 @@ public class TalkBoxSim extends Application {
 		customHeight=50;
 		//set size of custom button
 		custom.setPrefSize(customWidth,customHeight);
+		//add custom button to flowpane
 		flowPane.getChildren().add(custom);
 		custom.setAlignment(Pos.CENTER);
 		//translate custom button to bottom left
 		int customX_Translate;
-		customX_Translate=-160;
+		customX_Translate=90;
 		int customY_Translate;
-		customY_Translate=180;
+		customY_Translate=-40;
 		custom.setTranslateX(customX_Translate);
 		custom.setTranslateY(customY_Translate);
-
-
 
 		//PLAY BUTTON-------------------------------------------------------
 		Button play;
@@ -281,26 +376,50 @@ public class TalkBoxSim extends Application {
 		playHeight=50;
 		//set size of play button
 		play.setPrefSize(playWidth,playHeight);
+		//add play button to flow pane
 		flowPane.getChildren().add(play);
 		play.setAlignment(Pos.CENTER);
 		//translate play button to bottom left
 		int playX_Translate;
-		playX_Translate=50;
+		playX_Translate=0;
 		int playY_Translate;
-		playY_Translate=180;
+		playY_Translate=20;
 		play.setTranslateX(playX_Translate);
 		play.setTranslateY(playY_Translate);
+		box.getChildren().add(flowPane);
 
-
-		pagination.setPageFactory(this::configButtons);
 	}
 
 	private FlowPane configButtons(int page) {
-		FlowPane flowPane = new FlowPane();
+		/*FlowPane flowPane = new FlowPane();
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setPrefSize(100,25);
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
+		flowPane.setAlignment(Pos.CENTER);*/
+		//create new flow plane for the buttons
+		FlowPane flowPane = new FlowPane();
+		//to prevent "hard coding"
+		int flowpane_top;
+		flowpane_top=30;
+		int flowpane_right;
+		flowpane_right=20;
+		int flowpane_bottom;
+		flowpane_bottom=30;
+		int flowpane_left;
+		flowpane_left=20;
+		flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
+		int flowpane_width;
+		flowpane_width=100;
+		int flowpane_height;
+		flowpane_height=25;
+		flowPane.setPrefSize(flowpane_width,flowpane_height);
+		int flowpane_vGap;
+		flowpane_vGap=10;
+		int flowpane_hGap;
+		flowpane_hGap=10;
+		flowPane.setVgap(flowpane_vGap);
+		flowPane.setHgap(flowpane_hGap);
 		flowPane.setAlignment(Pos.CENTER);
 
 		// make the buttons
@@ -323,7 +442,7 @@ public class TalkBoxSim extends Application {
 //				player.play();
 //			}).run();
 		}));
-		/*
+		/*Testing custom and play buttons: TO BE REMOVED
 				//custom Button
 		Button custom;
 		String titleCustom;
@@ -347,9 +466,6 @@ public class TalkBoxSim extends Application {
 		customY_Translate=180;
 		custom.setTranslateX(customX_Translate);
 		custom.setTranslateY(customY_Translate);
-
-
-
 		//PLAY BUTTON-------------------------------------------------------
 		Button play;
 		String titlePlay;
