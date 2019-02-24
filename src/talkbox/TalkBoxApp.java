@@ -18,6 +18,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.*;
 import javafx.stage.*;
+import javafx.util.Callback;
 import talkbox.Commands.*;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -170,22 +171,40 @@ public class TalkBoxApp {
 		final MenuItem importM = new MenuItem("Import Audio Files");
 
 		undo.disableProperty().bind(getInstance().getIsEmptyProperty());
-		undo.setOnAction(event -> History.getInstance().undo());
+		undo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                History.getInstance().undo();
+            }
+        });
 		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 
 		save.setDisable(true);
-		save.setOnAction(e -> Try.newBuilder()
-				.setDefault(TalkBoxApp::save)
-				.run());
+		save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Try.newBuilder()
+                        .setDefault(TalkBoxApp::save)
+                        .run();
+            }
+        });
 		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 
-		custom.setOnAction(event -> {
-			final CustomDataView c = new CustomDataView(ts, primaryStage);
-			Try.newBuilder()
-					.setDefault(() -> c.start(new Stage()))
-					.setOtherwise(event::consume)
-					.run();
-		});
+		custom.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                final CustomDataView c = new CustomDataView(ts, primaryStage);
+                Try.newBuilder()
+                        .setDefault(new Try.RunnableEx() {
+                            @Override
+                            public void run() throws Exception {
+                                c.start(new Stage());
+                            }
+                        })
+                        .setOtherwise(event::consume)
+                        .run();
+            }
+        });
 		custom.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
 
@@ -215,7 +234,12 @@ public class TalkBoxApp {
 
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(
 				dir.toPath(),
-				entry -> entry.toString().matches(WAV))
+                new DirectoryStream.Filter<Path>() {
+                    @Override
+                    public boolean accept(Path entry) throws IOException {
+                        return entry.toString().matches(WAV);
+                    }
+                })
 		) {
 			History.getInstance().execute(new ImportCommand(stream));
 		} catch (IOException ignored) {
@@ -272,7 +296,12 @@ public class TalkBoxApp {
 
 		Try.newBuilder()
 				.setDefault(TalkBoxApp::readFile)
-				.setOtherwise(() -> open(box, scene))
+				.setOtherwise(new Try.RunnableEx() {
+                    @Override
+                    public void run() throws Exception {
+                        open(box, scene);
+                    }
+                })
 				.run();
 
 		final Pagination pagination = new Pagination(ts.numberOfAudioSets);
@@ -326,10 +355,13 @@ public class TalkBoxApp {
 		final File audio = audioFile.showOpenDialog(primaryStage);
 		if (audio == null) return;
 
-		Try.newBuilder().setDefault(() -> {
-			FileOutputStream copied = new FileOutputStream(getFullPath(audio.getName()));
-			Files.copy(audio.toPath(), copied);
-		}).run();
+		Try.newBuilder().setDefault(new Try.RunnableEx() {
+            @Override
+            public void run() throws Exception {
+                FileOutputStream copied = new FileOutputStream(getFullPath(audio.getName()));
+                Files.copy(audio.toPath(), copied);
+            }
+        }).run();
 
 		History.getInstance().execute(new AddCommand(page, j, audio, AddCommand.Type.FILE));
 	}
@@ -349,9 +381,19 @@ public class TalkBoxApp {
 		ts = (TalkBoxData) oin.readObject();
 
 		for (List<AudioPair> list : ts.database) {
-			final ObservableList<AudioPair> inner = FXCollections.observableList(list, (AudioPair p) -> new Observable[]{p.file, p.str});
+			final ObservableList<AudioPair> inner = FXCollections.observableList(list, new Callback<AudioPair, Observable[]>() {
+                @Override
+                public Observable[] call(AudioPair p) {
+                    return new Observable[]{p.file, p.str};
+                }
+            });
 
-			inner.addListener((ListChangeListener<AudioPair>) c -> save.setDisable(false));
+			inner.addListener(new ListChangeListener<AudioPair>() {
+                @Override
+                public void onChanged(Change<? extends AudioPair> c) {
+                    save.setDisable(false);
+                }
+            });
 			data.add(inner);
 		}
 
@@ -431,33 +473,52 @@ public class TalkBoxApp {
 
 		private void setAction() {
 			final SimpleObjectProperty<EventHandler<MouseEvent>> ifEmpty = new SimpleObjectProperty<>();
-			ifEmpty.set(event -> {
-				if (!event.getButton().equals(MouseButton.PRIMARY)) return;
-				final AudioInputStream audio = TTSWizard.launch(primaryStage);
-				if (audio == null) return;
+			ifEmpty.set(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!event.getButton().equals(MouseButton.PRIMARY)) return;
+                    final AudioInputStream audio = TTSWizard.launch(primaryStage);
+                    if (audio == null) return;
 
-				final WaveFileWriter w = new WaveFileWriter();
-				final File f = new File(getFullPath(TTSWizard.text + ".wav"));
+                    final WaveFileWriter w = new WaveFileWriter();
+                    final File f = new File(getFullPath(TTSWizard.text + ".wav"));
 
-				Try.newBuilder()
-						.setDefault(() -> w.write(audio, AudioFileFormat.Type.WAVE, f))
-						.run();
+                    Try.newBuilder()
+                            .setDefault(new Try.RunnableEx() {
+                                @Override
+                                public void run() throws Exception {
+                                    w.write(audio, AudioFileFormat.Type.WAVE, f);
+                                }
+                            })
+                            .run();
 
-				History.getInstance().execute(new AddCommand(i, j, f, AddCommand.Type.TTS));
-			});
+                    History.getInstance().execute(new AddCommand(i, j, f, AddCommand.Type.TTS));
+                }
+            });
 
 
 			final SimpleObjectProperty<EventHandler<MouseEvent>> ifNotEmpty = new SimpleObjectProperty<>();
-			ifNotEmpty.set(event -> {
-				if (!event.getButton().equals(MouseButton.PRIMARY)) return;
-				final File soundFile = data.get(i).get(j).getKey();
+			ifNotEmpty.set(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!event.getButton().equals(MouseButton.PRIMARY)) return;
+                    final File soundFile = data.get(i).get(j).getKey();
 
-				Try.newBuilder().setDefault(() -> {
-					final Media media = new Media(soundFile.toURI().toString());
-					final MediaPlayer player = new MediaPlayer(media);
-					player.play();
-				}).setOtherwise(() -> History.getInstance().execute(new RemoveCommand(i, j))).run();
-			});
+                    Try.newBuilder().setDefault(new Try.RunnableEx() {
+                        @Override
+                        public void run() throws Exception {
+                            final Media media = new Media(soundFile.toURI().toString());
+                            final MediaPlayer player = new MediaPlayer(media);
+                            player.play();
+                        }
+                    }).setOtherwise(new Try.RunnableEx() {
+                        @Override
+                        public void run() throws Exception {
+                            History.getInstance().execute(new RemoveCommand(i, j));
+                        }
+                    }).run();
+                }
+            });
 
 
 			this.onMouseClickedProperty().bind(
@@ -495,20 +556,26 @@ public class TalkBoxApp {
 		}
 
 		private void setDragged() {
-			this.setOnDragOver(event -> {
-				if (event.getGestureSource() != this && event.getDragboard().hasFiles())
-					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-				event.consume();
-			});
+			this.setOnDragOver(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    if (event.getGestureSource() != AudioButton.this && event.getDragboard().hasFiles())
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    event.consume();
+                }
+            });
 
-			this.setOnDragDropped(event -> {
-				final Dragboard dragboard = event.getDragboard();
+			this.setOnDragDropped(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    final Dragboard dragboard = event.getDragboard();
 
-				final File file = dragboard.getFiles().get(0);
+                    final File file = dragboard.getFiles().get(0);
 
-				if (file.getName().matches(WAV))
-					History.getInstance().execute(new AddCommand(i, j, file, AddCommand.Type.FILE));
-			});
+                    if (file.getName().matches(WAV))
+                        History.getInstance().execute(new AddCommand(i, j, file, AddCommand.Type.FILE));
+                }
+            });
 		}
 
 		private void setAccessibility() {
@@ -524,9 +591,24 @@ public class TalkBoxApp {
 			final MenuItem change = new MenuItem("Change");
 			contextMenu.getItems().addAll(rename, remove, change);
 
-			change.setOnAction(event -> setAudio(i, j));
-			rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(i, j)));
-			remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(i, j)));
+			change.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    setAudio(i, j);
+                }
+            });
+			rename.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    History.getInstance().execute(new RenameCommand(i, j));
+                }
+            });
+			remove.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    History.getInstance().execute(new RemoveCommand(i, j));
+                }
+            });
 
 			this.setContextMenu(contextMenu);
 		}
