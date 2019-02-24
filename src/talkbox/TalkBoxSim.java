@@ -219,7 +219,7 @@ public class TalkBoxSim extends Application {
 				custom.setTranslateX(customX_Translate);
 				custom.setTranslateY(customY_Translate);
 
-				//PLAY BUTTON-------------------------------------------------------
+				//PLAY BUTTON-------------------------------ss------------------------
 				Button play;
 				String titlePlay;
 				titlePlay="Play";
