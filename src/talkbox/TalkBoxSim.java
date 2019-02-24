@@ -1,7 +1,6 @@
 package talkbox;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -24,6 +23,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 /**
@@ -543,6 +543,8 @@ public class TalkBoxSim extends Application {
 
 		file = testTBC;
 		this.ts = ts;
+
+		makeAudioDirectory();
 	}
 
 	private void openWizardDialog() {
@@ -649,7 +651,7 @@ public class TalkBoxSim extends Application {
 		numBtnsLbl.setText("Number of Buttons: ");
 
 		Label numSetsLbl = new Label();
-		numSetsLbl.setText("Number of Sets: ");
+		numSetsLbl.setText("Number of Swap buttons: ");
 
 		TextField numBtnsTxtField = new TextField();
 		TextField numSetsTxtField = new TextField();
@@ -758,5 +760,20 @@ public class TalkBoxSim extends Application {
 			return false;
 		}
 		return true;
+	}
+
+	// make the audio directory to hold Audio files
+	private void makeAudioDirectory() {
+		File makeAudioDir = new File(savedDir + "/Audio");
+		if (!makeAudioDir.mkdir()) {
+			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
+					"Audio file already exists.\nDo you want to replace it?",
+					ButtonType.OK,
+					ButtonType.CANCEL);
+			overwriteAlert.setTitle("Confirm Overwrite");
+			Optional<ButtonType> result = overwriteAlert.showAndWait();
+
+
+		}
 	}
 }
