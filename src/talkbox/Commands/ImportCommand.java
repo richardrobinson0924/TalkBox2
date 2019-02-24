@@ -1,11 +1,11 @@
 package talkbox.Commands;
 
+import talkbox.TalkBoxApp;
+
 import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.util.Iterator;
-
-import static talkbox.Commands.History.appInstance;
 
 public final class ImportCommand implements History.Command {
 	private final DirectoryStream<Path> files;
@@ -15,7 +15,7 @@ public final class ImportCommand implements History.Command {
 	public ImportCommand(DirectoryStream<Path> files) {
 		this.files = files;
 		this.index = 0;
-		this.adds = new AddCommand[appInstance.data.size() * appInstance.data.get(0).size()];
+		this.adds = new AddCommand[TalkBoxApp.data.size() * TalkBoxApp.data.get(0).size()];
 	}
 
 	@Override
@@ -23,10 +23,10 @@ public final class ImportCommand implements History.Command {
 		Iterator<Path> it = files.iterator();
 		System.out.println("as");
 
-		for (int i = 0; i < appInstance.data.size(); i++) {
-			for (int j = 0; j < appInstance.data.get(0).size(); j++) {
+		for (int i = 0; i < TalkBoxApp.data.size(); i++) {
+			for (int j = 0; j < TalkBoxApp.data.get(0).size(); j++) {
 				if (!it.hasNext()) return;
-				if (!appInstance.data.get(i).get(j).isNull().get()) continue;
+				if (!TalkBoxApp.data.get(i).get(j).isNull().get()) continue;
 
 				adds[index] = new AddCommand(i, j, it.next().toFile(), AddCommand.Type.FILE);
 				adds[index++].execute();

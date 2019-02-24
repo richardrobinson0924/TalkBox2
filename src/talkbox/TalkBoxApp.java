@@ -50,15 +50,15 @@ import static talkbox.Commands.History.*;
  * @version vMidterm
  */
 @Beta
-public class TalkBoxApp extends Application {
+public class TalkBoxApp {
 	private static final String WAV = ".*\\.wav$";
-	private TalkBoxData ts;
+	private static TalkBoxData ts;
 	private static File audioFolder;
-	static MenuItem save;
-	private Path path;
-	private Stage primaryStage;
+	public static MenuItem save;
+	private static Path path = null;
+	private static Stage primaryStage;
 
-	public List<ObservableList<AudioPair>> data = new ArrayList<>();
+	public static List<ObservableList<AudioPair>> data = new ArrayList<>();
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
@@ -68,15 +68,16 @@ public class TalkBoxApp extends Application {
 	/**
 	 * Initializes the app.
 	 *
-	 * @param primaryStage cuz Java needs this
 	 * @see #configButtons(int) the main process of the app which configures and sets the buttons and repeats for each
 	 * data set in the pagination. In general, *everything* aside from global aspects of the app should be in here
 	 */
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		this.primaryStage = primaryStage;
+	static Stage init(Path p) throws Exception {
+		primaryStage = new Stage();
+		path = p;
+
+		primaryStage.initModality(Modality.APPLICATION_MODAL);
+
 		Try.setFailSafe(TalkBoxApp::setFailSafe);
-		path = Paths.get(this.getParameters().getRaw().get(0));
 
 		/* Sets the UI */
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -89,21 +90,24 @@ public class TalkBoxApp extends Application {
 
 		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
 		final VBox box = new VBox();
-		final Scene scene = new Scene(box);
 
-		/* Creates the menu bar */
-		final MenuBar menuBar = makeMenuBar(box, scene);
-		box.getChildren().addAll(menuBar);
+		final BorderPane pane = new BorderPane();
+		pane.topProperty().bindBidirectional(new SimpleObjectProperty<>(makeMenuBar()));
+		pane.centerProperty().bindBidirectional(new SimpleObjectProperty<>(box));
+
+		pane.prefHeightProperty().bind(primaryStage.heightProperty());
+
+		final Scene scene = new Scene(pane);
 
 		// show window
 		primaryStage.setScene(scene);
-		primaryStage.show();
 
 		/* start app by opening a file with `open()` */
 		open(box, scene);
 
 		/* Upon exit, call method to prompt user to save */
-		primaryStage.setOnCloseRequest(this::warnBeforeExit);
+		primaryStage.setOnCloseRequest(TalkBoxApp::warnBeforeExit);
+		return primaryStage;
 	}
 
 	/**
@@ -112,7 +116,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param event the event triggering the method
 	 */
-	private void warnBeforeExit(WindowEvent event) {
+	private static void warnBeforeExit(WindowEvent event) {
 		if (save.isDisable()) return;
 
 		final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -130,7 +134,7 @@ public class TalkBoxApp extends Application {
 		if (result.isPresent() && result.get() == yesButton) {
 			event.consume();
 			Try.newBuilder()
-					.setDefault(TalkBoxApp.this::save)
+					.setDefault(TalkBoxApp::save)
 					.run();
 			Platform.exit();
 		} else if (result.isPresent() && result.get() == noButton) {
@@ -149,11 +153,9 @@ public class TalkBoxApp extends Application {
 	 * Sets all menu item actions and accelerators as needed. The {@code save} item's disabled property is
 	 * initially bound previously so as to be disabled if no new changes have occured.
 	 *
-	 * @param box   the box enclosing this menu bar
-	 * @param scene the scene enclosing this menu bar
 	 * @return the generated menu bar
 	 */
-	private MenuBar makeMenuBar(VBox box, Scene scene) {
+	private static MenuBar makeMenuBar() {
 		MenuBar menuBar = new MenuBar();
 
 		menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -173,7 +175,7 @@ public class TalkBoxApp extends Application {
 
 		save.setDisable(true);
 		save.setOnAction(e -> Try.newBuilder()
-				.setDefault(this::save)
+				.setDefault(TalkBoxApp::save)
 				.run());
 		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 
@@ -187,7 +189,7 @@ public class TalkBoxApp extends Application {
 		custom.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
 
-		importM.setOnAction(this::importFiles);
+		importM.setOnAction(TalkBoxApp::importFiles);
 		importM.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
 
 		menuFile.getItems().addAll(save, importM);
@@ -204,7 +206,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @param actionEvent the event triggering this method
 	 */
-	private void importFiles(ActionEvent actionEvent) {
+	private static void importFiles(ActionEvent actionEvent) {
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		chooser.setTitle("Select a Directory");
@@ -263,22 +265,22 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @see #configButtons(int)
 	 */
-	private void open(VBox box, Scene scene) {
+	private static void open(VBox box, Scene scene) {
 		audioFolder = new File(path.getParent().toString().concat(AUDIO_PATH));
 
 		primaryStage.setTitle("TalkBox Configurator — " + path.getFileName().toString());
 
 		Try.newBuilder()
-				.setDefault(this::readFile)
+				.setDefault(TalkBoxApp::readFile)
 				.setOtherwise(() -> open(box, scene))
 				.run();
 
-		setTalkBoxData(this);
-
 		final Pagination pagination = new Pagination(ts.numberOfAudioSets);
+		pagination.prefHeightProperty().bind(primaryStage.heightProperty());
+		pagination.setPadding(new Insets(0, 0, 30, 0));
 		box.getChildren().add(pagination);
 
-		pagination.setPageFactory(this::configButtons);
+		pagination.setPageFactory(TalkBoxApp::configButtons);
 	}
 
 	/**
@@ -290,8 +292,9 @@ public class TalkBoxApp extends Application {
 	 * @param page a generalized audio set
 	 * @return the FlowPane created with the buttons
 	 */
-	private FlowPane configButtons(int page) {
+	private static FlowPane configButtons(int page) {
 		final FlowPane flowPane = new FlowPane();
+
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
@@ -300,6 +303,10 @@ public class TalkBoxApp extends Application {
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 			flowPane.getChildren().add(new AudioButton(page, i));
 		}
+
+		flowPane.minWidthProperty().bindBidirectional(primaryStage.minWidthProperty());
+		primaryStage.setMinHeight(300);
+		primaryStage.setMinWidth(300);
 
 		return flowPane;
 	}
@@ -310,7 +317,7 @@ public class TalkBoxApp extends Application {
 	 * @param page the audio set
 	 * @param j    the audio button
 	 */
-	private void setAudio(int page, int j) {
+	private static void setAudio(int page, int j) {
 		final FileChooser audioFile = new FileChooser();
 		final FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter("Audio File", "*.wav");
 		audioFile.getExtensionFilters().add(filter2);
@@ -332,7 +339,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @throws Exception if an exception occurs
 	 */
-	private void readFile() throws Exception {
+	private static void readFile() throws Exception {
 		FileInputStream fis;
 		ObjectInputStream oin;
 
@@ -357,7 +364,7 @@ public class TalkBoxApp extends Application {
 	 *
 	 * @throws Exception exception
 	 */
-	private void save() throws Exception {
+	private static void save() throws Exception {
 		final FileOutputStream fos = new FileOutputStream(path.toFile());
 		final ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -399,7 +406,7 @@ public class TalkBoxApp extends Application {
 	 * </ul>
 	 *
 	 */
-	public final class AudioButton extends Button {
+	public static final class AudioButton extends Button {
 		private final int i, j;
 
 		AudioButton(int i, int j) {
@@ -519,10 +526,6 @@ public class TalkBoxApp extends Application {
 
 			change.setOnAction(event -> setAudio(i, j));
 			rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(i, j)));
-			/*
-			* rename.setOnAction(someMethod(event));<--------THIS
-			* someMethod(Actionevent event){History.getInstance().execute(new RenameCommand(i, j)}
-			* */
 			remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(i, j)));
 
 			this.setContextMenu(contextMenu);

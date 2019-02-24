@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import static talkbox.Commands.History.appInstance;
-
 public final class RemoveCommand implements History.Command {
 	private final int i;
 	private final int j;
@@ -20,7 +18,7 @@ public final class RemoveCommand implements History.Command {
 	public RemoveCommand(int i, int j) {
 		this.i = i;
 		this.j = j;
-		this.oldPair = appInstance.data.get(i).get(j);
+		this.oldPair = TalkBoxApp.data.get(i).get(j);
 		this.oldText = oldPair.getValue();
 	}
 
@@ -32,7 +30,7 @@ public final class RemoveCommand implements History.Command {
 			Files.copy(f.toPath(), oldPath, StandardCopyOption.REPLACE_EXISTING);
 		}).run();
 
-		appInstance.data.get(i).get(j).set(null, "");
+		TalkBoxApp.data.get(i).get(j).set(null, "");
 
 		Try.newBuilder().setDefault(() -> {
 			if (f.exists()) Files.delete(f.toPath());

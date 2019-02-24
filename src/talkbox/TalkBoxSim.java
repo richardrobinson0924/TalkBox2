@@ -1,7 +1,6 @@
 package talkbox;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -270,7 +269,7 @@ public class TalkBoxSim extends Application {
 		/* Added the Open an Existing File */
 		Button openExistFileBtn = new Button("Open an Existing File");
 		openExistFileBtn.setOnAction(event -> {
-			open(null);
+			open();
 
 			adjustedSimStageWidthHeight();
             simStage.setHeight(SIMSTAGE_HEIGHT);
@@ -309,9 +308,10 @@ public class TalkBoxSim extends Application {
 
         final MenuItem config = new MenuItem("Switch to Config...");
         // input action for the switch to config here
-        config.setOnAction(event -> {
 
-        });
+        config.setOnAction(event -> Try.newBuilder()
+		        .setDefault(() -> TalkBoxApp.init(file.toPath()).showAndWait())
+		        .run());
 
         menuFile.getItems().add(config);
 
@@ -320,7 +320,7 @@ public class TalkBoxSim extends Application {
         return menuBar;
     }
 
-	private void open(ActionEvent event) {
+	private void open() {
 		FileChooser fileChooser = new FileChooser();
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		fileChooser.setInitialDirectory(workingDirectory);
@@ -336,7 +336,7 @@ public class TalkBoxSim extends Application {
 
 		Try.newBuilder()
 				.setDefault(this::readFile)
-				.setOtherwise(() -> open(null))
+				.setOtherwise(this::open)
 				.run();
 
 		audioFolder = new File(file.getParent().concat(AUDIO_PATH));

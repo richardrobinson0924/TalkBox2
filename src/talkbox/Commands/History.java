@@ -17,8 +17,6 @@ import java.util.Stack;
  * </code></p>
  */
 public final class History {
-	static TalkBoxApp appInstance;
-
 	private static History instance = null;
 	private final Stack<Command> stack = new Stack<>();
 	private final SimpleIntegerProperty size = new SimpleIntegerProperty(0);
@@ -53,9 +51,5 @@ public final class History {
 	public void undo() {
 		if (!stack.empty()) stack.pop().undo();
 		size.setValue(size.get() - 1);
-	}
-
-	public static void setTalkBoxData(TalkBoxApp tba) {
-		appInstance = tba;
 	}
 }

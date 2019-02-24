@@ -1,6 +1,5 @@
 package talkbox.Commands;
 
-import javafx.scene.image.ImageView;
 import talkbox.AudioPair;
 import talkbox.TTSWizard;
 import talkbox.TalkBoxApp;
@@ -11,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import static talkbox.Commands.History.appInstance;
 
 /**
  * A command to associate an audio file and alias with a button and with the TBC {@code audioList}.
@@ -40,10 +37,10 @@ public final class AddCommand implements History.Command {
 		this.i = i;
 		this.j = j;
 		this.file = f;
-		this.isNull = appInstance.data.get(i).get(j).isNull().get();
+		this.isNull = TalkBoxApp.data.get(i).get(j).isNull().get();
 		this.r = new RemoveCommand(i, j);
 		this.type = type;
-		this.oldPair = appInstance.data.get(i).get(j);
+		this.oldPair = TalkBoxApp.data.get(i).get(j);
 		this.text = text;
 	}
 
@@ -61,16 +58,16 @@ public final class AddCommand implements History.Command {
 						Paths.get(TalkBoxApp.getFullPath(file.getName())),
 						StandardCopyOption.REPLACE_EXISTING);
 
-				appInstance.data.get(i).get(j).set(p.toFile(), text);
+				TalkBoxApp.data.get(i).get(j).set(p.toFile(), text);
 			} else {
-				appInstance.data.get(i).get(j).set(file, TTSWizard.text);
+				TalkBoxApp.data.get(i).get(j).set(file, TTSWizard.text);
 			}
 		}).run();
 	}
 
 	@Override
 	public void undo() {
-		if (isNull) appInstance.data.get(i).get(j).set(null, null);
+		if (isNull) TalkBoxApp.data.get(i).get(j).set(null, null);
 		else r.undo();
 	}
 }
