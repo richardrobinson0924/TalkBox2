@@ -118,6 +118,8 @@ public class TalkBoxSim extends Application {
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
 
+    private static int SIMSTAGE_HEIGHT = 400;
+    private static int SIMSTAGE_WIDTH = 500;
 	private static final int MINOR_BUTTON_HEIGHT = 20;
 	private static final int MINOR_BUTTON_WIDTH = 85;
 	private boolean solveCanMkAudioDirMethod = false;
@@ -250,6 +252,9 @@ public class TalkBoxSim extends Application {
 				play.setTranslateY(playY_Translate);
 				box.getChildren().add(flowPane);
 
+				adjustedSimStageWidthHeight();
+				simStage.setHeight(SIMSTAGE_HEIGHT);
+				simStage.setWidth(SIMSTAGE_WIDTH);
 				Scene newTBCscene = new Scene(box);
 				simStage.setScene(newTBCscene);
 
@@ -266,6 +271,10 @@ public class TalkBoxSim extends Application {
 		Button openExistFileBtn = new Button("Open an Existing File");
 		openExistFileBtn.setOnAction(event -> {
 			open(null);
+
+			adjustedSimStageWidthHeight();
+            simStage.setHeight(SIMSTAGE_HEIGHT);
+            simStage.setWidth(SIMSTAGE_WIDTH);
 			Scene newTBCscene = new Scene(box);
 			simStage.setScene(newTBCscene);
 		});
@@ -286,6 +295,11 @@ public class TalkBoxSim extends Application {
 
 		//open(null);
 	}
+
+	private void adjustedSimStageWidthHeight() {
+        int multiplier = buttons.length/4;
+        SIMSTAGE_HEIGHT += 120 * multiplier;
+    }
 
     private MenuBar makeMenuBar() {
 	    MenuBar menuBar = new MenuBar();
