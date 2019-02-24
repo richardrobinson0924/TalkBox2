@@ -2,7 +2,6 @@ package talkbox;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -114,6 +113,7 @@ public class TalkBoxSim extends Application {
 	private Stage simStage;
 	private VBox box;
 	private Scene scene;
+    private MenuBar menuBar;
 
 	private static final String AUDIO_PATH = "/Audio";
 	private File audioFolder;
@@ -165,8 +165,11 @@ public class TalkBoxSim extends Application {
 
 				buttons = new Button[ts.numberOfAudioButtons];
 
+				// ------------------------------ MENUBAR TEST ----------------------------
+                MenuBar mb = makeMenuBar();
+
 				Pagination pagination = new Pagination(ts.numberOfAudioSets);
-				box.getChildren().add(pagination);
+				box.getChildren().addAll(mb, pagination);
 
 				pagination.setPageFactory(TalkBoxSim.this::configButtons);
 				//HERE
@@ -284,6 +287,25 @@ public class TalkBoxSim extends Application {
 		//open(null);
 	}
 
+    private MenuBar makeMenuBar() {
+	    MenuBar menuBar = new MenuBar();
+        menuBar.prefWidthProperty().bind(simStage.widthProperty());
+
+        final Menu menuFile = new Menu("File");
+
+        final MenuItem config = new MenuItem("Switch to Config...");
+        // input action for the switch to config here
+        config.setOnAction(event -> {
+
+        });
+
+        menuFile.getItems().add(config);
+
+        menuBar.getMenus().add(menuFile);
+
+        return menuBar;
+    }
+
 	private void open(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		File workingDirectory = new File(System.getProperty("user.dir"));
@@ -308,7 +330,11 @@ public class TalkBoxSim extends Application {
 		buttons = new Button[ts.numberOfAudioButtons];
 
 		Pagination pagination = new Pagination(ts.numberOfAudioSets);
-		box.getChildren().add(pagination);
+
+		// ------------------------------- MENUBAR TEST----------------------------------------
+		MenuBar mb = makeMenuBar();
+
+		box.getChildren().addAll(mb, pagination);
 		pagination.setPageFactory(this::configButtons);
 
 		//create new flow plane for the buttons
@@ -446,6 +472,7 @@ public class TalkBoxSim extends Application {
 //				player.play();
 //			}).run();
 		}));
+
 		/*Testing custom and play buttons: TO BE REMOVED
 				//custom Button
 		Button custom;
@@ -500,10 +527,6 @@ public class TalkBoxSim extends Application {
 	}
 
 	private void createNewTBC() throws IOException {
-		// File testTBC = new File("/Users/richardrobinson/Desktop/MyTalkBox/config.tbc");
-
-		// whenever a new file is created, it replaces the test.tbc file here
-
         openWizardDialog();
 
         if (!canContinue) {
@@ -762,9 +785,7 @@ public class TalkBoxSim extends Application {
 	// checks if it could make the audio directory
 	private boolean canMkFileAndCanMkAudioDir() {
 		if (canMkFile()) {
-			if (canMkAudioDirectory()) {
-				return true;
-			}
+			return canMkAudioDirectory();
 		}
 		return false;
 	}
@@ -778,7 +799,7 @@ public class TalkBoxSim extends Application {
 		// only goes through the if statement if the file exists in the directory
 		if (tbcFile.exists()) {
 			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
-					savedName + ".tbc already exists.\nDo you want to replace it?",
+					savedName + ".tbc already exists in this folder.\nDo you want to replace it?",
 					yesBtn,
 					noBtn);
 			overwriteAlert.setTitle("Confirm Overwrite " + savedName + ".tbc");
