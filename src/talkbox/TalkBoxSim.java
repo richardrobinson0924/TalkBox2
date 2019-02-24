@@ -120,6 +120,8 @@ public class TalkBoxSim extends Application {
 
 	private static final int MINOR_BUTTON_HEIGHT = 20;
 	private static final int MINOR_BUTTON_WIDTH = 85;
+	private boolean solveMkAudioDirMethod = false;
+	private boolean solveOverwriteFileMethod = false;
 	private boolean canContinue = false;
 	private String savedDir;
 	private String savedName;
@@ -182,13 +184,10 @@ public class TalkBoxSim extends Application {
 
 		/* Added the Open an Existing File */
 		Button openExistFileBtn = new Button("Open an Existing File");
-		openExistFileBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				open(null);
-				Scene newTBCscene = new Scene(box);
-				simStage.setScene(newTBCscene);
-			}
+		openExistFileBtn.setOnAction(event -> {
+			open(null);
+			Scene newTBCscene = new Scene(box);
+			simStage.setScene(newTBCscene);
 		});
 		openExistFileBtn.setPrefSize(100, 100);
 		openExistFileBtn.setWrapText(true);
@@ -427,8 +426,6 @@ public class TalkBoxSim extends Application {
 
 		file = testTBC;
 		this.ts = ts;
-
-		makeAudioDirectory();
 	}
 
 	private void openWizardDialog() {
@@ -550,14 +547,6 @@ public class TalkBoxSim extends Application {
 		numSetsValidation.registerValidator(numSetsTxtField, Validator.createEmptyValidator("Enter a number"));
 		numSetsValidation.setErrorDecorationEnabled(true);
 
-//		String [] numBtnsChoices = {"1","2","3","4","5"};
-//		String [] numSetsChoices = {"1","2","3","4","5","6","7","8"};
-//		ComboBox <String> numBtnsComboBox = new ComboBox<>(FXCollections.observableArrayList(numBtnsChoices));
-//		ComboBox <String> numSetsComboBox = new ComboBox<>(FXCollections.observableArrayList(numSetsChoices));
-
-		// how to get a selected item from the combobox
-		//numBtnsComboBox.getSelectionModel().getSelectedItem().toString();
-
 
 		// The following "nodes are to be added to the fourth pane"
         Button finishBtn = new Button();
@@ -585,8 +574,11 @@ public class TalkBoxSim extends Application {
                 numAudioSets = numSets;
                 savedDir = selectedDir;
                 savedName = talkBoxName;
-                canContinue = true;
-				dialog.close();
+				makeAudioDirectory();
+				if (solveMkAudioDirMethod && solveOverwriteFileMethod) {
+					canContinue = true;
+					dialog.close();
+				}
 			}
 			catch (Exception e) {
                 e.printStackTrace();
@@ -649,15 +641,46 @@ public class TalkBoxSim extends Application {
 	// make the audio directory to hold Audio files
 	private void makeAudioDirectory() {
 		File makeAudioDir = new File(savedDir + "/Audio");
+		ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+		ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 		if (!makeAudioDir.mkdir()) {
 			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
 					"Audio file already exists.\nDo you want to replace it?",
-					ButtonType.OK,
-					ButtonType.CANCEL);
-			overwriteAlert.setTitle("Confirm Overwrite");
+					yesBtn,
+					noBtn);
+			overwriteAlert.setTitle("Confirm Overwrite Audio File");
 			Optional<ButtonType> result = overwriteAlert.showAndWait();
 
-
+			if (result.get() == yesBtn) {
+				solveMkAudioDirMethod = true;
+				return;
+			}
+			else if (result.get() == noBtn) {
+				return;
+			}
 		}
+	}
+
+	private void overwriteFile() {
+		File tbcFile = new File(savedName);
+		ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+		ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+		if (tbcFile.exists()) {
+			Alert overwriteAlert = new Alert(Alert.AlertType.WARNING,
+					savedName + ".tbc already exists.\nDo you want to replace it?",
+					yesBtn,
+					noBtn);
+			overwriteAlert.setTitle("Confirm Overwrite " + savedName + ".tbc");
+			Optional<ButtonType> result = overwriteAlert.showAndWait();
+
+			if (result.get() == yesBtn) {
+				solveOverwriteFileMethod = true;
+				return;
+			}
+			else if (result.get() == noBtn) {
+				return;
+			}
+		}
+
 	}
 }
