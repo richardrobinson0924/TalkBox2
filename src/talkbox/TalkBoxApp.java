@@ -519,6 +519,10 @@ public class TalkBoxApp extends Application {
 
 			change.setOnAction(event -> setAudio(i, j));
 			rename.setOnAction(event -> History.getInstance().execute(new RenameCommand(i, j)));
+			/*
+			* rename.setOnAction(someMethod(event));<--------THIS
+			* someMethod(Actionevent event){History.getInstance().execute(new RenameCommand(i, j)}
+			* */
 			remove.setOnAction(event -> History.getInstance().execute(new RemoveCommand(i, j)));
 
 			this.setContextMenu(contextMenu);

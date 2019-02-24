@@ -386,6 +386,11 @@ public class TalkBoxSim extends Application {
 		play.setTranslateX(playX_Translate);
 		play.setTranslateY(playY_Translate);
 		box.getChildren().add(flowPane);
+		play.setOnAction(e -> {//event E should do..
+
+			// input action after browse button is clicked here
+
+		});
 
 	}
 
