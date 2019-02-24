@@ -26,7 +26,10 @@ import java.util.Optional;
 
 
 /**
- * A singleton class for a custom dialog wizard window to create an audio file of user-inputted text. A user types their desired text into the text field, and the gender of the voice they wish to use. The user can see what the audio file will sound like by clicking the "Play" button. If they are satisfied, the "OK" button saves the <code>*.wav</code> to a specified destination.
+ * A singleton class for a custom dialog wizard window to create an audio file of user-inputted text. A user types their
+ * desired text into the text field, and the gender of the voice they wish to use. The user can see what the audio
+ * file will sound like by clicking the "Play" button. If they are satisfied, the "OK" button saves the <code>*.wav</code>
+ * to a specified destination.
  *
  * @author Richard Robinson
  * @apiNote This class is fully independent, and can be launched from any JavaFX stage

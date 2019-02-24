@@ -173,84 +173,127 @@ public class TalkBoxSim extends Application {
 				box.getChildren().addAll(mb, pagination);
 
 				pagination.setPageFactory(TalkBoxSim.this::configButtons);
-				//HERE
+				//if the customWord is not empty then implement the custom and play button
+				if(!(ts.customWords.get(0).isEmpty()==true)) {
+					//create new flow plane for the buttons
+					FlowPane flowPane = new FlowPane();
+					//to prevent "hard coding"
+					int flowpane_top;
+					flowpane_top = 30;
+					int flowpane_right;
+					flowpane_right = 20;
+					int flowpane_bottom;
+					flowpane_bottom = 30;
+					int flowpane_left;
+					flowpane_left = 20;
+					flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
+					int flowpane_width;
+					flowpane_width = 100;
+					int flowpane_height;
+					flowpane_height = 25;
+					flowPane.setPrefSize(flowpane_width, flowpane_height);
+					int flowpane_vGap;
+					flowpane_vGap = 10;
+					int flowpane_hGap;
+					flowpane_hGap = 10;
+					flowPane.setVgap(flowpane_vGap);
+					flowPane.setHgap(flowpane_hGap);
+					flowPane.setAlignment(Pos.BOTTOM_RIGHT);
 
-				//create new flow plane for the buttons
-				FlowPane flowPane = new FlowPane();
-				//to prevent "hard coding"
-				int flowpane_top;
-				flowpane_top=30;
-				int flowpane_right;
-				flowpane_right=20;
-				int flowpane_bottom;
-				flowpane_bottom=30;
-				int flowpane_left;
-				flowpane_left=20;
-				flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
-				int flowpane_width;
-				flowpane_width=100;
-				int flowpane_height;
-				flowpane_height=25;
-				flowPane.setPrefSize(flowpane_width,flowpane_height);
-				int flowpane_vGap;
-				flowpane_vGap=10;
-				int flowpane_hGap;
-				flowpane_hGap=10;
-				flowPane.setVgap(flowpane_vGap);
-				flowPane.setHgap(flowpane_hGap);
-				flowPane.setAlignment(Pos.BOTTOM_RIGHT);
+					//custom Button
+					Button custom;
+					String titleCustom;
+					titleCustom = "Custom";
+					//create new instance of button called custom
+					custom = new Button(titleCustom);
+					//set width of custom button
+					int customWidth;
+					customWidth = 80;
+					//set height of custom button
+					int customHeight;
+					customHeight = 50;
+					//set size of custom button
+					custom.setPrefSize(customWidth, customHeight);
+					//add custom button to flowpane
+					flowPane.getChildren().add(custom);
+					custom.setAlignment(Pos.CENTER);
+					//translate custom button to bottom left
+					int customX_Translate;
+					customX_Translate = 90;
+					int customY_Translate;
+					customY_Translate = -40;
+					custom.setTranslateX(customX_Translate);
+					custom.setTranslateY(customY_Translate);
+					//string of subject,verb and object
+					//this string will be what is displayed.
+					String text_f;
+					custom.setOnAction(e -> {//event E should do..
+			/*	//for every button
+				// input action after custom button is clicked here
+						custom.setText("Choosing Subject");
+						ts.getNumberOfAudioSets();
 
-				//custom Button
-				Button custom;
-				String titleCustom;
-				titleCustom="Custom";
-				//create new instance of button called custom
-				custom = new Button (titleCustom);
-				//set width of custom button
-				int customWidth;
-				customWidth=80;
-				//set height of custom button
-				int customHeight;
-				customHeight=50;
-				//set size of custom button
-				custom.setPrefSize(customWidth,customHeight);
-				//add custom button to flowpane
-				flowPane.getChildren().add(custom);
-				custom.setAlignment(Pos.CENTER);
-				//translate custom button to bottom left
-				int customX_Translate;
-				customX_Translate=90;
-				int customY_Translate;
-				customY_Translate=-40;
-				custom.setTranslateX(customX_Translate);
-				custom.setTranslateY(customY_Translate);
+						for (int i = 0; i < ts.getNumberOfAudioSets(); i++) {
+							for(int j =0; j<ts.getNumberOfAudioButtons();i++) {
+								// change the all the buttons to the subject array
+							}
+						}
 
-				//PLAY BUTTON-------------------------------ss------------------------
-				Button play;
-				String titlePlay;
-				titlePlay="Play";
-				//create new instance of button called play
-				play = new Button (titlePlay);
-				//set width of play button
-				int playWidth;
-				playWidth=80;
-				//set height of play button
-				int playHeight;
-				playHeight=50;
-				//set size of play button
-				play.setPrefSize(playWidth,playHeight);
-				//add play button to flow pane
-				flowPane.getChildren().add(play);
-				play.setAlignment(Pos.CENTER);
-				//translate play button to bottom left
-				int playX_Translate;
-				playX_Translate=0;
-				int playY_Translate;
-				playY_Translate=20;
-				play.setTranslateX(playX_Translate);
-				play.setTranslateY(playY_Translate);
-				box.getChildren().add(flowPane);
 
+					// if there are verbs in the list then
+				if(!(ts.customWords.get(1).isEmpty()==true)) {
+					custom.setOnAction(ev -> {
+						custom.setText("Choosing verb");
+						for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+							buttons[i].setText(ts.customWords.get(1).get(i).toString());
+						}
+						if (!(ts.customWords.get(3).isEmpty() == true)) {
+							custom.setOnAction(eve -> {
+										custom.setText("Choosing subject");
+										for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+											buttons[i].setText(ts.customWords.get(2).get(i).toString());
+										}
+
+
+									}
+							);
+						}
+					});
+				}*/
+					});
+
+					//PLAY BUTTON-------------------------------------------------------
+					Button play;
+					String titlePlay;
+					titlePlay = "Play";
+					//create new instance of button called play
+					play = new Button(titlePlay);
+					//set width of play button
+					int playWidth;
+					playWidth = 80;
+					//set height of play button
+					int playHeight;
+					playHeight = 50;
+					//set size of play button
+					play.setPrefSize(playWidth, playHeight);
+					//add play button to flow pane
+					flowPane.getChildren().add(play);
+					play.setAlignment(Pos.CENTER);
+					//translate play button to bottom left
+					int playX_Translate;
+					playX_Translate = 0;
+					int playY_Translate;
+					playY_Translate = 20;
+					play.setTranslateX(playX_Translate);
+					play.setTranslateY(playY_Translate);
+					box.getChildren().add(flowPane);
+					//set action of play for open TBC
+					play.setOnAction(e -> {//event E should do..
+
+						// input action after browse button is clicked here
+
+					});
+				}
 				adjustedSimStageWidthHeight();
 				simStage.setHeight(SIMSTAGE_HEIGHT);
 				simStage.setWidth(SIMSTAGE_WIDTH);
@@ -350,87 +393,127 @@ public class TalkBoxSim extends Application {
 
 		box.getChildren().addAll(mb, pagination);
 		pagination.setPageFactory(this::configButtons);
+		//if the custom word SUBJECT array is not empty then implement the custom and play button
+		if(!(ts.customWords.get(0).isEmpty()==true)) {
+			//create new flow plane for the buttons
+			FlowPane flowPane = new FlowPane();
+			//to prevent "hard coding"
+			int flowpane_top;
+			flowpane_top = 30;
+			int flowpane_right;
+			flowpane_right = 20;
+			int flowpane_bottom;
+			flowpane_bottom = 30;
+			int flowpane_left;
+			flowpane_left = 20;
+			flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
+			int flowpane_width;
+			flowpane_width = 100;
+			int flowpane_height;
+			flowpane_height = 25;
+			flowPane.setPrefSize(flowpane_width, flowpane_height);
+			int flowpane_vGap;
+			flowpane_vGap = 10;
+			int flowpane_hGap;
+			flowpane_hGap = 10;
+			flowPane.setVgap(flowpane_vGap);
+			flowPane.setHgap(flowpane_hGap);
+			flowPane.setAlignment(Pos.BOTTOM_RIGHT);
 
-		//create new flow plane for the buttons
-		FlowPane flowPane = new FlowPane();
-		//to prevent "hard coding"
-		int flowpane_top;
-		flowpane_top=30;
-		int flowpane_right;
-		flowpane_right=20;
-		int flowpane_bottom;
-		flowpane_bottom=30;
-		int flowpane_left;
-		flowpane_left=20;
-		flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
-		int flowpane_width;
-		flowpane_width=100;
-		int flowpane_height;
-		flowpane_height=25;
-		flowPane.setPrefSize(flowpane_width,flowpane_height);
-		int flowpane_vGap;
-		flowpane_vGap=10;
-		int flowpane_hGap;
-		flowpane_hGap=10;
-		flowPane.setVgap(flowpane_vGap);
-		flowPane.setHgap(flowpane_hGap);
-		flowPane.setAlignment(Pos.BOTTOM_RIGHT);
+			//custom Button
+			Button custom;
+			String titleCustom;
+			titleCustom = "Custom";
+			//create new instance of button called custom
+			custom = new Button(titleCustom);
+			//set width of custom button
+			int customWidth;
+			customWidth = 80;
+			//set height of custom button
+			int customHeight;
+			customHeight = 50;
+			//set size of custom button
+			custom.setPrefSize(customWidth, customHeight);
+			//add custom button to flowpane
+			flowPane.getChildren().add(custom);
+			custom.setAlignment(Pos.CENTER);
+			//translate custom button to bottom left
+			int customX_Translate;
+			customX_Translate = 90;
+			int customY_Translate;
+			customY_Translate = -40;
+			custom.setTranslateX(customX_Translate);
+			custom.setTranslateY(customY_Translate);
+			//string of subject,verb and object
+			//this string will be what is displayed.
+			String text_f;
+			custom.setOnAction(e -> {//event E should do..
+			/*	//Functionality of custom button
+				// input action after custom button is clicked here
+						custom.setText("Choosing Subject");
+						ts.getNumberOfAudioSets();
 
-		//custom Button
-		Button custom;
-		String titleCustom;
-		titleCustom="Custom";
-		//create new instance of button called custom
-		custom = new Button (titleCustom);
-		//set width of custom button
-		int customWidth;
-		customWidth=80;
-		//set height of custom button
-		int customHeight;
-		customHeight=50;
-		//set size of custom button
-		custom.setPrefSize(customWidth,customHeight);
-		//add custom button to flowpane
-		flowPane.getChildren().add(custom);
-		custom.setAlignment(Pos.CENTER);
-		//translate custom button to bottom left
-		int customX_Translate;
-		customX_Translate=90;
-		int customY_Translate;
-		customY_Translate=-40;
-		custom.setTranslateX(customX_Translate);
-		custom.setTranslateY(customY_Translate);
+						for (int i = 0; i < ts.getNumberOfAudioSets(); i++) {
+							for(int j =0; j<ts.getNumberOfAudioButtons();i++) {
+								// change the all the buttons to the subject array
+							}
+						}
 
-		//PLAY BUTTON-------------------------------------------------------
-		Button play;
-		String titlePlay;
-		titlePlay="Play";
-		//create new instance of button called play
-		play = new Button (titlePlay);
-		//set width of play button
-		int playWidth;
-		playWidth=80;
-		//set height of play button
-		int playHeight;
-		playHeight=50;
-		//set size of play button
-		play.setPrefSize(playWidth,playHeight);
-		//add play button to flow pane
-		flowPane.getChildren().add(play);
-		play.setAlignment(Pos.CENTER);
-		//translate play button to bottom left
-		int playX_Translate;
-		playX_Translate=0;
-		int playY_Translate;
-		playY_Translate=20;
-		play.setTranslateX(playX_Translate);
-		play.setTranslateY(playY_Translate);
-		box.getChildren().add(flowPane);
-		play.setOnAction(e -> {//event E should do..
 
-			// input action after browse button is clicked here
+					// if there are verbs in the list then
+				if(!(ts.customWords.get(1).isEmpty()==true)) {
+					custom.setOnAction(ev -> {
+						custom.setText("Choosing verb");
+						for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+							buttons[i].setText(ts.customWords.get(1).get(i).toString());
+						}
+						if (!(ts.customWords.get(3).isEmpty() == true)) {
+							custom.setOnAction(eve -> {
+										custom.setText("Choosing subject");
+										for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+											buttons[i].setText(ts.customWords.get(2).get(i).toString());
+										}
 
-		});
+
+									}
+							);
+						}
+					});
+				}*/
+			});
+
+			//PLAY BUTTON-------------------------------------------------------
+			Button play;
+			String titlePlay;
+			titlePlay = "Play";
+			//create new instance of button called play
+			play = new Button(titlePlay);
+			//set width of play button
+			int playWidth;
+			playWidth = 80;
+			//set height of play button
+			int playHeight;
+			playHeight = 50;
+			//set size of play button
+			play.setPrefSize(playWidth, playHeight);
+			//add play button to flow pane
+			flowPane.getChildren().add(play);
+			play.setAlignment(Pos.CENTER);
+			//translate play button to bottom left
+			int playX_Translate;
+			playX_Translate = 0;
+			int playY_Translate;
+			playY_Translate = 20;
+			play.setTranslateX(playX_Translate);
+			play.setTranslateY(playY_Translate);
+			box.getChildren().add(flowPane);
+			//set action of play for open TBC
+			play.setOnAction(e -> {//event E should do..
+
+				// input action after browse button is clicked here
+
+			});
+		}
 
 	}
 
