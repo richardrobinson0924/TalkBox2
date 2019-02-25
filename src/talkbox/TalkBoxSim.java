@@ -230,15 +230,17 @@ public class TalkBoxSim extends Application {
 					custom.setOnAction(e -> {//event E should do..
 				//for every button
 				// input action after custom button is clicked here
-				/*		custom.setText("Choosing Subject");
-						for(int i=0;i<ts.getNumberOfAudioButtons();i++){
+						custom.setText("Choosing Subject");
+						/*for(int i=0;i<ts.getNumberOfAudioButtons();i++){
 							Button b;
 							b = new Button();
 							int finalI=i;
 							b.setOnAction(ea->{
-								sentence.add(page,ts.customWords.get(page).get(finalI));
+								sentence.add(pagination.getCurrentPageIndex(),ts.customWords.get(pagination.getCurrentPageIndex())
+                                        .get(finalI));
 							});
-						}
+						}*/
+
 					/*	for (int i = 0; i < ts.getNumberOfAudioSets(); i++) {
 							for(int j =0; j<ts.getNumberOfAudioButtons();i++) {
 								// change the all the buttons to the subject array
@@ -250,7 +252,7 @@ public class TalkBoxSim extends Application {
 				if(!(ts.customWords.get(1).isEmpty()==true)) {
 					custom.setOnAction(ev -> {
 						custom.setText("Choosing verb");
-						for (int i = 0; i < ts.numberOfAudioButtons; i++) {
+						/*for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 							buttons[i].setText(ts.customWords.get(1).get(i).toString());
 						}
 						if (!(ts.customWords.get(3).isEmpty() == true)) {
@@ -263,7 +265,7 @@ public class TalkBoxSim extends Application {
 
 									}
 							);
-						}
+						}*/
 					});
 				}
 					});
