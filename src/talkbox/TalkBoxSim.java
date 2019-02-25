@@ -226,18 +226,24 @@ public class TalkBoxSim extends Application {
 					custom.setTranslateY(customY_Translate);
 					//string of subject,verb and object
 					//this string will be what is displayed.
-					String text_f;
+					ArrayList<String> sentence = new ArrayList<>();
 					custom.setOnAction(e -> {//event E should do..
-			/*	//for every button
+				//for every button
 				// input action after custom button is clicked here
-						custom.setText("Choosing Subject");
-						ts.getNumberOfAudioSets();
-
-						for (int i = 0; i < ts.getNumberOfAudioSets(); i++) {
+				/*		custom.setText("Choosing Subject");
+						for(int i=0;i<ts.getNumberOfAudioButtons();i++){
+							Button b;
+							b = new Button();
+							int finalI=i;
+							b.setOnAction(ea->{
+								sentence.add(page,ts.customWords.get(page).get(finalI));
+							});
+						}
+					/*	for (int i = 0; i < ts.getNumberOfAudioSets(); i++) {
 							for(int j =0; j<ts.getNumberOfAudioButtons();i++) {
 								// change the all the buttons to the subject array
 							}
-						}
+						}*/
 
 
 					// if there are verbs in the list then
@@ -259,7 +265,7 @@ public class TalkBoxSim extends Application {
 							);
 						}
 					});
-				}*/
+				}
 					});
 
 					//PLAY BUTTON-------------------------------------------------------
