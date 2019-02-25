@@ -56,6 +56,8 @@ The TTS Wizard works best when connected to the internet, however a lower-qualit
 
 In addition to preset audio files, you can use your TalkBox to automatically generate custom phrases as audio in real time by creating a sentence from simple words. To set up the Custom Phrase Generator, go to `View > Open Custom Phrase List`. 
 
+![](.gitbook/assets/screen-shot-2019-02-24-at-10.47.26-pm.png)
+
 Here, you can customize the list of nouns, verbs, subjects, etc to be available on the TalkBox to generate the sentences. The operation of the CPG is explained further in [Using TalkBox Device](using-talkbox-device.md#using-talkbox).
 
 ## Exporting to Device

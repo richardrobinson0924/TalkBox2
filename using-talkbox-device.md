@@ -20,6 +20,8 @@ The TalkBox device already comes with a TBC file specifying its number of button
 {% endtab %}
 {% endtabs %}
 
+![](.gitbook/assets/screen-shot-2019-02-24-at-10.47.59-pm.png)
+
 ## Using TalkBox
 
 Once your TalkBox is set up, it's simple to use. Simply click on any of the assigned audio buttons once to preview the audio file's name on the display, and twice to play the audio. Or, click a swap button to go to the next audio set.
