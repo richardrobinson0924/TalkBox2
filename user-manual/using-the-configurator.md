@@ -34,7 +34,7 @@ If you already have a directory of audio files, use `File > Import` button to im
 
 To change a button's audio source, right click on the button and select `Change`. To remove an audio source, right click and select `Remove`. Lastly, to change the default label of a button, select `Rename`. You can always undo any changes you make using `Edit > Undo`.
 
-![The options for each button](.gitbook/assets/screen-shot-2019-02-03-at-9.50.58-pm-1.png)
+![The options for each button](../.gitbook/assets/screen-shot-2019-02-03-at-9.50.58-pm-1.png)
 
 ## Using the TTS Wizard
 
@@ -46,9 +46,9 @@ To hear how the audio sounds without exporting it, click the `Play` button
 
 Here, you can enter a custom phrase and select from one of six unique voices to have it converted to audio.  Once you're done, click `OK` to save the new audio file for use with the TBC.
 
-![The TTS Wizard](.gitbook/assets/screen-shot-2019-02-03-at-10.11.49-pm.png)
+![The TTS Wizard](../.gitbook/assets/screen-shot-2019-02-03-at-10.11.49-pm.png)
 
-{% file src=".gitbook/assets/hello.wav" caption="Sample Audio" %}
+{% file src="../.gitbook/assets/hello.wav" caption="Sample Audio" %}
 
 The TTS Wizard works best when connected to the internet, however a lower-quality TTS service will be used when a connection cannot be established.
 
@@ -56,7 +56,7 @@ The TTS Wizard works best when connected to the internet, however a lower-qualit
 
 In addition to preset audio files, you can use your TalkBox to automatically generate custom phrases as audio in real time by creating a sentence from simple words. To set up the Custom Phrase Generator, go to `View > Open Custom Phrase List`. 
 
-![](.gitbook/assets/screen-shot-2019-02-24-at-10.47.26-pm.png)
+![](../.gitbook/assets/screen-shot-2019-02-24-at-10.47.26-pm.png)
 
 Here, you can customize the list of nouns, verbs, subjects, etc to be available on the TalkBox to generate the sentences. The operation of the CPG is explained further in [Using TalkBox Device](using-talkbox-device.md#using-talkbox).
 

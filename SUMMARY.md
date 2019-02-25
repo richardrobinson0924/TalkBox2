@@ -1,6 +1,10 @@
 # Table of contents
 
-* [TalkBox User Guide](README.md)
-* [Using the Configurator](using-the-configurator.md)
-* [Using TalkBox Device](using-talkbox-device.md)
+* [TalkBox](README.md)
+
+## User Manual
+
+* [TalkBox User Guide](user-manual/talkbox-user-guide.md)
+* [Using the Configurator](user-manual/using-the-configurator.md)
+* [Using TalkBox Device](user-manual/using-talkbox-device.md)
 

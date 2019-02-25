@@ -1,16 +1,9 @@
----
-description: >-
-  Welcome to the TalkBox User Guide! Here, you can easily learn how to set up
-  and use your unique TalkBox device!
----
+# TalkBox
 
-# TalkBox User Guide
+Software source code and documentation for a TalkBox device. The following documentation is available:
 
-TalkBox is a simple Text-to-Speech \(TTS\) device for those with difficulty speaking. Use the TalkBox Configuration App \(TCA\) \(optionally with the TalkBox Simulator\) to configure your unqiue TalkBox to match your needs.
-
-![The TalkBox Configurator](.gitbook/assets/screen-shot-2019-02-24-at-10.45.48-pm.png)
-
-The TalkBox app itself is accessibility-minded, and compatable with most Screen Readers and Assistive Technologies.
-
-{% page-ref page="using-the-configurator.md" %}
-
+* [TalkBox User Guide](user-manual/talkbox-user-guide.md)
+* [Testing Documentation](https://github.com/richardrobinson0924/TalkBox2/blob/master/TestCases.pdf)
+* [Code Coverage Report](https://github.com/richardrobinson0924/TalkBox2/tree/master/Archive)
+* Requirements Document
+* * * * 

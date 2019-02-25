@@ -20,7 +20,7 @@ The TalkBox device already comes with a TBC file specifying its number of button
 {% endtab %}
 {% endtabs %}
 
-![](.gitbook/assets/screen-shot-2019-02-24-at-10.47.59-pm.png)
+![](../.gitbook/assets/screen-shot-2019-02-24-at-10.47.59-pm.png)
 
 ## Using TalkBox
 
