@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="TalkBox2:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/TalkBox2_jar</output-path>
+    <output-path>$USER_HOME$/Downloads</output-path>
     <root id="archive" name="TalkBox2.jar">
       <element id="module-output" name="TalkBox2" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/auth/google-auth-library-oauth2-http/0.13.0/google-auth-library-oauth2-http-0.13.0.jar" path-in-jar="/" />
@@ -53,6 +53,9 @@
       <element id="library" level="project" name="com.google.auth:google-auth-library-oauth2-http:0.13.0" />
       <element id="library" level="project" name="com.google.cloud:google-cloud-core:1.61.0" />
       <element id="library" level="project" name="com.google.cloud:google-cloud-texttospeech:0.79.0-beta" />
+      <element id="library" level="module" name="JUnit5.3" module-name="TalkBox2" />
+      <element id="library" level="project" name="org.apache.commons:commons-csv:1.6" />
+      <element id="library" level="project" name="org.controlsfx:controlsfx:8.40.14" />
     </root>
   </artifact>
 </component>

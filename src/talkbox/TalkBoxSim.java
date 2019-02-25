@@ -46,7 +46,7 @@ import java.util.stream.IntStream;
  * <p>
  *     <b>Opening an Existing File</b>
  * <p>
- *
+ *`
  * This presents a FileChooser allowing a user to select a .tbc TalkBox Configuration file. Then, an  interface will
  * appear with the following presentation:
  * <ul>
@@ -402,7 +402,7 @@ public class TalkBoxSim extends Application {
 		box.getChildren().addAll(mb, pagination);
 		pagination.setPageFactory(this::configButtons);
 		//if the custom word SUBJECT array is not empty then implement the custom and play button
-		if(!(ts.customWords.get(0).isEmpty()==true)) {
+		if(!(ts.customWords.get(0).isEmpty())) {
 			//create new flow plane for the buttons
 			FlowPane flowPane = new FlowPane();
 			//to prevent "hard coding"
