@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -149,8 +151,6 @@ public class TalkBoxSim extends Application {
 
 		/* Sets window size and title */
 		simStage.setTitle("TalkBox Simulator");
-		simStage.setWidth(500);
-		simStage.setHeight(400);
 		simStage.setResizable(false);
 		simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
@@ -347,8 +347,10 @@ public class TalkBoxSim extends Application {
 	}
 
 	private void adjustedSimStageWidthHeight() {
-        int multiplier = buttons.length/4;
-        SIMSTAGE_HEIGHT += 120 * multiplier;
+	    if (buttons.length > 8) {
+            int multiplier = (buttons.length/4) - 1;
+            SIMSTAGE_HEIGHT += 120 * multiplier;
+        }
     }
 
     private MenuBar makeMenuBar() {
@@ -685,51 +687,54 @@ public class TalkBoxSim extends Application {
         // uses the errorLbl to display an error message for missing info
         // add more instructions before the specific pane
 
+        Region newLine = addNewLinePane();
+
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(simStage);
         dialog.setTitle("New TalkBox");
         dialog.setResizable(false);
+        dialog.setHeight(SIMSTAGE_HEIGHT);
         dialog.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
 
         // 0th pane
 		FlowPane dialogPane0 = new FlowPane();
 		dialogPane0.setPrefSize(500,25);
-		dialogPane0.setPadding(new Insets(30, 20, 5, 35));
+		dialogPane0.setPadding(new Insets(30, 20, 0, 35));
 		dialogPane0.setAlignment(Pos.BOTTOM_LEFT);
 
         // first pane
         FlowPane dialogPane1 = new FlowPane();
-        dialogPane1.setPrefSize(500,50);
-        dialogPane1.setPadding(new Insets(0, 20, 10, 35));
+        dialogPane1.setPrefSize(500,40);
+        dialogPane1.setPadding(new Insets(0, 20, 0, 35));
 		dialogPane1.setHgap(10);
         dialogPane1.setAlignment(Pos.CENTER_LEFT);
 
         // second pane
         FlowPane dialogPane2 = new FlowPane();
         dialogPane2.setPrefSize(500,50);
-        dialogPane2.setPadding(new Insets(10, 20, 10, 35));
+        dialogPane2.setPadding(new Insets(0, 20, 0, 35));
 		dialogPane2.setHgap(10);
 		dialogPane2.setAlignment(Pos.CENTER_LEFT);
 
-		// third pane
+		// Fourth pane
 		FlowPane dialogPane3 = new FlowPane();
 		dialogPane3.setPrefSize(500,50);
-		dialogPane3.setPadding(new Insets(10, 35, 10, 35));
+		dialogPane3.setPadding(new Insets(0, 35, 0, 35));
 		dialogPane3.setHgap(20);
 		dialogPane3.setAlignment(Pos.CENTER_LEFT);
 
-		// fourth pane
+		// Fifth pane
 		FlowPane dialogPane4 = new FlowPane();
 		dialogPane4.setPrefSize(500,50);
-		dialogPane4.setPadding(new Insets(10, 20, 0, 35));
+		dialogPane4.setPadding(new Insets(25, 20, 20, 35));
 		dialogPane4.setHgap(10);
 		dialogPane4.setAlignment(Pos.BOTTOM_RIGHT);
 
 
 		// The following "nodes" are to be added to the 0th pane
 		Label enterNameLbl = new Label();
-		enterNameLbl.setText("Creating a New TalkBox\n\tEnter a TalkBox name.");
+		enterNameLbl.setText("Creating a New TalkBox\nEnter a TalkBox name.");
 		enterNameLbl.setStyle("-fx-font-weight: bold;");
 
         Label errorLbl = new Label();
@@ -741,7 +746,7 @@ public class TalkBoxSim extends Application {
         nameLbl.setText("TextBox file name (file type: .tbc): ");
 
 		TextField nameTxtField = new TextField();
-		nameTxtField.setPrefWidth(300);
+		nameTxtField.setPrefWidth(265);
 
 		ValidationSupport nameValidation = new ValidationSupport();
 		nameValidation.registerValidator(nameTxtField, Validator.createEmptyValidator("Name is required"));
@@ -849,7 +854,7 @@ public class TalkBoxSim extends Application {
         dialogPane0.getChildren().add(enterNameLbl);
         dialogPane1.getChildren().addAll(nameLbl, nameTxtField);
         dialogPane2.getChildren().addAll(locationLbl, locationTxtField, browseBtn);
-        dialogPane3.getChildren().addAll(numBtnsLbl,numBtnsTxtField,numSetsLbl,numSetsTxtField);
+        dialogPane3.getChildren().addAll(numBtnsLbl,numBtnsTxtField, newLine, numSetsLbl,numSetsTxtField);
         dialogPane4.getChildren().addAll(finishBtn,cancelBtn);
 
 		// add the Vbox to the dialog scene and show it
@@ -857,6 +862,12 @@ public class TalkBoxSim extends Application {
         Scene dialogScene = new Scene(dialogVbox);
         dialog.setScene(dialogScene);
         dialog.showAndWait();
+    }
+
+    private Region addNewLinePane() {
+        Region r = new Region();
+        r.setPrefSize(SIMSTAGE_WIDTH, 10);
+        return r;
     }
 
 	private void readFile() throws Exception {
