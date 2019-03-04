@@ -49,5 +49,5 @@ jobs:
             TAG=Release-$(date '+%Y-%m-%d-%H-%M-%S')
             gradle jar
             cd ./build/libs/
-            zip ${ZIP_FILE_NAME}.zip TalkBox.jar
+            zip ${ZIP_FILE_NAME}.zip talkbox-1.0-SNAPSHOT.jar
             github-release upload --token ${GITHUB_TOKEN} --owner ${PROJECT_USERNAME} --repo ${PROJECT_REPONAME} --tag ${TAG} --name ${TAG} --body "Release date: ${NOW}" ${ZIP_FILE_NAME}.z
