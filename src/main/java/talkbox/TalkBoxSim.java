@@ -407,24 +407,16 @@ public class TalkBoxSim extends Application {
 			//create new flow plane for the buttons
 			FlowPane flowPane = new FlowPane();
 			//to prevent "hard coding"
-			int flowpane_top;
-			flowpane_top = 30;
-			int flowpane_right;
-			flowpane_right = 20;
-			int flowpane_bottom;
-			flowpane_bottom = 30;
-			int flowpane_left;
-			flowpane_left = 20;
+			int flowpane_top = 30;
+			int flowpane_right = 20;
+			int flowpane_bottom = 30;
+			int flowpane_left = 20;
 			flowPane.setPadding(new Insets(flowpane_top, flowpane_right, flowpane_bottom, flowpane_left));
-			int flowpane_width;
-			flowpane_width = 100;
-			int flowpane_height;
-			flowpane_height = 25;
+			int flowpane_width = 100;
+			int flowpane_height = 25;
 			flowPane.setPrefSize(flowpane_width, flowpane_height);
-			int flowpane_vGap;
-			flowpane_vGap = 10;
-			int flowpane_hGap;
-			flowpane_hGap = 10;
+			int flowpane_vGap = 10;
+			int flowpane_hGap = 10;
 			flowPane.setVgap(flowpane_vGap);
 			flowPane.setHgap(flowpane_hGap);
 			flowPane.setAlignment(Pos.BOTTOM_RIGHT);
