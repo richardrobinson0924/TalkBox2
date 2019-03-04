@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.testfx:testfx-junit:4.0+'
     compile group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '0.13.0'
     compile group: 'com.google.cloud', name: 'google-cloud-core', version: '1.61.0'
     compile group: 'com.google.cloud', name: 'google-cloud-texttospeech', version: '0.79.0-beta'

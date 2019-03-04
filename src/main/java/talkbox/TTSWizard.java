@@ -150,7 +150,7 @@ public class TTSWizard {
 	 */
 	static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		final GoogleCredentials credentials = GoogleCredentials
-				.fromStream(TTSWizard.class.getClassLoader().getResourceAsStream("/Resources/TalkBox-0d25e5d8c6d7.json"))
+				.fromStream(TTSWizard.class.getClassLoader().getResourceAsStream("TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
 		final TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()
