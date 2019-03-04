@@ -2,21 +2,28 @@ package talkbox;
 
 import com.google.api.client.util.Beta;
 import com.sun.media.sound.WaveFileWriter;
-import javafx.application.*;
+import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.binding.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.*;
-import javafx.scene.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.AccessibleRole;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.media.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.*;
 import talkbox.Commands.*;
 
@@ -24,11 +31,15 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static talkbox.Commands.History.*;
+import static talkbox.Commands.History.getInstance;
 
 /**
  * NOT SUITABLE YET FOR PRODUCTION USE
@@ -62,7 +73,7 @@ public class TalkBoxApp {
 
 	private final static int GRAPHIC_SIZE = 55;
 	private final static int BUTTON_SIZE = 100;
-	private final static Image GRAPHIC = new Image(TalkBoxApp.class.getResource("/Resources/button_graphic.png").toString());
+	private static final Image GRAPHIC = new Image(TalkBoxApp.class.getClassLoader().getResource("button_graphic.png").toString());
 	private final static String AUDIO_PATH = "/Audio";
 
 	/**
@@ -86,7 +97,7 @@ public class TalkBoxApp {
 		primaryStage.setTitle("TalkBox Config");
 		primaryStage.setWidth(500);
 		primaryStage.setHeight(400);
-		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
+		primaryStage.getIcons().add(new Image(TalkBoxApp.class.getClassLoader().getResourceAsStream("icon2.png")));
 
 		/* Creates the outermost container, composing of a `MenuBar` and `FlowPane` */
 		final VBox box = new VBox();

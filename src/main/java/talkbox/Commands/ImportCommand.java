@@ -2,7 +2,6 @@ package talkbox.Commands;
 
 import talkbox.TalkBoxApp;
 
-import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.util.Iterator;

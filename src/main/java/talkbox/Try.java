@@ -1,8 +1,5 @@
 package talkbox;
 
-import com.sun.istack.internal.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -117,7 +114,7 @@ public final class Try {
 
 	/**
 	 * A <code>Runner</code> interface which throws an exception
-	 * @see java.lang.Runnable
+	 * @see Runnable
 	 */
 	@FunctionalInterface
 	public interface RunnableEx {

@@ -3,7 +3,6 @@ package talkbox;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,7 +64,7 @@ public class TTSWizard {
 		dialog1.setHeaderText("Set Button Audio");
 
 		/* Use custom dialog graphic */
-		final ImageView imageView = new ImageView(TTSWizard.class.getResource("/Resources/magic-wand-2.png").toString());
+		final ImageView imageView = new ImageView(TTSWizard.class.getClassLoader().getResource("magic-wand-2.png").toString());
 		imageView.setFitHeight(40);
 		imageView.setPreserveRatio(true);
 		dialog1.setGraphic(imageView);
@@ -149,9 +148,9 @@ public class TTSWizard {
 	 * or use with <code>Clip</code> class to play directly.
 	 * @throws Exception if any exception occurs
 	 */
-	static AudioInputStream generateAudio(@NotNull String text, Voice v) throws Exception {
+	static AudioInputStream generateAudio(String text, Voice v) throws Exception {
 		final GoogleCredentials credentials = GoogleCredentials
-				.fromStream(TTSWizard.class.getResourceAsStream("/Resources/TalkBox-0d25e5d8c6d7.json"))
+				.fromStream(TTSWizard.class.getClassLoader().getResourceAsStream("/Resources/TalkBox-0d25e5d8c6d7.json"))
 				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
 		final TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()

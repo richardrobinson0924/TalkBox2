@@ -1,7 +1,10 @@
 package talkbox;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.*;
 
 /**

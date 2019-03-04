@@ -1,8 +1,7 @@
 package talkbox.Commands;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
-import talkbox.TalkBoxApp;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.Stack;
 

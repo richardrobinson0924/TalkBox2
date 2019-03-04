@@ -1,7 +1,8 @@
 package talkbox.Commands;
 
-import javafx.scene.image.ImageView;
-import talkbox.*;
+import talkbox.AudioPair;
+import talkbox.TalkBoxApp;
+import talkbox.Try;
 
 import java.io.File;
 import java.nio.file.Files;

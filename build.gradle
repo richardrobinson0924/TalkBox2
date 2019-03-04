@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'talkbox.TalkBoxSim'
+
+group 'eecs'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '0.13.0'
+    compile group: 'com.google.cloud', name: 'google-cloud-core', version: '1.61.0'
+    compile group: 'com.google.cloud', name: 'google-cloud-texttospeech', version: '0.79.0-beta'
+    compile group: 'uk.ac.abdn', name: 'SimpleNLG', version: '4.4.8'
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'talkbox.TalkBoxSim'
+    }
+}

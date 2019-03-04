@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -152,7 +151,7 @@ public class TalkBoxSim extends Application {
 		/* Sets window size and title */
 		simStage.setTitle("TalkBox Simulator");
 		simStage.setResizable(false);
-		simStage.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
+		simStage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("icon2.png")));
 
 		/* Added the Creating a new file button */
 		Button newFileBtn = new Button("Create a New File");
@@ -695,7 +694,7 @@ public class TalkBoxSim extends Application {
         dialog.setTitle("New TalkBox");
         dialog.setResizable(false);
         dialog.setHeight(SIMSTAGE_HEIGHT);
-        dialog.getIcons().add(new Image(TalkBoxApp.class.getResourceAsStream("/Resources/icon2.png")));
+        dialog.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("icon2.png")));
 
         // 0th pane
 		FlowPane dialogPane0 = new FlowPane();
