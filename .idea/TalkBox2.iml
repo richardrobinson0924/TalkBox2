@@ -35,5 +35,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="org.controlsfx:controlsfx:8.40.14" level="project" />
+    <orderEntry type="library" name="org.testfx:testfx-core:4.0.15-alpha" level="project" />
+    <orderEntry type="library" name="org.testfx:testfx-junit:4.0.15-alpha" level="project" />
   </component>
 </module>
