@@ -61,6 +61,7 @@ public class CustomPhraseButton extends Button {
 
 		} else {
 			phraseSpec.setFeature(Feature.TENSE, Tense.valueOf(str.toUpperCase()));
+
 		}
 	}
 }
