@@ -1,0 +1,448 @@
+2019-03-27 07:02:48,INFO,SplashStage:55,Starting TalkBox App...
+2019-03-27 11:58:53,INFO,SplashStage:55,Starting TalkBox App...
+2019-03-27 11:58:57,INFO,SplashStage:114,Attempting to open file from recents list...
+2019-03-27 11:58:57,INFO,ConfigStage:59,Starting Configuration App
+2019-03-27 12:00:39,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 0
+2019-03-27 12:00:39,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:00:41,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:00:43,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:00:46,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:00:52,DEBUG,InternalLoggerFactory:43,Using SLF4J as the default logging framework
+2019-03-27 12:00:52,DEBUG,PlatformDependent:966,Platform: MacOS
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:395,-Dio.netty.noUnsafe: {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:871,Java version: {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:120,sun.misc.Unsafe.theUnsafe: available
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:144,sun.misc.Unsafe.copyMemory: available
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:182,java.nio.Buffer.address: available
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:243,direct buffer constructor: available
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:313,java.nio.Bits.unaligned: available, {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:378,jdk.internal.misc.Unsafe.allocateUninitializedArray(int): unavailable prior to Java9
+2019-03-27 12:00:52,DEBUG,PlatformDependent0:385,java.nio.DirectByteBuffer.<init>(long, int): {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent:992,sun.misc.Unsafe: {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent:1086,-Dio.netty.tmpdir: {} (java.io.tmpdir)
+2019-03-27 12:00:52,DEBUG,PlatformDependent:1165,-Dio.netty.bitMode: {} (sun.arch.data.model)
+2019-03-27 12:00:52,DEBUG,PlatformDependent:158,-Dio.netty.maxDirectMemory: {} bytes
+2019-03-27 12:00:52,DEBUG,PlatformDependent:164,-Dio.netty.uninitializedArrayAllocationThreshold: {}
+2019-03-27 12:00:52,DEBUG,CleanerJava6:92,java.nio.ByteBuffer.cleaner(): available
+2019-03-27 12:00:52,DEBUG,PlatformDependent:184,-Dio.netty.noPreferDirect: {}
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:73,-Dio.netty.native.workdir: /var/folders/_y/td1fy47s6yd0pk0c9x1xg8l80000gn/T (io.netty.tmpdir)
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:78,-Dio.netty.native.deleteLibAfterLoading: {}
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:82,-Dio.netty.native.tryPatchShadedId: {}
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:311,Unable to load the library '{}', trying other loading mechanism.
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:140,{} cannot be loaded from java.libary.path, now trying export to -Dio.netty.native.workdir: {}
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:277,Was not able to find the ID of the shaded native library {}, can't adjust it.
+2019-03-27 12:00:52,DEBUG,NativeLibraryLoader:307,Successfully loaded the library {}
+2019-03-27 12:00:52,DEBUG,OpenSsl:110,Initialize netty-tcnative using engine: 'default'
+2019-03-27 12:00:52,DEBUG,OpenSsl:135,netty-tcnative using native library: {}
+2019-03-27 12:00:52,DEBUG,ResourceLeakDetector:121,-D{}: {}
+2019-03-27 12:00:52,DEBUG,ResourceLeakDetector:122,-D{}: {}
+2019-03-27 12:00:52,DEBUG,AbstractByteBuf:60,-D{}: {}
+2019-03-27 12:00:52,DEBUG,AbstractByteBuf:61,-D{}: {}
+2019-03-27 12:00:52,DEBUG,ResourceLeakDetectorFactory:202,Loaded default ResourceLeakDetector: {}
+2019-03-27 12:00:52,DEBUG,InternalThreadLocalMap:54,-Dio.netty.threadLocalMap.stringBuilder.initialSize: {}
+2019-03-27 12:00:52,DEBUG,InternalThreadLocalMap:57,-Dio.netty.threadLocalMap.stringBuilder.maxSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:120,-Dio.netty.allocator.numHeapArenas: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:121,-Dio.netty.allocator.numDirectArenas: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:123,-Dio.netty.allocator.pageSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:128,-Dio.netty.allocator.maxOrder: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:132,-Dio.netty.allocator.chunkSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:133,-Dio.netty.allocator.tinyCacheSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:134,-Dio.netty.allocator.smallCacheSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:135,-Dio.netty.allocator.normalCacheSize: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:136,-Dio.netty.allocator.maxCachedBufferCapacity: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:137,-Dio.netty.allocator.cacheTrimInterval: {}
+2019-03-27 12:00:52,DEBUG,PooledByteBufAllocator:138,-Dio.netty.allocator.useCacheForAllThreads: {}
+2019-03-27 12:00:52,DEBUG,ByteBufUtil:83,-Dio.netty.allocator.type: {}
+2019-03-27 12:00:52,DEBUG,ByteBufUtil:92,-Dio.netty.threadLocalDirectBufferSize: {}
+2019-03-27 12:00:52,DEBUG,ByteBufUtil:95,-Dio.netty.maxThreadLocalCharBufferSize: {}
+2019-03-27 12:00:52,DEBUG,ResourceLeakDetectorFactory:202,Loaded default ResourceLeakDetector: {}
+2019-03-27 12:00:52,DEBUG,Recycler:96,-Dio.netty.recycler.maxCapacityPerThread: {}
+2019-03-27 12:00:52,DEBUG,Recycler:97,-Dio.netty.recycler.maxSharedCapacityFactor: {}
+2019-03-27 12:00:52,DEBUG,Recycler:98,-Dio.netty.recycler.linkCapacity: {}
+2019-03-27 12:00:52,DEBUG,Recycler:99,-Dio.netty.recycler.ratio: {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:316,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,CipherSuiteConverter:317,Cipher suite mapping: {} => {}
+2019-03-27 12:00:52,DEBUG,OpenSsl:246,Supported protocols (OpenSSL): {} 
+2019-03-27 12:00:52,DEBUG,OpenSsl:247,Default cipher suites (OpenSSL): {}
+2019-03-27 12:00:52,DEBUG,MultithreadEventLoopGroup:44,-Dio.netty.eventLoopThreads: {}
+2019-03-27 12:00:52,DEBUG,NioEventLoop:104,-Dio.netty.noKeySetOptimization: {}
+2019-03-27 12:00:52,DEBUG,NioEventLoop:105,-Dio.netty.selectorAutoRebuildThreshold: {}
+2019-03-27 12:00:52,DEBUG,PlatformDependent:860,org.jctools-core.MpscChunkedArrayQueue: available
+2019-03-27 12:00:52,DEBUG,DefaultChannelId:79,-Dio.netty.processId: {} (auto-detected)
+2019-03-27 12:00:52,DEBUG,NetUtil:139,-Djava.net.preferIPv4Stack: {}
+2019-03-27 12:00:52,DEBUG,NetUtil:140,-Djava.net.preferIPv6Addresses: {}
+2019-03-27 12:00:52,DEBUG,NetUtil:224,Loopback interface: {} ({}, {})
+2019-03-27 12:00:52,DEBUG,NetUtil:289,Failed to get SOMAXCONN from sysctl and file {}. Default: {}
+2019-03-27 12:00:52,DEBUG,DefaultChannelId:101,-Dio.netty.machineId: {} (auto-detected)
+2019-03-27 12:00:52,DEBUG,ResourceLeakDetectorFactory:202,Loaded default ResourceLeakDetector: {}
+2019-03-27 12:00:53,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:00:53,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:00:53,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@64538ec
+2019-03-27 12:00:53,INFO,Entry:37,String 'Sad' added to talkboxnew.Entry$Builder@64538ec
+2019-03-27 12:00:53,INFO,Entry:43,Image 'SADNESS_Fullbody_Render.png' added to talkboxnew.Entry$Builder@64538ec
+2019-03-27 12:00:53,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@613d9410
+2019-03-27 12:00:53,INFO,Entry:37,String 'Sad' added to talkboxnew.Entry$Builder@613d9410
+2019-03-27 12:00:53,INFO,Entry:43,Image 'Sad.png' added to talkboxnew.Entry$Builder@613d9410
+2019-03-27 12:00:54,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:01:42,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 1
+2019-03-27 12:01:42,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:01:43,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:01:45,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:01:47,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:01:50,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:01:50,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:01:51,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:01:51,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@655b8ac
+2019-03-27 12:01:51,INFO,Entry:37,String 'Angry' added to talkboxnew.Entry$Builder@655b8ac
+2019-03-27 12:01:51,INFO,Entry:43,Image '3965c4b9d57ce7119f6de542aa186789.png' added to talkboxnew.Entry$Builder@655b8ac
+2019-03-27 12:01:51,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@142cf15
+2019-03-27 12:01:51,INFO,Entry:37,String 'Angry' added to talkboxnew.Entry$Builder@142cf15
+2019-03-27 12:01:51,INFO,Entry:43,Image 'Angry.png' added to talkboxnew.Entry$Builder@142cf15
+2019-03-27 12:01:52,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:02:03,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 2
+2019-03-27 12:02:03,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:02:05,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:02:08,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:02:10,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:02:10,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:02:10,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:02:17,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:02:17,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:02:17,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@6f84aaa7
+2019-03-27 12:02:17,INFO,Entry:37,String 'Nervous' added to talkboxnew.Entry$Builder@6f84aaa7
+2019-03-27 12:02:17,INFO,Entry:43,Image 'Insıde Out Png Pack (NavyGorl) (11).png' added to talkboxnew.Entry$Builder@6f84aaa7
+2019-03-27 12:02:17,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@46c57d09
+2019-03-27 12:02:17,INFO,Entry:37,String 'Nervous' added to talkboxnew.Entry$Builder@46c57d09
+2019-03-27 12:02:17,INFO,Entry:43,Image 'Nervous.png' added to talkboxnew.Entry$Builder@46c57d09
+2019-03-27 12:02:18,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:02:21,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 3
+2019-03-27 12:02:21,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:02:22,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:02:27,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:02:30,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:02:36,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:02:36,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:02:36,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@28bf08aa
+2019-03-27 12:02:36,INFO,Entry:37,String 'Happy' added to talkboxnew.Entry$Builder@28bf08aa
+2019-03-27 12:02:36,INFO,Entry:43,Image 'd3db8af2c4ce6b59d8626e54f8ec1e23.png' added to talkboxnew.Entry$Builder@28bf08aa
+2019-03-27 12:02:36,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@22056586
+2019-03-27 12:02:36,INFO,Entry:37,String 'Happy' added to talkboxnew.Entry$Builder@22056586
+2019-03-27 12:02:36,INFO,Entry:43,Image 'Happy.png' added to talkboxnew.Entry$Builder@22056586
+2019-03-27 12:02:37,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:02:39,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 4
+2019-03-27 12:02:39,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:02:40,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:02:47,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:02:58,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:03:07,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:03:07,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:03:07,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@36a8522a
+2019-03-27 12:03:07,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@36a8522a
+2019-03-27 12:03:07,INFO,Entry:43,Image 'kisspng-inside-out-riley-disgust-youtube-character-inside-5addf487dd2594.3907879715244954959058-2.jpg' added to talkboxnew.Entry$Builder@36a8522a
+2019-03-27 12:03:07,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@509b53a4
+2019-03-27 12:03:07,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@509b53a4
+2019-03-27 12:03:07,INFO,Entry:43,Image 'Disgusted.png' added to talkboxnew.Entry$Builder@509b53a4
+2019-03-27 12:03:08,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:17,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:18,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:19,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:03:21,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:03:24,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:03:25,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:03:38,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:03:38,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:03:38,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@4eaaacdd
+2019-03-27 12:03:38,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@4eaaacdd
+2019-03-27 12:03:38,INFO,Entry:43,Image 'kisspng-inside-out-riley-disgust-youtube-character-inside-5addf487dd2594.3907879715244954959058-3.jpg' added to talkboxnew.Entry$Builder@4eaaacdd
+2019-03-27 12:03:38,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@488f8fd
+2019-03-27 12:03:38,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@488f8fd
+2019-03-27 12:03:38,INFO,Entry:43,Image 'Disgusted.png' added to talkboxnew.Entry$Builder@488f8fd
+2019-03-27 12:03:39,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:40,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:42,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:43,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:43,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:43,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:43,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:03:43,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:44,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:03:45,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:04:16,INFO,Utils:124,Playing audio for Entry 4
+2019-03-27 12:04:19,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:04:20,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:04:23,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:04:24,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:04:36,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:04:36,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:04:36,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@491cf04a
+2019-03-27 12:04:36,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@491cf04a
+2019-03-27 12:04:36,INFO,Entry:43,Image 'disgust-inside-out-transparent-png-image-5a1be454cdd5b4.0058951115117773648431.jpg' added to talkboxnew.Entry$Builder@491cf04a
+2019-03-27 12:04:36,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@7361f6a8
+2019-03-27 12:04:36,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@7361f6a8
+2019-03-27 12:04:36,INFO,Entry:43,Image 'Disgusted.png' added to talkboxnew.Entry$Builder@7361f6a8
+2019-03-27 12:04:37,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:04:54,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:04:55,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 12:04:58,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 12:04:59,INFO,AddWizardView:54,Advancing to pane 5
+2019-03-27 12:05:40,DEBUG,SslHandler:1528,{} HANDSHAKEN: {}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} SETTINGS: ack=false settings={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} WINDOW_UPDATE: streamId={} windowSizeIncrement={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:193,{} {} SETTINGS: ack=true
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} streamDependency={} weight={} exclusive={} padding={} endStream={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} DATA: streamId={} padding={} endStream={} length={} bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} HEADERS: streamId={} headers={} padding={} endStream={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} PING: ack=false bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} PING: ack=true bytes={}
+2019-03-27 12:05:40,DEBUG,NettyClientHandler:216,{} {} GO_AWAY: lastStreamId={} errorCode={} length={} bytes={}
+2019-03-27 12:05:40,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@b4d140b
+2019-03-27 12:05:40,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@b4d140b
+2019-03-27 12:05:40,INFO,Entry:43,Image '5a0c693082e02d31ecb8d004.png' added to talkboxnew.Entry$Builder@b4d140b
+2019-03-27 12:05:41,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@6c1877b
+2019-03-27 12:05:41,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@6c1877b
+2019-03-27 12:05:41,INFO,Entry:43,Image 'Disgusted.png' added to talkboxnew.Entry$Builder@6c1877b
+2019-03-27 12:05:41,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:15:29,INFO,ConfigStage:162,'Undo' selected
+2019-03-27 12:15:29,INFO,Entry:29,New Entry Created: talkboxnew.Entry$Builder@3b216b3
+2019-03-27 12:15:29,INFO,Entry:37,String 'Disgusted' added to talkboxnew.Entry$Builder@3b216b3
+2019-03-27 12:15:29,INFO,Entry:43,Image 'Disgusted' added to talkboxnew.Entry$Builder@3b216b3
+2019-03-27 12:15:32,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:15:32,DEBUG,PoolThreadCache:249,Freed {} thread-local buffer(s) from thread: {}
+2019-03-27 12:15:33,INFO,ConfigStage:103,Not saving and exiting...
+2019-03-27 22:51:39,INFO,SplashStage:54,Starting TalkBox App...
+2019-03-27 22:51:43,INFO,SplashStage:214,'New Configuration' button selected
+2019-03-27 22:51:43,INFO,CreateConfigWizard:58,Config Wizard invoked...
+2019-03-27 22:51:43,INFO,CreateConfigWizard:203,Name wizard pane invoked
+2019-03-27 22:51:43,INFO,CreateConfigWizard:171,Numbers pane invoked
+2019-03-27 22:51:43,INFO,CreateConfigWizard:94,File pane invoked
+2019-03-27 22:51:54,ERROR,CreateConfigWizard:162,Overwriting exists file
+2019-03-27 22:51:54,INFO,CreateConfigWizard:262,TBC Directory Created (/Users/richardrobinson/hi) with 5 buttons
+2019-03-27 22:51:54,INFO,ConfigStage:59,Starting Configuration App
+2019-03-27 22:51:55,INFO,CreateConfigWizard:267,Wizard complete. Opening Configurator stage with created file
+2019-03-27 22:52:00,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 1
+2019-03-27 22:52:00,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 22:52:01,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 22:52:18,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 22:52:21,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 2
+2019-03-27 22:52:21,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 22:52:24,INFO,AddWizardView:54,Advancing to pane 1
+2019-03-27 22:52:32,INFO,Utils:116,Entry empty. Invoking AddWizardView for index 2
+2019-03-27 22:52:33,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 22:52:33,INFO,IntroPane:32,Button RadioButton[id=RecordingButton, styleClass=radio-button]'Record Audio' selected
+2019-03-27 22:52:34,INFO,AddWizardView:54,Advancing to pane 3
+2019-03-27 22:52:39,INFO,AddWizardView:54,Advancing to pane 4
+2019-03-27 23:34:18,INFO,SplashStage:54,Starting TalkBox App...
+2019-03-28 09:15:13,INFO,SplashStage:54,Starting TalkBox App...
+2019-03-28 09:15:15,INFO,SplashStage:214,'New Configuration' button selected
+2019-03-28 09:15:15,INFO,CreateConfigWizard:58,Config Wizard invoked...
+2019-03-28 09:15:15,INFO,CreateConfigWizard:203,Name wizard pane invoked
+2019-03-28 09:15:15,INFO,CreateConfigWizard:171,Numbers pane invoked
+2019-03-28 09:15:15,INFO,CreateConfigWizard:94,File pane invoked
+2019-03-28 09:15:19,ERROR,CreateConfigWizard:162,Overwriting exists file
+2019-03-28 09:15:19,INFO,CreateConfigWizard:262,TBC Directory Created (/Users/richardrobinson/m) with 1 buttons
+2019-03-28 09:15:20,INFO,ConfigStage:60,Starting Configuration App
+2019-03-28 09:15:20,INFO,CreateConfigWizard:267,Wizard complete. Opening Configurator stage with created file

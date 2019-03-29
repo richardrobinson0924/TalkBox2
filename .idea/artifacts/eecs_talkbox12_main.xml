@@ -1,0 +1,87 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="eecs.talkbox12.main">
+    <output-path>$PROJECT_DIR$/out/artifacts/eecs_talkbox12_main</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="talkboxnew.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="image" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="eecs_talkbox12_main.jar">
+        <element id="module-output" name="eecs.talkbox12.main" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/libs/JARVIS-API.jar" />
+      <element id="library" level="project" name="Gradle: de.dfki.mary:voice-cmu-slt-hsmm:5.2" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/voice-cmu-slt-hsmm-5.2.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/marytts-client-5.2-jar-with-dependencies.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/marytts-lang-en-5.2.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/marytts-runtime-5.2-jar-with-dependencies.jar" />
+      <element id="library" level="project" name="Gradle: com.google.cloud:google-cloud-texttospeech:0.79.0-beta" />
+      <element id="library" level="project" name="Gradle: com.google.cloud:google-cloud-core-grpc:1.61.0" />
+      <element id="library" level="project" name="Gradle: com.google.cloud:google-cloud-core:1.61.0" />
+      <element id="library" level="project" name="Gradle: com.google.api:gax-grpc:1.37.0" />
+      <element id="library" level="project" name="Gradle: com.google.api:gax:1.37.0" />
+      <element id="library" level="project" name="Gradle: com.google.auth:google-auth-library-oauth2-http:0.13.0" />
+      <element id="library" level="project" name="Gradle: uk.ac.abdn:SimpleNLG:4.4.8" />
+      <element id="library" level="project" name="Gradle: org.controlsfx:controlsfx:8.40.14" />
+      <element id="library" level="project" name="Gradle: org.apache.ant:ant-apache-log4j:1.10.5" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-auth:1.17.1" />
+      <element id="library" level="project" name="Gradle: com.google.auth:google-auth-library-credentials:0.13.0" />
+      <element id="library" level="project" name="Gradle: com.google.http-client:google-http-client-jackson2:1.28.0" />
+      <element id="library" level="project" name="Gradle: com.google.http-client:google-http-client:1.28.0" />
+      <element id="library" level="project" name="Gradle: com.google.api.grpc:proto-google-iam-v1:0.12.0" />
+      <element id="library" level="project" name="Gradle: com.google.api.grpc:proto-google-cloud-texttospeech-v1beta1:0.44.0" />
+      <element id="library" level="project" name="Gradle: com.google.api.grpc:proto-google-cloud-texttospeech-v1:0.44.0" />
+      <element id="library" level="project" name="Gradle: com.google.api:api-common:1.7.0" />
+      <element id="library" level="project" name="Gradle: com.google.protobuf:protobuf-java-util:3.6.1" />
+      <element id="library" level="project" name="Gradle: io.opencensus:opencensus-contrib-http-util:0.18.0" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-protobuf:1.17.1" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-netty-shaded:1.17.1" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-stub:1.17.1" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-protobuf-lite:1.17.1" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-core:1.17.1" />
+      <element id="library" level="project" name="Gradle: com.google.guava:guava:26.0-android" />
+      <element id="library" level="project" name="Gradle: joda-time:joda-time:2.9.2" />
+      <element id="library" level="project" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" />
+      <element id="library" level="project" name="Gradle: com.google.api.grpc:proto-google-common-protos:1.12.0" />
+      <element id="library" level="project" name="Gradle: javax.annotation:javax.annotation-api:1.2" />
+      <element id="library" level="project" name="Gradle: org.apache.maven.plugins:maven-antrun-plugin:1.8" />
+      <element id="library" level="project" name="Gradle: org.apache.ant:ant:1.10.5" />
+      <element id="library" level="project" name="Gradle: log4j:log4j:1.2.17" />
+      <element id="library" level="project" name="Gradle: com.google.j2objc:j2objc-annotations:1.1" />
+      <element id="library" level="project" name="Gradle: io.opencensus:opencensus-contrib-grpc-metrics:0.17.0" />
+      <element id="library" level="project" name="Gradle: io.opencensus:opencensus-api:0.18.0" />
+      <element id="library" level="project" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.6" />
+      <element id="library" level="project" name="Gradle: org.checkerframework:checker-compat-qual:2.5.2" />
+      <element id="library" level="project" name="Gradle: com.google.errorprone:error_prone_annotations:2.2.0" />
+      <element id="library" level="project" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17" />
+      <element id="library" level="project" name="Gradle: org.threeten:threetenbp:1.3.3" />
+      <element id="library" level="project" name="Gradle: com.google.protobuf:protobuf-java:3.6.1" />
+      <element id="library" level="project" name="Gradle: com.google.code.gson:gson:2.7" />
+      <element id="library" level="project" name="Gradle: io.grpc:grpc-context:1.17.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-plugin-api:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-project:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-artifact-manager:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-artifact:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-settings:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-profile:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-model:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-plugin-registry:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.codehaus.plexus:plexus-container-default:1.0-alpha-9-stable-1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven:maven-repository-metadata:2.2.1" />
+      <element id="library" level="project" name="Gradle: org.apache.maven.wagon:wagon-provider-api:1.0-beta-6" />
+      <element id="library" level="project" name="Gradle: org.codehaus.plexus:plexus-utils:3.0.20" />
+      <element id="library" level="project" name="Gradle: org.apache.ant:ant-launcher:1.10.5" />
+      <element id="library" level="project" name="Gradle: org.codehaus.plexus:plexus-interpolation:1.11" />
+      <element id="library" level="project" name="Gradle: backport-util-concurrent:backport-util-concurrent:3.1" />
+      <element id="library" level="project" name="Gradle: junit:junit:3.8.1" />
+      <element id="library" level="project" name="Gradle: classworlds:classworlds:1.1-alpha-2" />
+    </root>
+  </artifact>
+</component>
