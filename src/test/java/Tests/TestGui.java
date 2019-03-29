@@ -7,6 +7,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +23,7 @@ import talkboxnew.Main;
 
 import java.util.concurrent.TimeoutException;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
