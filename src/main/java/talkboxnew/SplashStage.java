@@ -48,7 +48,7 @@ public final class SplashStage extends Stage {
 
 	// each node in this string is used for testing... Id must be set for the testing to work
 	// KEEP THIS RESPECTIVE ORDER.
-	public static final String[] nodesId = {"OPEN_BUTTON","NEW_BUTTON","LIST"};
+	public static final String[] nodesId = {"OPEN_BUTTON", "NEW_BUTTON", "LIST"};
 
 	public SplashStage() {
 		log.info("Starting TalkBox App...");
@@ -82,8 +82,7 @@ public final class SplashStage extends Stage {
 				Collections.reverse(tmp);
 				data.addAll(tmp);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 
 		System.out.println(data);

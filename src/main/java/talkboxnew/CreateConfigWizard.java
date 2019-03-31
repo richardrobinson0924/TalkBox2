@@ -202,6 +202,7 @@ public final class CreateConfigWizard {
 	private WizardPane getName() {
 		log.info("Name wizard pane invoked");
 		final TextField textField = new TextField();
+
 		textField.setPromptText("TalkBox Configuration");
 		textField.requestFocus();
 
@@ -242,7 +243,9 @@ public final class CreateConfigWizard {
 
 	private void end(ButtonType buttonType1) throws IOException {
 		final File file = makeDirectory();
-		final File tbcFile = Paths.get(file.getPath(), filename.getValueSafe() + ".tbc").toFile();
+		final File tbcFile = Paths
+				.get(file.getPath(), filename.getValueSafe() + ".tbc")
+				.toFile();
 
 		IntStream.range(0, tbd.getTotalNumberOfButtons())
 				.forEach(i -> tbd.database.add(null));

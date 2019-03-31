@@ -21,8 +21,8 @@ import java.net.URI;
 import static talkboxnew.AddWizard.AddWizardView.*;
 import static talkboxnew.Utils.tryFactory;
 
-class ImagePane extends WizardPane {
-	ImagePane(Entry oldEntry, Wizard wiz) {
+public class ImagePane extends WizardPane {
+	public ImagePane(Entry oldEntry, Wizard wiz) {
 		super();
 
 		this.setHeaderText("Select Button Image");

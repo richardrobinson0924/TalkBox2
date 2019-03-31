@@ -96,7 +96,8 @@ public final class SimulatorStage extends Stage {
 			log.info("Playing custom audio...");
 			final AudioInputStream phrase = TTSPane.getAudio(
 					customText.getValueSafe(),
-					TTSPane.Voice.FEMALE1);
+					TTSPane.Voice.FEMALE1
+			);
 
 			Utils.play(phrase);
 		}));

@@ -46,7 +46,7 @@ public class Entry implements Serializable {
 		}
 
 		public Entry build() {
-			Entry entry = new Entry();
+			final Entry entry = new Entry();
 			entry.file  = this.file;
 			entry.image = this.image;
 			entry.frequency = this.frequency;
@@ -74,10 +74,6 @@ public class Entry implements Serializable {
 
 	public void incrementFrequency() {
 		this.frequency++;
-	}
-
-	public boolean hasImage() {
-		return image != null;
 	}
 
 	@Override

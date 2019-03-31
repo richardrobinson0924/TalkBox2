@@ -161,6 +161,7 @@ public final class Utils {
 			} catch (Throwable throwable) {
 				orElse.accept(throwable);
 				throwable.printStackTrace(System.err);
+				log.fatal(throwable.getMessage());
 				otherwise.run();
 			}
 		}

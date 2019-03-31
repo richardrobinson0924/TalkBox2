@@ -65,7 +65,8 @@ public class ConfigStage extends Stage {
 
 		final BorderPane pane = new BorderPane();
 		pane.topProperty().bindBidirectional(new SimpleObjectProperty<>(makeMenuBar()));
-		VBox box = new VBox();
+
+		final VBox box = new VBox();
 		pane.centerProperty().bindBidirectional(new SimpleObjectProperty<>(box));
 		pane.prefHeightProperty().bind(this.heightProperty());
 
@@ -98,6 +99,7 @@ public class ConfigStage extends Stage {
 		if (result.isPresent() && result.get() == ButtonType.YES) {
 			log.info("Saving and exiting...");
 			event.consume();
+
 			tryFactory.attemptTo(this::saveConfig);
 			Platform.exit();
 		} else if (result.isPresent() && result.get() == ButtonType.NO) {
@@ -149,7 +151,7 @@ public class ConfigStage extends Stage {
 
 		final MenuItem custom = new MenuItem("Custom Phrase List");
 		final MenuItem undo = new MenuItem("Undo");
-		final MenuItem importM = new MenuItem("Import Audio Files");
+		final MenuItem importM = new MenuItem("Import Audio F1F1F24iles");
 		final MenuItem sim = new MenuItem("Open in Simulator...");
 
 		sim.setOnAction(event -> {
@@ -225,9 +227,7 @@ public class ConfigStage extends Stage {
 	}
 
 	private void saveConfig() throws Exception {
-		try (final ObjectOutputStream oos = new ObjectOutputStream(
-				new FileOutputStream(Utils.getTBC()))
-		) {
+		try (final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Utils.getTBC()))) {
 			ts.database = new ArrayList<>(data);
 			oos.writeObject(ts);
 		}
@@ -249,7 +249,8 @@ public class ConfigStage extends Stage {
 		list.remove(s);
 		list.add(s);
 
-		final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Utils.getRecentsPath().toString()));
+		final FileOutputStream fos = new FileOutputStream(Utils.getRecentsPath().toString());
+		final ObjectOutputStream oos = new ObjectOutputStream(fos);
 
 		oos.writeObject(list);
 		oos.close();

@@ -30,7 +30,7 @@ public class RecordingPane extends WizardPane {
 	private File file;
 	private ComboBox<Pair<String, Line.Info>> mixerBox;
 
-	RecordingPane() {
+	public RecordingPane() {
 		super();
 
 		this.mixerBox = getLineComboBox();

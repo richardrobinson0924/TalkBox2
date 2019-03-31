@@ -1,12 +1,13 @@
 package talkboxnew.AddWizard;
 
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -27,9 +28,11 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.EnumSet;
+import java.util.Objects;
 
 import static talkboxnew.AddWizard.AddWizardView.*;
 import static talkboxnew.Utils.tryFactory;
@@ -40,11 +43,9 @@ public class TTSPane extends WizardPane {
 	private static SimpleBooleanProperty isReady = new SimpleBooleanProperty();
 
 	private static final Logger log = Logger.getLogger(TTSPane.class.getName());
+	private static final String LANG = "en-US";
 
-	private final static String CREDENTIALS = "TalkBox-0d25e5d8c6d7.json";
-	private final static String LANG = "en-US";
-
-	TTSPane(Entry oldEntry) {
+	public TTSPane(Entry oldEntry) {
 		super();
 
 		this.phrase = new TextField();
@@ -105,25 +106,27 @@ public class TTSPane extends WizardPane {
 		b.setCursor(Cursor.HAND);
 
 		b.setOnAction(e -> {
-			this.getScene().setCursor(Cursor.WAIT);
+//			this.getScene().setCursor(Cursor.WAIT);
+//
+//			final Task<Void> task = new Task<Void>() {
+//				@Override
+//				protected Void call() {
+//
+//
+//					return null;
+//				}
+//			};
+//
+//			task.setOnSucceeded(e1 -> this.getScene().setCursor(Cursor.DEFAULT));
+//
+//			final Thread thread = new Thread(task);
+//			thread.start();
 
-			final Task<Void> task = new Task<Void>() {
-				@Override
-				protected Void call() {
-					tryFactory.attemptTo(() -> {
-						final Clip clip = AudioSystem.getClip();
-						clip.open(getAudio(phrase.getText(), comboBox.valueProperty().get()));
-						clip.start();
-					});
-
-					return null;
-				}
-			};
-
-			task.setOnSucceeded(e1 -> this.getScene().setCursor(Cursor.DEFAULT));
-
-			final Thread thread = new Thread(task);
-			thread.start();
+			tryFactory.attemptTo(() -> {
+				final Clip clip = AudioSystem.getClip();
+				clip.open(getAudio(phrase.getText(), comboBox.valueProperty().get()));
+				clip.start();
+			});
 		});
 
 		return new HBox(SPACING, phrase, b);
@@ -132,10 +135,10 @@ public class TTSPane extends WizardPane {
 	public static AudioInputStream getAudio(String phrase, Voice voice) throws Exception {
 		return isConnectedToInternet()
 				? getHiFi(phrase, voice)
-				: getLoFi(phrase, voice);
+				: getLoFi(phrase);
 	}
 
-	private static AudioInputStream getLoFi(String phrase, Voice voice) throws Exception {
+	private static AudioInputStream getLoFi(String phrase) throws Exception {
 		isReady.setValue(false);
 		final MaryInterface marytts = new LocalMaryInterface();
 
@@ -148,16 +151,18 @@ public class TTSPane extends WizardPane {
 		isReady.setValue(false);
 
 		final GoogleCredentials credentials = GoogleCredentials
-				.fromStream(Utils.getStream(CREDENTIALS))
-				.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+			.fromStream(Objects.requireNonNull(TTSPane
+					.class
+					.getClassLoader()
+					.getResourceAsStream("spatial-iris-230217-b424f67b42f9.json")))
+			.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
-		final TextToSpeechSettings auth = TextToSpeechSettings.newBuilder()
-				.setCredentialsProvider(() -> credentials)
-				.build();
+		final TextToSpeechSettings settings = TextToSpeechSettings
+			.newBuilder()
+			.setCredentialsProvider(() -> credentials)
+			.build();
 
-		AudioInputStream stream;
-
-		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(auth)) {
+		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(settings)) {
 			final SynthesisInput input = SynthesisInput.newBuilder()
 					.setText(phrase)
 					.build();
@@ -171,17 +176,19 @@ public class TTSPane extends WizardPane {
 					.setAudioEncoding(AudioEncoding.LINEAR16)
 					.build();
 
-			final SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, vsp,
-					audioConfig);
+			final SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, vsp, audioConfig);
 
 			final ByteArrayInputStream bin = new ByteArrayInputStream(response.getAudioContent().toByteArray());
 
-			stream = AudioSystem.getAudioInputStream(bin);
+			final AudioInputStream stream = AudioSystem.getAudioInputStream(bin);
 			textToSpeechClient.shutdown();
-		}
 
-		isReady.setValue(true);
-		return stream;
+			isReady.setValue(true);
+			return stream;
+		} catch (Exception e) {
+			Utils.release(e);
+			return null;
+		}
 	}
 
 	private static boolean isConnectedToInternet() {
