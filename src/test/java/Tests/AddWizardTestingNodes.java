@@ -13,19 +13,21 @@ public class AddWizardTestingNodes {
         public static final String TTS_BUTTON = getTTsButton();
         public static final String WAV_BUTTON = introPaneNodes[1];
         public static final String RECORD_BUTTON = introPaneNodes[2];
+
+        static String[] getIntroPaneNodes(){
+            String [] Id;
+            Id=IntroPane.nodesId;
+            return Id;
+        }
+        static String getTTsButton(){
+            String []Id;
+            Id=getIntroPaneNodes();
+            String TTS;
+            TTS=Id[0];
+            return TTS;
+        }
     }
-   static String[] getIntroPaneNodes(){
-        String [] Id;
-        Id=IntroPane.nodesId;
-        return Id;
-    }
-    static String getTTsButton(){
-        String []Id;
-        Id=getIntroPaneNodes();
-        String TTS;
-        TTS=Id[0];
-        return TTS;
-    }
+
 
     static class TTSPaneNodes {
         private static String[] TTSPaneNodes = TTSPane.nodesId;
