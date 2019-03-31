@@ -17,6 +17,7 @@ import talkboxnew.Utils;
 
 import javax.sound.sampled.AudioFileFormat;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Optional;
@@ -31,8 +32,6 @@ public class AddWizardView extends Wizard {
 
 	static final double SPACING = 10, WIDTH = 400, HEIGHT = 210;
 	static final Insets PADDING = new Insets(SPACING, 20, 20, SPACING);
-
-	private static int counter;
 
 	public AddWizardView(int index, Window owner) {
 		super(owner);
@@ -84,7 +83,8 @@ public class AddWizardView extends Wizard {
 			eb = Entry.Builder.of(file);
 		} catch (Exception e) {
 			Utils.release(e);
-		} else if ((boolean) map.get("WAVButton")) {
+		}
+		else if ((boolean) map.get("WAVButton")) {
 			eb = Entry.Builder.of(new File((String) map.get("filename")));
 		} else {
 			eb = Entry.Builder.of((File) map.get("recordFile"));
@@ -96,7 +96,7 @@ public class AddWizardView extends Wizard {
 		}
 
 		eb.withName((String) map.get("AudioName"));
-		eb.withImage(new File(((SimpleObjectProperty<URI>) map.get("image")).get()));
+		eb.withImage((File) map.get("image"));
 
 		final Entry finalEb = eb.build();
 		tryFactory.attemptTo(() -> History.getInstance().execute(new ChangeCommand(index, finalEb)));

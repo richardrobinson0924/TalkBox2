@@ -42,7 +42,7 @@ public final class SimButton extends Button {
 	}
 
 	private ImageView getImage(final Entry e) {
-		final Image image = new Image(e.getImage().toURI().toString());
+		final Image image = new Image(e.getImage().toPath().toString());
 		final ImageView imageView = new ImageView(image);
 
 		imageView.setPreserveRatio(true);

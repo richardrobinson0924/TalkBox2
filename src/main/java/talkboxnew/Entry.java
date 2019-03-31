@@ -3,6 +3,7 @@ package talkboxnew;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 
 public class Entry implements Serializable {
@@ -40,7 +41,7 @@ public class Entry implements Serializable {
 		}
 
 		public Builder withImage(File image) {
-			log.info("Image '" + image.getName() + "' added to " + toString());
+			log.info("Image '" + image.toString() + "' added to " + toString());
 			this.image = image;
 			return this;
 		}
@@ -81,7 +82,7 @@ public class Entry implements Serializable {
 		return String.format("Entry[%s, %s, %s, %d]",
 				getFile().getName(),
 				getName(),
-				getImage().getName(),
+				getImage().toString(),
 				getFrequency()
 		);
 	}

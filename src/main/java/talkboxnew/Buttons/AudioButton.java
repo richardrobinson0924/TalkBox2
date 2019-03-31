@@ -26,6 +26,8 @@ import talkboxnew.Entry;
 import talkboxnew.Utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import static talkboxnew.ConfigStage.WAV;
 import static talkboxnew.ConfigStage.data;
@@ -89,14 +91,14 @@ public final class AudioButton extends Button {
 
 			this.setTooltip(new Tooltip("Click to play audio"));
 
-			final ImageView graphic = new ImageView(new Image(data
-					.get(i)
-					.getImage()
-					.toURI()
-					.toString()));
-
-			graphic.setFitHeight(GRAPHIC_SIZE);
-			graphic.setPreserveRatio(true);
+			ImageView graphic = null;
+			try {
+				graphic = new ImageView(new Image(new FileInputStream(data.get(i).getImage())));
+				graphic.setFitHeight(GRAPHIC_SIZE);
+				graphic.setPreserveRatio(true);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 
 			final Region r = new Region();
 			r.setPrefHeight(7);

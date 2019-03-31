@@ -249,7 +249,7 @@ public final class SplashStage extends Stage {
 			this.setOnAction(ae);
 
 			this.setAlignment(Pos.CENTER_LEFT);
-			this.setPrefWidth(200);
+			this.setPrefWidth(ICON_SIZE);
 
 			this.getStylesheets().add(Utils
 					.getResource("style.css")

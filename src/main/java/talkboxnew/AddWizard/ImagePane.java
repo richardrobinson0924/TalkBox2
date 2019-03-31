@@ -1,27 +1,33 @@
 package talkboxnew.AddWizard;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ImageInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import org.apache.log4j.Logger;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 import talkboxnew.Entry;
 import talkboxnew.Utils;
 
 import java.io.File;
-import java.net.URI;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
+import static org.apache.log4j.Logger.*;
 import static talkboxnew.AddWizard.AddWizardView.*;
-import static talkboxnew.Utils.tryFactory;
 
 public class ImagePane extends WizardPane {
+	Logger log = getLogger(this.getClass());
 	public ImagePane(Entry oldEntry, Wizard wiz) {
 		super();
 
@@ -39,23 +45,25 @@ public class ImagePane extends WizardPane {
 		final VBox box = new VBox(SPACING);
 		box.setAlignment(Pos.CENTER);
 
-		box.getChildren().addAll(textFlow, getButton(oldEntry, wiz));
+		try {
+			box.getChildren().addAll(textFlow, getButton(oldEntry, wiz));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return box;
 	}
 
-	private Button getButton(Entry oldEntry, Wizard wiz) {
+	private Button getButton(Entry oldEntry, Wizard wiz) throws Exception {
 		final Button img = new Button();
 
-		final SimpleObjectProperty<URI> imgName = new SimpleObjectProperty<>();
-		tryFactory.attemptTo(() -> imgName.set((oldEntry == null)
-				? Utils.getResource("button_graphic.png").toURI()
-				: oldEntry.getImage().toURI())
-		);
+		log.fatal(oldEntry == null);
+		final File[] stream = new File[]{(oldEntry == null)
+				? new File("/Users/richardrobinson/IntelliJProjects/talkbox12/src/main/resources/button_graphic.png")
+				: oldEntry.getImage()};
 
-		final Image image = new Image(imgName.get().toString());
 		final ImageView imageView = new ImageView();
 
-		imageView.setImage(image);
+		imageView.setImage(new Image(stream[0].toURI().toURL().toString()));
 		imageView.setPreserveRatio(true);
 		imageView.setFitHeight(80);
 
@@ -67,13 +75,17 @@ public class ImagePane extends WizardPane {
 			final File received = fileChooser.showOpenDialog(null);
 
 			if (received != null) {
-				imgName.set(received.toURI());
-				tryFactory.attemptTo(() -> imageView.setImage(new Image(received.toURI().toURL().toString()))
-				);
+				try {
+					stream[0] = received;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				imageView.setImage(new Image(stream[0].toPath().toString()));
 			}
 		});
 
-		wiz.getSettings().put("image", imgName);
+		wiz.getSettings().put("image", stream[0]);
+
 		return img;
 	}
 }
