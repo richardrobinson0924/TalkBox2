@@ -25,6 +25,8 @@ public final class CustomDataView extends Application {
 	private TalkBoxData ts;
 	private Stage owner;
 
+	public static final String[] nodesId = {"ADD_TEXTFIELD"};
+
 	public CustomDataView(TalkBoxData tbd, Stage s) {
 		this.ts = tbd;
 		this.owner = s;
@@ -110,6 +112,7 @@ public final class CustomDataView extends Application {
 		hBox.setAlignment(Pos.CENTER);
 
 		final TextField addString = new TextField();
+		addString.setId(nodesId[0]);
 		addString.setPromptText(name);
 		addString.setMaxWidth(table.getPrefWidth());
 

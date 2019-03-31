@@ -45,11 +45,13 @@ public class TTSPane extends WizardPane {
 	private static final Logger log = Logger.getLogger(TTSPane.class.getName());
 	private static final String LANG = "en-US";
 
+	public static final String[] nodesId = {"TTSPhrase","PLAY_BUTTON"};
+
 	public TTSPane(Entry oldEntry) {
 		super();
 
 		this.phrase = new TextField();
-		phrase.setId("TTSPhrase");
+		phrase.setId(nodesId[0]);
 
 		phrase.setPromptText(oldEntry == null
 				? "Enter a phrase"
@@ -104,6 +106,7 @@ public class TTSPane extends WizardPane {
 		b.disableProperty().bind(phrase.textProperty().isEmpty());
 
 		b.setCursor(Cursor.HAND);
+		b.setId(nodesId[1]);
 
 		b.setOnAction(e -> {
 //			this.getScene().setCursor(Cursor.WAIT);

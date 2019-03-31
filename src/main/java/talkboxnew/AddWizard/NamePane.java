@@ -14,6 +14,8 @@ import static talkboxnew.AddWizard.AddWizardView.*;
 public class NamePane extends WizardPane {
 	private TextField textField;
 
+	public static final String[] nodesId = {"AudioName"};
+
 	NamePane(Entry oldEntry) {
 		super();
 		this.textField = new TextField(oldEntry == null ? "" : oldEntry.getName());
@@ -27,7 +29,7 @@ public class NamePane extends WizardPane {
 		final GridPane grid = new GridPane();
 
 		textField.requestFocus();
-		textField.setId("AudioName");
+		textField.setId(nodesId[0]);
 
 		grid.setHgap(SPACING);
 		grid.setVgap(SPACING);

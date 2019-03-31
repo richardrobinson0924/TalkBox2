@@ -49,6 +49,9 @@ public class ConfigStage extends Stage {
 
 	public static final String WAV = ".*\\.wav$";
 
+	// nodes for testing
+	public static final String[] nodesId = {"BUTTONS_FLOWPANE"};
+
 	public ConfigStage(Path masterPath) throws Exception {
 		ConfigStage.masterPath = masterPath;
 		updateRecents(masterPath.toFile());
@@ -123,11 +126,13 @@ public class ConfigStage extends Stage {
 
 	private FlowPane configButtons(int page) {
 		final FlowPane flowPane = new FlowPane();
+		flowPane.setId(nodesId[0]);
 
 		flowPane.setPadding(new Insets(30, 20, 30, 20));
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
+
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 			flowPane.getChildren().add(new AudioButton(page * ts.numberOfAudioButtons + i));

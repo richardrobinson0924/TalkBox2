@@ -22,6 +22,8 @@ public class IntroPane extends WizardPane {
 
 	private static final Logger log = Logger.getLogger(IntroPane.class.getName());
 
+	public static final String[] nodesId = {"TTSButton", "WAVButton", "RecordingButton"};
+
 	IntroPane() {
 		super();
 
@@ -47,13 +49,13 @@ public class IntroPane extends WizardPane {
 
 	private List<RadioButton> getList() {
 		final RadioButton TTS = new RadioButton("TTS");
-		TTS.setId("TTSButton");
+		TTS.setId(nodesId[0]);
 
 		final RadioButton wavFile = new RadioButton("WAV File");
-		wavFile.setId("WAVButton");
+		wavFile.setId(nodesId[1]);
 
 		final RadioButton recording = new RadioButton("Record Audio");
-		recording.setId("RecordingButton");
+		recording.setId(nodesId[2]);
 
 		radioButtons = new RadioButton[]{TTS, wavFile, recording};
 		final List<RadioButton> list = Arrays.asList(radioButtons);

@@ -30,6 +30,8 @@ public class RecordingPane extends WizardPane {
 	private File file;
 	private ComboBox<Pair<String, Line.Info>> mixerBox;
 
+	public static final String[] nodesId = {"RECORD_TOGGLE","PLAY_BUTTON"};
+
 	public RecordingPane() {
 		super();
 
@@ -47,8 +49,10 @@ public class RecordingPane extends WizardPane {
 		label.setWrapText(true);
 
 		final Button play = new Button("Play", new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_RIGHT));
+		play.setId(nodesId[1]);
 
 		final ToggleButton tb = new ToggleButton("Record", new Glyph("FontAwesome", FontAwesome.Glyph.CIRCLE));
+		tb.setId(nodesId[0]);
 
 		final HBox hbox = new HBox(SPACING, tb, play);
 		hbox.setAlignment(Pos.CENTER);

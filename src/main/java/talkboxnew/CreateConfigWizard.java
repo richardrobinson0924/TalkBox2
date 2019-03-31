@@ -44,14 +44,9 @@ public final class CreateConfigWizard {
 
 	private final static Insets PADDING = new Insets(2 * SPACING, 100, SPACING, SPACING);
 
-	// each node in this string is used for testing... Id must be set for the testing to work
-	// if I want to add an element to test with, i have to (1) add it to the one of the array panes of the wizard (below)
-	// and (2) i have to align it with the TestingNodes classes.
-	// (3) don't forget to set its Id
-	public static final String[] nodesId = {"NAMEWIZARDPANE","NUMBERSWIZARDPANE","FILEWIZARDPANE"}; // has no purpose
 	public static final String[] NAMEWIZARDPANE_NODES = {"NAME_TEXTFIELD"};
 	public static final String[] NUMBERSWIZARDPANE_NODES = {"NUMBUTTONS_SPINNER","NUMSETS_SPINNER"};
-	public static final String[] FILEWIZARDPANE_NODES = {"CHOOSE_TEXTFIELD"};
+	public static final String[] FILEWIZARDPANE_NODES = {"CHOOSE_BUTTON"};
 
 
 	public CreateConfigWizard() {
@@ -138,8 +133,6 @@ public final class CreateConfigWizard {
 			}
 		};
 
-		// set Id for FILE wizard pane
-		pane.setId(nodesId[2]);
 		pane.setContent(grid);
 		pane.setHeaderText("Select File Destination");
 		return pane;
@@ -190,8 +183,6 @@ public final class CreateConfigWizard {
 
 		wizardPane.setHeaderText("Select Number of Audio Buttons");
 
-		// set Id for wizard pane
-		wizardPane.setId(nodesId[1]);
 		numButtons.setId(NUMBERSWIZARDPANE_NODES[0]);
 		numSets.setId(NUMBERSWIZARDPANE_NODES[1]);
 
@@ -223,7 +214,6 @@ public final class CreateConfigWizard {
 
 		// set Id for name wizard pane and textfield in wizard pane
 		textField.setId(NAMEWIZARDPANE_NODES[0]);
-		namePane.setId(nodesId[0]);
 		return namePane;
 	}
 

@@ -44,6 +44,8 @@ public final class SimulatorStage extends Stage {
 	public static SPhraseSpec phraseSpec;
 	public static Realiser realiser;
 
+	public static final String[] nodesId = {"CUSTOM_LABEL"};
+
 	public SimulatorStage(Path masterPath, Window owner) {
 		this.initOwner(owner);
 		this.initModality(Modality.APPLICATION_MODAL);
@@ -84,6 +86,7 @@ public final class SimulatorStage extends Stage {
 		customToggle = new ToggleButton("Custom Phrase");
 
 		final Label customLabel = new Label();
+		customLabel.setId(nodesId[0]);
 		customLabel.textProperty().bind(customText);
 
 		final Button customPlay = new Button("Play");
