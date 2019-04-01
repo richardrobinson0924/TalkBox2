@@ -61,7 +61,10 @@ public final class CustomDataView extends Application {
 		final ObservableList<String> data = FXCollections.observableArrayList(rawData);
 		Bindings.bindContent(ts.customWords.get(index), data);
 
-		data.addListener((ListChangeListener<String>) c -> ConfigStage.save.setDisable(false));
+		data.addListener((ListChangeListener<String>) c -> {
+			ConfigStage.save.disableProperty().unbind();
+			ConfigStage.save.setDisable(false);
+		});
 
 		final TableView<String> table = getTable(name, index, data);
 

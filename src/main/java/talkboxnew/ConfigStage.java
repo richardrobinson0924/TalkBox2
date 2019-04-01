@@ -230,6 +230,7 @@ public class ConfigStage extends Stage {
 			oos.writeObject(ts);
 		}
 
+		save.disableProperty().unbind();
 		save.setDisable(true);
 	}
 
