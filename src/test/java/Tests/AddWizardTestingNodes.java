@@ -30,14 +30,14 @@ public class AddWizardTestingNodes {
             String []Id;
             Id=getIntroPaneNodes();
             String WAV;
-            WAV=Id[1];
+            WAV=Id[2];
             return WAV;
         }
         static String getWavButton(){
             String []Id;
             Id=getIntroPaneNodes();
             String RECORD;
-            RECORD=Id[2];
+            RECORD=Id[1];
             return RECORD;
         }
     }
