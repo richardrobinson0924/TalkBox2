@@ -1,6 +1,7 @@
 package talkboxnew;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -45,7 +46,7 @@ public class ConfigStage extends Stage {
 	public static ObservableList<Entry> data;
 	public static MenuItem save;
 
-	private static final Logger log = Logger.getLogger(ConfigStage.class.getName());
+	public static final Logger log = Logger.getLogger(ConfigStage.class.getName());
 
 	public static final String WAV = ".*\\.wav$";
 
@@ -76,7 +77,10 @@ public class ConfigStage extends Stage {
 		this.ts = readConfig();
 
 		data = FXCollections.observableList(ts.database);
-		data.addListener((ListChangeListener<Entry>) c -> save.setDisable(false));
+		data.addListener((ListChangeListener<Entry>) c -> {
+			save.disableProperty().unbind();
+			save.disableProperty().setValue(false);
+		});
 
 		box.getChildren().add(getGridPane());
 
@@ -145,52 +149,41 @@ public class ConfigStage extends Stage {
 
 	private MenuBar makeMenuBar() {
 		final MenuBar menuBar = new MenuBar();
-
 		menuBar.prefWidthProperty().bind(this.widthProperty().subtract(150));
 
 		final Menu menuFile = new Menu("File");
 		final Menu menuEdit = new Menu("Edit");
 		final Menu menuView = new Menu("View");
 
-		save = new MenuItem("Save");
+		final MenuItem sim = new MenuItemBuilder("Open in Simulator...")
+				.withAction(e -> {
+					tryFactory.attemptTo(this::saveConfig);
+					new SimulatorStage(masterPath, this).showAndWait();
+				})
+				.withShortcutKey(KeyCode.O)
+				.build();
 
-		final MenuItem custom = new MenuItem("Custom Phrase List");
-		final MenuItem undo = new MenuItem("Undo");
-		final MenuItem importM = new MenuItem("Import Audio F1F1F24iles");
-		final MenuItem sim = new MenuItem("Open in Simulator...");
+		final MenuItem undo = new MenuItemBuilder("Undo")
+				.disableWhen(History.getInstance().getIsEmptyProperty())
+				.withAction(e -> tryFactory.attemptTo(() -> History.getInstance().undo()))
+				.withShortcutKey(KeyCode.Z)
+				.build();
 
-		sim.setOnAction(event -> {
-			log.info("Opening Simulator...");
-			tryFactory.attemptTo(this::saveConfig);
-			new SimulatorStage(masterPath, this).showAndWait();
-		});
+		ConfigStage.save = new MenuItemBuilder("Save")
+				.disableWhen(new SimpleBooleanProperty(true))
+				.withAction(e -> tryFactory.attemptTo(this::saveConfig))
+				.withShortcutKey(KeyCode.S)
+				.build();
 
-		undo.disableProperty().bind(History.getInstance().getIsEmptyProperty());
-		undo.setOnAction(event -> {
-			log.info("'Undo' selected");
-			tryFactory.attemptTo(() -> History.getInstance().undo());
-		});
-		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
+		final MenuItem custom = new MenuItemBuilder("Custom Phrase List")
+				.withAction(e -> tryFactory.attemptTo(() -> new CustomDataView(ts, this).start(new Stage())))
+				.withShortcutKey(KeyCode.C)
+				.build();
 
-		save.setDisable(true);
-		save.setOnAction(e -> {
-			log.info("'Save' selected");
-			tryFactory.attemptTo(this::saveConfig);
-		});
-		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-
-		custom.setOnAction(event -> {
-			log.info("'Custom Phrase List' selected");
-			final CustomDataView c = new CustomDataView(ts, this);
-			tryFactory.attemptTo(() -> c.start(new Stage()));
-		});
-		custom.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
-
-		importM.setOnAction(e -> {
-			log.info("'Import' selected");
-			importFiles();
-		});
-		importM.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
+		final MenuItem importM = new MenuItemBuilder("Import Audio Files")
+				.withAction(e -> importFiles())
+				.withShortcutKey(KeyCode.I)
+				.build();
 
 		menuFile.getItems().addAll(save, importM);
 		menuEdit.getItems().addAll(undo, custom);

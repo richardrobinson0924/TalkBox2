@@ -48,7 +48,6 @@ public final class CreateConfigWizard {
 	public static final String[] NUMBERSWIZARDPANE_NODES = {"NUMBUTTONS_SPINNER","NUMSETS_SPINNER"};
 	public static final String[] FILEWIZARDPANE_NODES = {"CHOOSE_BUTTON"};
 
-
 	public CreateConfigWizard() {
 		log.info("Config Wizard invoked...");
 		tbd.database = new ArrayList<>();
