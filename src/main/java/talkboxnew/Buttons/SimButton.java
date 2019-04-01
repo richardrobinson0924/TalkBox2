@@ -9,6 +9,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import talkboxnew.Entry;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import static talkboxnew.ConfigStage.data;
+
 public final class SimButton extends Button {
 	private static final int IMAGE_HEIGHT = 60;
 	private static final int BUTTON_SIZE = 100;
@@ -42,7 +47,12 @@ public final class SimButton extends Button {
 	}
 
 	private ImageView getImage(final Entry e) {
-		final Image image = new Image(e.getImage().toPath().toString());
+		Image image = null;
+		try {
+			image = new Image(new FileInputStream(e.getImage()));
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		}
 		final ImageView imageView = new ImageView(image);
 
 		imageView.setPreserveRatio(true);
