@@ -153,19 +153,7 @@ public class TTSPane extends WizardPane {
 	private static AudioInputStream getHiFi(String phrase, Voice voice) throws Exception {
 		isReady.setValue(false);
 
-		final GoogleCredentials credentials = GoogleCredentials
-			.fromStream(Objects.requireNonNull(TTSPane
-					.class
-					.getClassLoader()
-					.getResourceAsStream("spatial-iris-230217-b424f67b42f9.json")))
-			.createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-
-		final TextToSpeechSettings settings = TextToSpeechSettings
-			.newBuilder()
-			.setCredentialsProvider(() -> credentials)
-			.build();
-
-		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(settings)) {
+		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {
 			final SynthesisInput input = SynthesisInput.newBuilder()
 					.setText(phrase)
 					.build();
