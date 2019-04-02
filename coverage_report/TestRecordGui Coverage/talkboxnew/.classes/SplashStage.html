@@ -1,0 +1,392 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SplashStage</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SplashStage (talkboxnew)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SplashStage</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (6/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    65.3%
+  </span>
+  <span class="absValue">
+    (64/ 98)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SplashStage$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/ 23)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SplashStage$CustomButton</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (9/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    74%
+  </span>
+  <span class="absValue">
+    (97/ 131)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.beans.binding.Bindings;
+<i>4</i>&nbsp;import javafx.collections.FXCollections;
+<i>5</i>&nbsp;import javafx.collections.ObservableList;
+<i>6</i>&nbsp;import javafx.event.ActionEvent;
+<i>7</i>&nbsp;import javafx.event.EventHandler;
+<i>8</i>&nbsp;import javafx.geometry.Pos;
+<i>9</i>&nbsp;import javafx.scene.Cursor;
+<i>10</i>&nbsp;import javafx.scene.Scene;
+<i>11</i>&nbsp;import javafx.scene.control.*;
+<i>12</i>&nbsp;import javafx.scene.image.Image;
+<i>13</i>&nbsp;import javafx.scene.image.ImageView;
+<i>14</i>&nbsp;import javafx.scene.layout.HBox;
+<i>15</i>&nbsp;import javafx.scene.layout.Region;
+<i>16</i>&nbsp;import javafx.scene.layout.VBox;
+<i>17</i>&nbsp;import javafx.scene.text.Font;
+<i>18</i>&nbsp;import javafx.scene.text.FontWeight;
+<i>19</i>&nbsp;import javafx.stage.DirectoryChooser;
+<i>20</i>&nbsp;import javafx.stage.Stage;
+<i>21</i>&nbsp;import org.apache.log4j.Logger;
+<i>22</i>&nbsp;import org.controlsfx.glyphfont.FontAwesome;
+<i>23</i>&nbsp;import org.controlsfx.glyphfont.Glyph;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;import java.io.File;
+<i>26</i>&nbsp;import java.io.FileInputStream;
+<i>27</i>&nbsp;import java.io.ObjectInputStream;
+<i>28</i>&nbsp;import java.util.ArrayList;
+<i>29</i>&nbsp;import java.util.Collections;
+<i>30</i>&nbsp;import java.util.Date;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;import static talkboxnew.Utils.isValidFile;
+<i>33</i>&nbsp;import static talkboxnew.Utils.tryFactory;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;public final class SplashStage extends Stage {
+<b class="fc"><i>36</i>&nbsp;	private static final Logger log = Logger.getLogger(SplashStage.class.getName());</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;	private final static int
+<i>39</i>&nbsp;			SPACING = 10,
+<i>40</i>&nbsp;			LIST_WIDTH = 250,
+<i>41</i>&nbsp;			BOX_WIDTH = (int) (LIST_WIDTH * 1.4),
+<i>42</i>&nbsp;			WIDTH = (LIST_WIDTH + BOX_WIDTH),
+<i>43</i>&nbsp;			HEIGHT = (int) (LIST_WIDTH * 1.6),
+<i>44</i>&nbsp;			LOGO_SIZE = (int) (LIST_WIDTH / 2.3),
+<i>45</i>&nbsp;			ICON_SIZE = (int) (LIST_WIDTH / 1.25);
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;	private final static String LOGO = &quot;512-2.png&quot;;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;	// each node in this string is used for testing... Id must be set for the testing to work
+<i>50</i>&nbsp;	// KEEP THIS RESPECTIVE ORDER.
+<b class="fc"><i>51</i>&nbsp;	public static final String[] nodesId = {&quot;OPEN_BUTTON&quot;, &quot;NEW_BUTTON&quot;, &quot;LIST&quot;};</b>
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;	public SplashStage() {</b>
+<b class="fc"><i>54</i>&nbsp;		log.info(&quot;Starting TalkBox App...&quot;);</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;		this.setWidth(WIDTH);</b>
+<b class="fc"><i>57</i>&nbsp;		this.setTitle(&quot;TalkBox&quot;);</b>
+<b class="fc"><i>58</i>&nbsp;		this.setHeight(HEIGHT);</b>
+<b class="fc"><i>59</i>&nbsp;		this.setResizable(false);</b>
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;		HBox hbox = new HBox();</b>
+<b class="fc"><i>62</i>&nbsp;		hbox.getChildren().addAll(getRecents(), getSplash());</b>
+<i>63</i>&nbsp;
+<b class="fc"><i>64</i>&nbsp;		final Scene scene = new Scene(hbox);</b>
+<i>65</i>&nbsp;
+<b class="fc"><i>66</i>&nbsp;		scene.getStylesheets().addAll(Utils</b>
+<b class="fc"><i>67</i>&nbsp;				.getResource(&quot;global_style.css&quot;)</b>
+<b class="fc"><i>68</i>&nbsp;				.toExternalForm()</b>
+<i>69</i>&nbsp;		);
+<i>70</i>&nbsp;
+<b class="fc"><i>71</i>&nbsp;		this.setScene(scene);</b>
+<b class="fc"><i>72</i>&nbsp;	}</b>
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;	private ListView getRecents() {
+<b class="fc"><i>75</i>&nbsp;		final ObservableList&lt;File&gt; data = FXCollections.observableArrayList();</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;		try {
+<b class="fc"><i>78</i>&nbsp;			final ObjectInputStream oin = new ObjectInputStream(new FileInputStream(Utils.getRecentsPath().toString()));</b>
+<b class="fc"><i>79</i>&nbsp;			final ArrayList&lt;File&gt; tmp = (ArrayList&lt;File&gt;) oin.readObject();</b>
+<i>80</i>&nbsp;
+<b class="fc"><i>81</i>&nbsp;			if (!tmp.isEmpty()) {</b>
+<b class="fc"><i>82</i>&nbsp;				Collections.reverse(tmp);</b>
+<b class="fc"><i>83</i>&nbsp;				data.addAll(tmp);</b>
+<i>84</i>&nbsp;			}
+<b class="nc"><i>85</i>&nbsp;		} catch (Exception ignored) {</b>
+<b class="fc"><i>86</i>&nbsp;		}</b>
+<i>87</i>&nbsp;
+<b class="fc"><i>88</i>&nbsp;		System.out.println(data);</b>
+<b class="fc"><i>89</i>&nbsp;		data.removeIf(file -&gt; !isValidFile(file));</b>
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;		final ListView&lt;File&gt; list = new ListView&lt;&gt;();</b>
+<i>92</i>&nbsp;		// set name for the listview
+<b class="fc"><i>93</i>&nbsp;		list.setId(nodesId[2]);</b>
+<b class="fc"><i>94</i>&nbsp;		list.setPrefWidth(LIST_WIDTH);</b>
+<i>95</i>&nbsp;
+<b class="fc"><i>96</i>&nbsp;		list.prefHeightProperty().bind(this.heightProperty());</b>
+<b class="fc"><i>97</i>&nbsp;		list.setItems(data);</b>
+<i>98</i>&nbsp;
+<b class="fc"><i>99</i>&nbsp;		list.setPlaceholder(new Label(&quot;No Recent Files&quot;));</b>
+<i>100</i>&nbsp;
+<b class="fc"><i>101</i>&nbsp;		final SplashStage thisStage = this;</b>
+<b class="fc"><i>102</i>&nbsp;		list.setOnMouseClicked(event -&gt; {</b>
+<b class="nc"><i>103</i>&nbsp;			list.getFocusModel().focus(list.getSelectionModel().getSelectedIndex());</b>
+<i>104</i>&nbsp;
+<b class="nc"><i>105</i>&nbsp;			if (event.getClickCount() == 2) try {</b>
+<b class="nc"><i>106</i>&nbsp;				log.info(&quot;Attempting to open file from recents list...&quot;);</b>
+<b class="nc"><i>107</i>&nbsp;				if (!isValidFile(list.getSelectionModel().getSelectedItem())) {</b>
+<i>108</i>&nbsp;
+<b class="nc"><i>109</i>&nbsp;					data.remove(list.getSelectionModel().getSelectedIndex());</b>
+<b class="nc"><i>110</i>&nbsp;					list.refresh();</b>
+<i>111</i>&nbsp;				} else {
+<b class="nc"><i>112</i>&nbsp;					new ConfigStage(list.getSelectionModel().</b>
+<b class="nc"><i>113</i>&nbsp;							getSelectedItem().</b>
+<b class="nc"><i>114</i>&nbsp;							toPath()</b>
+<b class="nc"><i>115</i>&nbsp;					).show();</b>
+<b class="nc"><i>116</i>&nbsp;					thisStage.close();</b>
+<i>117</i>&nbsp;				}
+<b class="nc"><i>118</i>&nbsp;			} catch (Exception ignored) {</b>
+<b class="nc"><i>119</i>&nbsp;				log.warn(&quot;File invalid. Removing file from list&quot;);</b>
+<b class="nc"><i>120</i>&nbsp;				data.remove(list.getSelectionModel().getSelectedIndex());</b>
+<b class="nc"><i>121</i>&nbsp;				list.refresh();</b>
+<b class="nc"><i>122</i>&nbsp;			}</b>
+<b class="nc"><i>123</i>&nbsp;		});</b>
+<i>124</i>&nbsp;
+<b class="fc"><i>125</i>&nbsp;		list.setCellFactory(param -&gt; new ListCell&lt;File&gt;() {</b>
+<i>126</i>&nbsp;			@Override
+<i>127</i>&nbsp;			public void updateItem(File file, boolean empty) {
+<b class="fc"><i>128</i>&nbsp;				super.updateItem(file, empty);</b>
+<i>129</i>&nbsp;
+<b class="fc"><i>130</i>&nbsp;				if (file == null) {</b>
+<b class="fc"><i>131</i>&nbsp;					setGraphic(null);</b>
+<b class="fc"><i>132</i>&nbsp;					return;</b>
+<i>133</i>&nbsp;				}
+<i>134</i>&nbsp;
+<b class="fc"><i>135</i>&nbsp;				final VBox vbox = new VBox();</b>
+<b class="fc"><i>136</i>&nbsp;				vbox.setAlignment(Pos.CENTER_LEFT);</b>
+<b class="fc"><i>137</i>&nbsp;				vbox.getChildren().clear();</b>
+<i>138</i>&nbsp;
+<b class="fc"><i>139</i>&nbsp;				final Label firstLine = new Label(&quot;~/&quot; + file</b>
+<b class="fc"><i>140</i>&nbsp;						.toPath().subpath(2, file.toPath().getNameCount())</b>
+<b class="fc"><i>141</i>&nbsp;						.toString()</b>
+<i>142</i>&nbsp;				);
+<i>143</i>&nbsp;
+<b class="fc"><i>144</i>&nbsp;				final Label secondLine = new Label(&quot;Last Modified: &quot; + new Date(file.lastModified())</b>
+<b class="fc"><i>145</i>&nbsp;						.toString()</b>
+<b class="fc"><i>146</i>&nbsp;						.substring(4)</b>
+<b class="fc"><i>147</i>&nbsp;						.replaceAll(&quot; \\w{3} \\d{4}$&quot;, &quot;&quot;)</b>
+<i>148</i>&nbsp;				);
+<i>149</i>&nbsp;
+<b class="fc"><i>150</i>&nbsp;				final String styl = secondLine.getStyle();</b>
+<b class="fc"><i>151</i>&nbsp;				secondLine.styleProperty().bind(Bindings</b>
+<b class="fc"><i>152</i>&nbsp;						.when(selectedProperty().not())</b>
+<b class="fc"><i>153</i>&nbsp;						.then(&quot;-fx-text-fill: #A0A0A0&quot;)</b>
+<b class="fc"><i>154</i>&nbsp;						.otherwise(styl)</b>
+<i>155</i>&nbsp;				);
+<i>156</i>&nbsp;
+<b class="fc"><i>157</i>&nbsp;				vbox.getChildren().addAll(firstLine, secondLine);</b>
+<b class="fc"><i>158</i>&nbsp;				this.setGraphic(vbox);</b>
+<b class="fc"><i>159</i>&nbsp;			}</b>
+<i>160</i>&nbsp;		});
+<i>161</i>&nbsp;
+<b class="fc"><i>162</i>&nbsp;		return list;</b>
+<i>163</i>&nbsp;	}
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;	private VBox getSplash() {
+<b class="fc"><i>166</i>&nbsp;		final VBox box = new VBox();</b>
+<b class="fc"><i>167</i>&nbsp;		box.setPrefWidth(BOX_WIDTH);</b>
+<b class="fc"><i>168</i>&nbsp;		box.prefHeightProperty().bind(this.heightProperty());</b>
+<i>169</i>&nbsp;
+<b class="fc"><i>170</i>&nbsp;		box.setAlignment(Pos.CENTER);</b>
+<b class="fc"><i>171</i>&nbsp;		box.setSpacing(SPACING);</b>
+<i>172</i>&nbsp;
+<b class="fc"><i>173</i>&nbsp;		final Button openButton = new CustomButton(</b>
+<i>174</i>&nbsp;				&quot;Open Existing Directory...&quot;,
+<i>175</i>&nbsp;				FontAwesome.Glyph.FOLDER_OPEN,
+<i>176</i>&nbsp;				this::openAction
+<i>177</i>&nbsp;		);
+<i>178</i>&nbsp;
+<b class="fc"><i>179</i>&nbsp;		final Button newButton = new CustomButton(</b>
+<i>180</i>&nbsp;				&quot; New TalkBox Directory...&quot;,
+<i>181</i>&nbsp;				FontAwesome.Glyph.PLUS,
+<i>182</i>&nbsp;				this::newAction
+<i>183</i>&nbsp;		);
+<i>184</i>&nbsp;
+<b class="fc"><i>185</i>&nbsp;        openButton.setId(nodesId[0]);</b>
+<b class="fc"><i>186</i>&nbsp;        newButton.setId(nodesId[1]);</b>
+<i>187</i>&nbsp;
+<b class="fc"><i>188</i>&nbsp;		final VBox vbox = new VBox(newButton, openButton);</b>
+<b class="fc"><i>189</i>&nbsp;		vbox.alignmentProperty().setValue(Pos.CENTER);</b>
+<i>190</i>&nbsp;
+<b class="fc"><i>191</i>&nbsp;		final Label l = new Label(&quot;TalkBox (v2)&quot;);</b>
+<b class="fc"><i>192</i>&nbsp;		l.setFont(Font.font(&quot;Segoe UI&quot;, FontWeight.THIN, 24));</b>
+<i>193</i>&nbsp;
+<b class="fc"><i>194</i>&nbsp;		final Label l2 = new Label(&quot;Developed by EECS Group 2, Inc.&quot;);</b>
+<i>195</i>&nbsp;
+<b class="fc"><i>196</i>&nbsp;		final Region space = new Region();</b>
+<b class="fc"><i>197</i>&nbsp;		space.setPrefSize(0, SPACING);</b>
+<b class="fc"><i>198</i>&nbsp;		final Region space2 = new Region();</b>
+<b class="fc"><i>199</i>&nbsp;		space2.setPrefSize(0, SPACING);</b>
+<i>200</i>&nbsp;
+<b class="fc"><i>201</i>&nbsp;		box.getChildren().addAll(l, l2, space, generateImage(), space2, vbox);</b>
+<i>202</i>&nbsp;
+<b class="fc"><i>203</i>&nbsp;		return box;</b>
+<i>204</i>&nbsp;	}
+<i>205</i>&nbsp;
+<i>206</i>&nbsp;	private void newAction(ActionEvent actionEvent) {
+<b class="fc"><i>207</i>&nbsp;		log.info(&quot;&#39;New Configuration&#39; button selected&quot;);</b>
+<b class="fc"><i>208</i>&nbsp;		final CreateConfigWizard wiz = new CreateConfigWizard();</b>
+<i>209</i>&nbsp;
+<b class="fc"><i>210</i>&nbsp;		if (wiz.getWizard()) this.close();</b>
+<b class="fc"><i>211</i>&nbsp;	}</b>
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;	private void openAction(ActionEvent actionEvent) {
+<b class="nc"><i>214</i>&nbsp;		log.info(&quot;&#39;Open Existing&#39; button selected&quot;);</b>
+<b class="nc"><i>215</i>&nbsp;		final DirectoryChooser directoryChooser = new DirectoryChooser();</b>
+<b class="nc"><i>216</i>&nbsp;		final File f = directoryChooser.showDialog(this);</b>
+<i>217</i>&nbsp;
+<b class="nc"><i>218</i>&nbsp;		if (f == null) return;</b>
+<b class="nc"><i>219</i>&nbsp;		log.info(&quot;Opening directory &quot; + f.toString());</b>
+<i>220</i>&nbsp;
+<b class="nc"><i>221</i>&nbsp;		if (isValidFile(f)) {</b>
+<b class="nc"><i>222</i>&nbsp;			final Alert alert = new Alert(Alert.AlertType.ERROR);</b>
+<i>223</i>&nbsp;
+<b class="nc"><i>224</i>&nbsp;			alert.setHeaderText(&quot;Directory Not Valid&quot;);</b>
+<b class="nc"><i>225</i>&nbsp;			alert.setTitle(&quot;Directory Not Valid&quot;);</b>
+<i>226</i>&nbsp;
+<b class="nc"><i>227</i>&nbsp;			alert.setContentText(&quot;This directory is either not a TalkBox directory or is corrupted. Please select another option.&quot;);</b>
+<b class="nc"><i>228</i>&nbsp;			alert.showAndWait().ifPresent(a -&gt; alert.close());</b>
+<b class="nc"><i>229</i>&nbsp;		} else tryFactory.attemptTo(() -&gt; {</b>
+<b class="nc"><i>230</i>&nbsp;			new ConfigStage(f.toPath()).show();</b>
+<b class="nc"><i>231</i>&nbsp;			this.close();</b>
+<b class="nc"><i>232</i>&nbsp;		});</b>
+<b class="nc"><i>233</i>&nbsp;	}</b>
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;	private ImageView generateImage() {
+<b class="fc"><i>236</i>&nbsp;		final Image img = new Image(Utils.getResource(LOGO).toString());</b>
+<b class="fc"><i>237</i>&nbsp;		final ImageView imageView = new ImageView(img);</b>
+<i>238</i>&nbsp;
+<b class="fc"><i>239</i>&nbsp;		imageView.setPreserveRatio(true);</b>
+<b class="fc"><i>240</i>&nbsp;		imageView.setFitHeight(LOGO_SIZE);</b>
+<i>241</i>&nbsp;
+<b class="fc"><i>242</i>&nbsp;		return imageView;</b>
+<i>243</i>&nbsp;	}
+<i>244</i>&nbsp;
+<i>245</i>&nbsp;	public static final class CustomButton extends Button {
+<i>246</i>&nbsp;		CustomButton(String str, FontAwesome.Glyph icon, EventHandler&lt;ActionEvent&gt; ae) {
+<b class="fc"><i>247</i>&nbsp;			super(str, new Glyph(&quot;FontAwesome&quot;, icon));</b>
+<i>248</i>&nbsp;
+<b class="fc"><i>249</i>&nbsp;			this.setOnAction(ae);</b>
+<i>250</i>&nbsp;
+<b class="fc"><i>251</i>&nbsp;			this.setAlignment(Pos.CENTER_LEFT);</b>
+<b class="fc"><i>252</i>&nbsp;			this.setPrefWidth(ICON_SIZE);</b>
+<i>253</i>&nbsp;
+<b class="fc"><i>254</i>&nbsp;			this.getStylesheets().add(Utils</b>
+<b class="fc"><i>255</i>&nbsp;					.getResource(&quot;style.css&quot;)</b>
+<b class="fc"><i>256</i>&nbsp;					.toExternalForm()</b>
+<i>257</i>&nbsp;			);
+<i>258</i>&nbsp;
+<b class="fc"><i>259</i>&nbsp;			this.setOnMouseEntered(e -&gt; getScene().setCursor(Cursor.HAND));</b>
+<b class="fc"><i>260</i>&nbsp;			this.setOnMouseExited(e -&gt; getScene().setCursor(Cursor.DEFAULT));</b>
+<b class="fc"><i>261</i>&nbsp;		}</b>
+<i>262</i>&nbsp;	}
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 09:55</div>
+</div>
+</body>
+</html>

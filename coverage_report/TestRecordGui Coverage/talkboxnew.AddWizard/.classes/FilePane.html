@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FilePane</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew.AddWizard</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FilePane (talkboxnew.AddWizard)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FilePane</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (2/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60.6%
+  </span>
+  <span class="absValue">
+    (20/ 33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew.AddWizard;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.event.ActionEvent;
+<i>4</i>&nbsp;import javafx.scene.control.Button;
+<i>5</i>&nbsp;import javafx.scene.control.Label;
+<i>6</i>&nbsp;import javafx.scene.control.TextField;
+<i>7</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>8</i>&nbsp;import javafx.scene.text.TextFlow;
+<i>9</i>&nbsp;import javafx.stage.FileChooser;
+<i>10</i>&nbsp;import org.controlsfx.dialog.Wizard;
+<i>11</i>&nbsp;import org.controlsfx.dialog.WizardPane;
+<i>12</i>&nbsp;import org.controlsfx.validation.*;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.io.File;
+<i>15</i>&nbsp;import java.nio.file.Files;
+<i>16</i>&nbsp;import java.nio.file.Paths;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;import static talkboxnew.AddWizard.AddWizardView.*;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;public class FilePane extends WizardPane {
+<i>21</i>&nbsp;	private TextField textField;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;	FilePane() {
+<b class="fc"><i>24</i>&nbsp;		super();</b>
+<b class="fc"><i>25</i>&nbsp;		textField = new TextField();</b>
+<i>26</i>&nbsp;
+<b class="fc"><i>27</i>&nbsp;		this.setHeaderText(&quot;Select a File&quot;);</b>
+<b class="fc"><i>28</i>&nbsp;		this.setContent(getView());</b>
+<b class="fc"><i>29</i>&nbsp;		this.setPrefSize(WIDTH, HEIGHT);</b>
+<b class="fc"><i>30</i>&nbsp;	}</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;	private GridPane getView() {
+<b class="fc"><i>33</i>&nbsp;		final GridPane grid = new GridPane();</b>
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;		final Label label = new Label(&quot;Audio File&quot;);</b>
+<b class="fc"><i>36</i>&nbsp;		final Button file = new Button(&quot;Choose&quot;);</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;		final TextField textField = new TextField();</b>
+<b class="fc"><i>39</i>&nbsp;		textField.setId(&quot;filename&quot;);</b>
+<i>40</i>&nbsp;
+<b class="fc"><i>41</i>&nbsp;		final Label text = new Label(&quot;Choose an existing audio file to use with this button.\nOnly *.wav files are supported.&quot;);</b>
+<b class="fc"><i>42</i>&nbsp;		text.setWrapText(true);</b>
+<i>43</i>&nbsp;
+<b class="fc"><i>44</i>&nbsp;		grid.add(new TextFlow(text), 0, 0, 3, 1);</b>
+<b class="fc"><i>45</i>&nbsp;		grid.addRow(1, label, textField, file);</b>
+<i>46</i>&nbsp;
+<b class="fc"><i>47</i>&nbsp;		file.setOnAction(this::onAction);</b>
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;		grid.setHgap(SPACING);</b>
+<b class="fc"><i>50</i>&nbsp;		grid.setVgap(SPACING);</b>
+<b class="fc"><i>51</i>&nbsp;		grid.setPadding(PADDING);</b>
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;		return grid;</b>
+<i>54</i>&nbsp;	}
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;	@Override
+<i>57</i>&nbsp;	public void onEnteringPage(Wizard wizard) {
+<b class="nc"><i>58</i>&nbsp;		AddWizardView.next.setValue(4);</b>
+<b class="nc"><i>59</i>&nbsp;		wizard.invalidProperty().unbind();</b>
+<b class="nc"><i>60</i>&nbsp;		wizard.invalidProperty().bind(getValidation().invalidProperty());</b>
+<b class="nc"><i>61</i>&nbsp;	}</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;	private void onAction(ActionEvent ae) {
+<b class="nc"><i>64</i>&nbsp;		final FileChooser fileChooser = new FileChooser();</b>
+<b class="nc"><i>65</i>&nbsp;		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;(.wav)&quot;, &quot;*.wav&quot;));</b>
+<i>66</i>&nbsp;
+<b class="nc"><i>67</i>&nbsp;		final File f = fileChooser.showOpenDialog(null);</b>
+<b class="nc"><i>68</i>&nbsp;		if (f.exists()) textField.setText(f.getPath());</b>
+<b class="nc"><i>69</i>&nbsp;	}</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;	private ValidationSupport getValidation() {
+<b class="nc"><i>72</i>&nbsp;		final ValidationSupport validation = new ValidationSupport();</b>
+<b class="nc"><i>73</i>&nbsp;		validation.registerValidator(textField, (Validator&lt;String&gt;) (control, s) -&gt; new ValidationResult().addErrorIf(</b>
+<i>74</i>&nbsp;				control,
+<i>75</i>&nbsp;				&quot;File not valid&quot;,
+<b class="nc"><i>76</i>&nbsp;				s.isEmpty() || !Files.exists(Paths.get(s)) || s.matches(&quot;^.wav$&quot;))</b>
+<i>77</i>&nbsp;		);
+<i>78</i>&nbsp;
+<b class="nc"><i>79</i>&nbsp;		return validation;</b>
+<i>80</i>&nbsp;	}
+<i>81</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 09:55</div>
+</div>
+</body>
+</html>

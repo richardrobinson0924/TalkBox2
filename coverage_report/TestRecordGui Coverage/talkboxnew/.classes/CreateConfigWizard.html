@@ -1,0 +1,390 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CreateConfigWizard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CreateConfigWizard (talkboxnew)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CreateConfigWizard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.7%
+  </span>
+  <span class="absValue">
+    (127/ 130)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CreateConfigWizard$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CreateConfigWizard$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.8%
+  </span>
+  <span class="absValue">
+    (136/ 139)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.beans.property.SimpleStringProperty;
+<i>4</i>&nbsp;import javafx.beans.property.StringProperty;
+<i>5</i>&nbsp;import javafx.event.ActionEvent;
+<i>6</i>&nbsp;import javafx.geometry.Insets;
+<i>7</i>&nbsp;import javafx.scene.control.*;
+<i>8</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>9</i>&nbsp;import javafx.stage.DirectoryChooser;
+<i>10</i>&nbsp;import org.apache.commons.io.FileUtils;
+<i>11</i>&nbsp;import org.apache.log4j.Logger;
+<i>12</i>&nbsp;import org.controlsfx.dialog.Wizard;
+<i>13</i>&nbsp;import org.controlsfx.dialog.WizardPane;
+<i>14</i>&nbsp;import org.controlsfx.validation.ValidationResult;
+<i>15</i>&nbsp;import org.controlsfx.validation.ValidationSupport;
+<i>16</i>&nbsp;import org.controlsfx.validation.Validator;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;import java.io.File;
+<i>19</i>&nbsp;import java.io.FileOutputStream;
+<i>20</i>&nbsp;import java.io.IOException;
+<i>21</i>&nbsp;import java.io.ObjectOutputStream;
+<i>22</i>&nbsp;import java.nio.file.FileSystemException;
+<i>23</i>&nbsp;import java.nio.file.Files;
+<i>24</i>&nbsp;import java.nio.file.Paths;
+<i>25</i>&nbsp;import java.util.ArrayList;
+<i>26</i>&nbsp;import java.util.Arrays;
+<i>27</i>&nbsp;import java.util.Optional;
+<i>28</i>&nbsp;import java.util.stream.IntStream;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;import static talkboxnew.Utils.tryFactory;
+<i>31</i>&nbsp;
+<b class="fc"><i>32</i>&nbsp;public final class CreateConfigWizard {</b>
+<b class="fc"><i>33</i>&nbsp;	private final Wizard wiz = new Wizard();</b>
+<b class="fc"><i>34</i>&nbsp;	private final TalkBoxData tbd = new TalkBoxData();</b>
+<b class="fc"><i>35</i>&nbsp;	private final StringProperty filename = new SimpleStringProperty();</b>
+<b class="fc"><i>36</i>&nbsp;	private final StringProperty pathname = new SimpleStringProperty();</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;	private static final Logger log = Logger.getLogger(CreateConfigWizard.class.getName());</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;	private final static int PANE_HEIGHT = 210,
+<i>41</i>&nbsp;			PANE_WIDTH = 500,
+<i>42</i>&nbsp;			SPACING = 10,
+<i>43</i>&nbsp;			NUM_PANES = 4;
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;	private final static Insets PADDING = new Insets(2 * SPACING, 100, SPACING, SPACING);</b>
+<i>46</i>&nbsp;
+<b class="fc"><i>47</i>&nbsp;	public static final String[] NAMEWIZARDPANE_NODES = {&quot;NAME_TEXTFIELD&quot;};</b>
+<b class="fc"><i>48</i>&nbsp;	public static final String[] NUMBERSWIZARDPANE_NODES = {&quot;NUMBUTTONS_SPINNER&quot;,&quot;NUMSETS_SPINNER&quot;};</b>
+<b class="fc"><i>49</i>&nbsp;	public static final String[] FILEWIZARDPANE_NODES = {&quot;CHOOSE_BUTTON&quot;};</b>
+<i>50</i>&nbsp;
+<b class="fc"><i>51</i>&nbsp;	public CreateConfigWizard() {</b>
+<b class="fc"><i>52</i>&nbsp;		log.info(&quot;Config Wizard invoked...&quot;);</b>
+<b class="fc"><i>53</i>&nbsp;		tbd.database = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>54</i>&nbsp;		tbd.customWords = new ArrayList&lt;&gt;(NUM_PANES);</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;		IntStream.range(0, NUM_PANES)</b>
+<b class="fc"><i>57</i>&nbsp;				.forEach(i -&gt; tbd.customWords.add(new ArrayList&lt;&gt;()));</b>
+<i>58</i>&nbsp;
+<b class="fc"><i>59</i>&nbsp;		tbd.customWords.get(3).addAll(Arrays.asList(</b>
+<i>60</i>&nbsp;				&quot;Future&quot;,
+<i>61</i>&nbsp;				&quot;Past&quot;,
+<i>62</i>&nbsp;				&quot;Present&quot;,
+<i>63</i>&nbsp;				&quot;Negate&quot;,
+<i>64</i>&nbsp;				&quot;Question?&quot;
+<i>65</i>&nbsp;		));
+<i>66</i>&nbsp;
+<b class="fc"><i>67</i>&nbsp;		final Wizard.LinearFlow wizFlow = new Wizard.LinearFlow(</b>
+<b class="fc"><i>68</i>&nbsp;				getName(),</b>
+<b class="fc"><i>69</i>&nbsp;				getNumbers(),</b>
+<b class="fc"><i>70</i>&nbsp;				getFile()</b>
+<i>71</i>&nbsp;		);
+<i>72</i>&nbsp;
+<b class="fc"><i>73</i>&nbsp;		wiz.flowProperty().setValue(wizFlow);</b>
+<b class="fc"><i>74</i>&nbsp;	}</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;	public boolean getWizard() {
+<b class="fc"><i>77</i>&nbsp;		final Optional&lt;ButtonType&gt; result = wiz.showAndWait();</b>
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;		if (result.isPresent() &amp;&amp; result.get() == ButtonType.FINISH) {</b>
+<b class="fc"><i>80</i>&nbsp;			tryFactory.attemptTo(() -&gt; end(result.get()));</b>
+<b class="fc"><i>81</i>&nbsp;			return true;</b>
+<i>82</i>&nbsp;		}
+<i>83</i>&nbsp;
+<b class="nc"><i>84</i>&nbsp;		return false;</b>
+<i>85</i>&nbsp;	}
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;	private WizardPane getFile() {
+<b class="fc"><i>88</i>&nbsp;		log.info(&quot;File pane invoked&quot;);</b>
+<b class="fc"><i>89</i>&nbsp;		final GridPane grid = new GridPane();</b>
+<b class="fc"><i>90</i>&nbsp;		grid.setHgap(SPACING);</b>
+<b class="fc"><i>91</i>&nbsp;		grid.setVgap(SPACING);</b>
+<b class="fc"><i>92</i>&nbsp;		grid.setPadding(PADDING);</b>
+<i>93</i>&nbsp;
+<b class="fc"><i>94</i>&nbsp;		final TextField textField = new TextField(System.getProperty(&quot;user.home&quot;));</b>
+<b class="fc"><i>95</i>&nbsp;		final Button choose = new Button(&quot;Choose&quot;);</b>
+<i>96</i>&nbsp;		// setting id for choose button
+<b class="fc"><i>97</i>&nbsp;		choose.setId(FILEWIZARDPANE_NODES[0]);</b>
+<i>98</i>&nbsp;
+<b class="fc"><i>99</i>&nbsp;		choose.setOnAction(e -&gt; {</b>
+<b class="fc"><i>100</i>&nbsp;			final DirectoryChooser directoryChooser = new DirectoryChooser();</b>
+<b class="fc"><i>101</i>&nbsp;			directoryChooser.setInitialDirectory(Paths.get(System.getProperty(&quot;user.home&quot;)).toFile());</b>
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;			final File dir = directoryChooser.showDialog(null);</b>
+<b class="fc"><i>104</i>&nbsp;			textField.textProperty().setValue(dir.getAbsolutePath());</b>
+<b class="fc"><i>105</i>&nbsp;			log.info(&quot;Path to Directory: &quot; + dir.toString());</b>
+<b class="fc"><i>106</i>&nbsp;		});</b>
+<i>107</i>&nbsp;
+<b class="fc"><i>108</i>&nbsp;		grid.addRow(0, new Label(&quot;Select Directory:&quot;), textField, choose);</b>
+<i>109</i>&nbsp;
+<b class="fc"><i>110</i>&nbsp;		final ValidationSupport validation = new ValidationSupport();</b>
+<b class="fc"><i>111</i>&nbsp;		validation.registerValidator(textField, (Validator&lt;String&gt;) (control, s) -&gt; new ValidationResult().addErrorIf(</b>
+<i>112</i>&nbsp;				control,
+<i>113</i>&nbsp;				&quot;Directory does not exist&quot;,
+<b class="fc"><i>114</i>&nbsp;				!Files.exists(Paths.get(s)))</b>
+<i>115</i>&nbsp;		);
+<i>116</i>&nbsp;
+<b class="fc"><i>117</i>&nbsp;		final ValidationSupport alreadyExistsValidation = new ValidationSupport();</b>
+<b class="fc"><i>118</i>&nbsp;		alreadyExistsValidation.registerValidator(textField, (Validator&lt;String&gt;) (control, s) -&gt; new ValidationResult().addErrorIf(control,</b>
+<i>119</i>&nbsp;						&quot;File already exists&quot;,
+<b class="fc"><i>120</i>&nbsp;						Files.exists(Paths.get(pathname.getValueSafe(), filename.getValueSafe())))</b>
+<i>121</i>&nbsp;		);
+<i>122</i>&nbsp;
+<b class="fc"><i>123</i>&nbsp;		pathname.bind(textField.textProperty());</b>
+<i>124</i>&nbsp;
+<b class="fc"><i>125</i>&nbsp;		final WizardPane pane = new WizardPane() {</b>
+<i>126</i>&nbsp;			@Override
+<i>127</i>&nbsp;			public void onEnteringPage(Wizard wizard) {
+<b class="fc"><i>128</i>&nbsp;				wiz.invalidProperty().unbind();</b>
+<b class="fc"><i>129</i>&nbsp;				wiz.invalidProperty().bind(validation.invalidProperty());</b>
+<i>130</i>&nbsp;
+<b class="fc"><i>131</i>&nbsp;				this.lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION, e -&gt; finishAttempt(alreadyExistsValidation, e));</b>
+<b class="fc"><i>132</i>&nbsp;			}</b>
+<i>133</i>&nbsp;		};
+<i>134</i>&nbsp;
+<b class="fc"><i>135</i>&nbsp;		pane.setContent(grid);</b>
+<b class="fc"><i>136</i>&nbsp;		pane.setHeaderText(&quot;Select File Destination&quot;);</b>
+<b class="fc"><i>137</i>&nbsp;		return pane;</b>
+<i>138</i>&nbsp;	}
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;	private void finishAttempt(ValidationSupport validation, ActionEvent event) {
+<b class="fc"><i>141</i>&nbsp;		if (!validation.isInvalid()) return;</b>
+<i>142</i>&nbsp;
+<b class="fc"><i>143</i>&nbsp;		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</b>
+<b class="fc"><i>144</i>&nbsp;		alert.setTitle(&quot;Directory Exists&quot;);</b>
+<b class="fc"><i>145</i>&nbsp;		alert.setHeaderText(&quot;Directory Already Exists&quot;);</b>
+<i>146</i>&nbsp;
+<b class="fc"><i>147</i>&nbsp;		alert.setContentText(&quot;The directory &quot;</b>
+<b class="fc"><i>148</i>&nbsp;				+ Paths.get(pathname.getValueSafe(), filename.getValueSafe()).toString()</b>
+<i>149</i>&nbsp;				+ &quot; already exists. Would you like to overwrite the contents with the new TalkBox directory? This action cannot be undone.&quot;
+<i>150</i>&nbsp;		);
+<i>151</i>&nbsp;
+<b class="fc"><i>152</i>&nbsp;		Optional&lt;ButtonType&gt; result = alert.showAndWait();</b>
+<b class="fc"><i>153</i>&nbsp;		if (result.isPresent() &amp;&amp; result.get() == ButtonType.OK) {</b>
+<b class="fc"><i>154</i>&nbsp;			log.error(&quot;Overwriting exists file&quot;);</b>
+<b class="fc"><i>155</i>&nbsp;			alert.close();</b>
+<i>156</i>&nbsp;		} else {
+<b class="nc"><i>157</i>&nbsp;			log.error(&quot;Event consumed. Returning to wizard.&quot;);</b>
+<b class="nc"><i>158</i>&nbsp;			event.consume();</b>
+<i>159</i>&nbsp;		}
+<b class="fc"><i>160</i>&nbsp;	}</b>
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;	private WizardPane getNumbers() {
+<b class="fc"><i>163</i>&nbsp;		log.info(&quot;Numbers pane invoked&quot;);</b>
+<b class="fc"><i>164</i>&nbsp;		final GridPane grid = new GridPane();</b>
+<b class="fc"><i>165</i>&nbsp;		grid.setHgap(SPACING);</b>
+<b class="fc"><i>166</i>&nbsp;		grid.setVgap(SPACING);</b>
+<b class="fc"><i>167</i>&nbsp;		grid.setPadding(PADDING);</b>
+<i>168</i>&nbsp;
+<b class="fc"><i>169</i>&nbsp;		final Spinner&lt;Integer&gt; numButtons = new Spinner&lt;&gt;(1, 10, 1);</b>
+<b class="fc"><i>170</i>&nbsp;		final Spinner&lt;Integer&gt; numSets = new Spinner&lt;&gt;(1, 10, 1);</b>
+<i>171</i>&nbsp;
+<b class="fc"><i>172</i>&nbsp;		grid.addRow(0, new Label(&quot;Audio Buttons:&quot;), numButtons);</b>
+<b class="fc"><i>173</i>&nbsp;		grid.addRow(1, new Label(&quot;Audio Sets:&quot;), numSets);</b>
+<i>174</i>&nbsp;
+<b class="fc"><i>175</i>&nbsp;		final WizardPane wizardPane = new WizardPane() {</b>
+<i>176</i>&nbsp;			@Override
+<i>177</i>&nbsp;			public void onExitingPage(Wizard wizard) {
+<b class="fc"><i>178</i>&nbsp;				tbd.numberOfAudioSets = numSets.getValue();</b>
+<b class="fc"><i>179</i>&nbsp;				tbd.numberOfAudioButtons = numButtons.getValue();</b>
+<b class="fc"><i>180</i>&nbsp;			}</b>
+<i>181</i>&nbsp;		};
+<i>182</i>&nbsp;
+<b class="fc"><i>183</i>&nbsp;		wizardPane.setHeaderText(&quot;Select Number of Audio Buttons&quot;);</b>
+<i>184</i>&nbsp;
+<b class="fc"><i>185</i>&nbsp;		numButtons.setId(NUMBERSWIZARDPANE_NODES[0]);</b>
+<b class="fc"><i>186</i>&nbsp;		numSets.setId(NUMBERSWIZARDPANE_NODES[1]);</b>
+<i>187</i>&nbsp;
+<b class="fc"><i>188</i>&nbsp;		wizardPane.setContent(grid);</b>
+<b class="fc"><i>189</i>&nbsp;		return wizardPane;</b>
+<i>190</i>&nbsp;	}
+<i>191</i>&nbsp;
+<i>192</i>&nbsp;	private WizardPane getName() {
+<b class="fc"><i>193</i>&nbsp;		log.info(&quot;Name wizard pane invoked&quot;);</b>
+<b class="fc"><i>194</i>&nbsp;		final TextField textField = new TextField();</b>
+<i>195</i>&nbsp;
+<b class="fc"><i>196</i>&nbsp;		textField.setPromptText(&quot;TalkBox Configuration&quot;);</b>
+<b class="fc"><i>197</i>&nbsp;		textField.requestFocus();</b>
+<i>198</i>&nbsp;
+<b class="fc"><i>199</i>&nbsp;		filename.bind(textField.textProperty());</b>
+<b class="fc"><i>200</i>&nbsp;		wiz.invalidProperty().bind(textField.textProperty().isEmpty());</b>
+<i>201</i>&nbsp;
+<b class="fc"><i>202</i>&nbsp;		final WizardPane namePane = new WizardPane();</b>
+<b class="fc"><i>203</i>&nbsp;		namePane.setHeaderText(&quot;Choose Name for File&quot;);</b>
+<b class="fc"><i>204</i>&nbsp;		namePane.setPrefHeight(210);</b>
+<i>205</i>&nbsp;
+<b class="fc"><i>206</i>&nbsp;		final GridPane grid = new GridPane();</b>
+<b class="fc"><i>207</i>&nbsp;		grid.setHgap(SPACING);</b>
+<b class="fc"><i>208</i>&nbsp;		grid.setVgap(SPACING);</b>
+<b class="fc"><i>209</i>&nbsp;		grid.setPadding(PADDING);</b>
+<b class="fc"><i>210</i>&nbsp;		grid.addRow(0, new Label(&quot;File Name:&quot;), textField);</b>
+<i>211</i>&nbsp;
+<b class="fc"><i>212</i>&nbsp;		namePane.setContent(grid);</b>
+<i>213</i>&nbsp;
+<i>214</i>&nbsp;		// set Id for name wizard pane and textfield in wizard pane
+<b class="fc"><i>215</i>&nbsp;		textField.setId(NAMEWIZARDPANE_NODES[0]);</b>
+<b class="fc"><i>216</i>&nbsp;		return namePane;</b>
+<i>217</i>&nbsp;	}
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;	private File makeDirectory() throws IOException {
+<b class="fc"><i>220</i>&nbsp;		final File file = Paths.get(pathname.getValueSafe(), filename.getValueSafe()).toFile();</b>
+<b class="fc"><i>221</i>&nbsp;		if (file.exists()) FileUtils.deleteDirectory(file);</b>
+<b class="fc"><i>222</i>&nbsp;		if (!file.mkdir()) Utils.release(new FileSystemException(file.getName()));</b>
+<i>223</i>&nbsp;
+<b class="fc"><i>224</i>&nbsp;		final File audio = Paths.get(file.getPath(), &quot;Audio&quot;).toFile();</b>
+<b class="fc"><i>225</i>&nbsp;		if (!audio.mkdir()) Utils.release(new FileSystemException(file.getName()));</b>
+<i>226</i>&nbsp;
+<b class="fc"><i>227</i>&nbsp;		final File images = Paths.get(file.getPath(), &quot;Images&quot;).toFile();</b>
+<b class="fc"><i>228</i>&nbsp;		if (!images.mkdir()) Utils.release(new FileSystemException(file.getName()));</b>
+<i>229</i>&nbsp;
+<b class="fc"><i>230</i>&nbsp;		return file;</b>
+<i>231</i>&nbsp;	}
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;	private void end(ButtonType buttonType1) throws IOException {
+<b class="fc"><i>234</i>&nbsp;		final File file = makeDirectory();</b>
+<b class="fc"><i>235</i>&nbsp;		final File tbcFile = Paths</b>
+<b class="fc"><i>236</i>&nbsp;				.get(file.getPath(), filename.getValueSafe() + &quot;.tbc&quot;)</b>
+<b class="fc"><i>237</i>&nbsp;				.toFile();</b>
+<i>238</i>&nbsp;
+<b class="fc"><i>239</i>&nbsp;		IntStream.range(0, tbd.getTotalNumberOfButtons())</b>
+<b class="fc"><i>240</i>&nbsp;				.forEach(i -&gt; tbd.database.add(null));</b>
+<i>241</i>&nbsp;
+<b class="fc"><i>242</i>&nbsp;		IntStream.range(0, 3)</b>
+<b class="fc"><i>243</i>&nbsp;				.forEach(i -&gt; tbd.customWords.add(new ArrayList&lt;&gt;()));</b>
+<i>244</i>&nbsp;
+<b class="fc"><i>245</i>&nbsp;		tryFactory.attemptTo(() -&gt; {</b>
+<b class="fc"><i>246</i>&nbsp;			final FileOutputStream fos = new FileOutputStream(tbcFile);</b>
+<b class="fc"><i>247</i>&nbsp;			final ObjectOutputStream oos = new ObjectOutputStream(fos);</b>
+<i>248</i>&nbsp;
+<b class="fc"><i>249</i>&nbsp;			oos.writeObject(tbd);</b>
+<b class="fc"><i>250</i>&nbsp;			oos.flush();</b>
+<b class="fc"><i>251</i>&nbsp;			oos.close();</b>
+<b class="fc"><i>252</i>&nbsp;		});</b>
+<i>253</i>&nbsp;
+<b class="fc"><i>254</i>&nbsp;		log.info(&quot;TBC Directory Created (&quot; + file.toString() + &quot;) with &quot; + tbd.getTotalNumberOfButtons() + &quot; buttons&quot;);</b>
+<i>255</i>&nbsp;
+<b class="fc"><i>256</i>&nbsp;		tryFactory.attemptTo(() -&gt; {</b>
+<b class="fc"><i>257</i>&nbsp;			ConfigStage configStage = new ConfigStage(file.toPath());</b>
+<b class="fc"><i>258</i>&nbsp;			configStage.show();</b>
+<b class="fc"><i>259</i>&nbsp;			log.info(&quot;Wizard complete. Opening Configurator stage with created file&quot;);</b>
+<b class="fc"><i>260</i>&nbsp;		});</b>
+<b class="fc"><i>261</i>&nbsp;	}</b>
+<i>262</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 09:55</div>
+</div>
+</body>
+</html>

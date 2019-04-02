@@ -1,0 +1,149 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TalkBoxData</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TalkBoxData (talkboxnew)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TalkBoxData</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57.1%
+  </span>
+  <span class="absValue">
+    (4/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.1%
+  </span>
+  <span class="absValue">
+    (8/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.nio.file.Path;
+<i>4</i>&nbsp;import java.util.ArrayList;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;import java.util.Objects;
+<i>7</i>&nbsp;import java.util.stream.Collectors;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * The base data structure of the TalkBox data is a double array of &lt;code&gt;Mapping&lt;/code&gt;s, in which each Mapping contains the audio
+<i>11</i>&nbsp; * filename (the key) and the audio file&#39;s alias (the value; by default, the file name). To retrieve the double array of only the
+<i>12</i>&nbsp; * filenames, use &lt;code&gt;getAudioFilenames&lt;/code&gt; to produce a shallow copy.
+<i>13</i>&nbsp; * &lt;p&gt;
+<i>14</i>&nbsp; * The file system structure assumes there exists an /Audio folder in the same parent directory as the source .tbc file.
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; * Precondition for TalkBoxApp: There exists a directory in which there is a *.tbc file and another directory entitled &quot;Audio&quot;
+<i>17</i>&nbsp; */
+<b class="fc"><i>18</i>&nbsp;public class TalkBoxData implements TalkBoxConfiguration {</b>
+<i>19</i>&nbsp;	private static final long serialVersionUID = -512851111601552178L;
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;	int numberOfAudioButtons = 0;</b>
+<b class="fc"><i>22</i>&nbsp;	int numberOfAudioSets = 0;</b>
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;	List&lt;Entry&gt; database = new ArrayList&lt;&gt;();</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;	List&lt;List&lt;String&gt;&gt; customWords = new ArrayList&lt;&gt;();</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;	public int getNumberOfAudioButtons() {
+<b class="fc"><i>29</i>&nbsp;		return this.numberOfAudioButtons;</b>
+<i>30</i>&nbsp;	}
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;	public int getNumberOfAudioSets() {
+<b class="fc"><i>33</i>&nbsp;		return numberOfAudioSets;</b>
+<i>34</i>&nbsp;	}
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;	public int getTotalNumberOfButtons() {
+<b class="fc"><i>37</i>&nbsp;		return getNumberOfAudioButtons() * getNumberOfAudioSets();</b>
+<i>38</i>&nbsp;	}
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;	@Override
+<i>41</i>&nbsp;	public String toString() {
+<b class="nc"><i>42</i>&nbsp;		return database.stream()</b>
+<b class="nc"><i>43</i>&nbsp;				.filter(Objects::nonNull)</b>
+<b class="nc"><i>44</i>&nbsp;				.map(Entry::toString)</b>
+<b class="nc"><i>45</i>&nbsp;				.collect(Collectors.joining(&quot;, &quot;, &quot;[&quot;, &quot;]&quot;));</b>
+<i>46</i>&nbsp;	}
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;	@Override
+<i>49</i>&nbsp;	public Path getRelativePathToAudioFiles() {
+<b class="nc"><i>50</i>&nbsp;		return Utils.getAudio(&quot;&quot;);</b>
+<i>51</i>&nbsp;	}
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;	@Override
+<i>54</i>&nbsp;	public String[][] getAudioFileNames() {
+<b class="nc"><i>55</i>&nbsp;		String[][] filenames = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];</b>
+<b class="nc"><i>56</i>&nbsp;		int k = 0;</b>
+<i>57</i>&nbsp;
+<b class="nc"><i>58</i>&nbsp;		for (int i = 0; i &lt; getNumberOfAudioSets(); i++) {</b>
+<b class="nc"><i>59</i>&nbsp;			for (int j = 0; j &lt; getNumberOfAudioButtons(); j++) {</b>
+<b class="nc"><i>60</i>&nbsp;				filenames[i][j] = database.get(k++).getFile().toString();</b>
+<i>61</i>&nbsp;			}
+<i>62</i>&nbsp;		}
+<i>63</i>&nbsp;
+<b class="nc"><i>64</i>&nbsp;		return filenames;</b>
+<i>65</i>&nbsp;	}
+<i>66</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 09:55</div>
+</div>
+</body>
+</html>

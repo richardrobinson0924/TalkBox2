@@ -1,0 +1,266 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AudioButton</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew.Buttons</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AudioButton (talkboxnew.Buttons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AudioButton</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.3%
+  </span>
+  <span class="absValue">
+    (11/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81%
+  </span>
+  <span class="absValue">
+    (68/ 84)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew.Buttons;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.collections.ListChangeListener;
+<i>4</i>&nbsp;import javafx.event.ActionEvent;
+<i>5</i>&nbsp;import javafx.geometry.Pos;
+<i>6</i>&nbsp;import javafx.scene.AccessibleRole;
+<i>7</i>&nbsp;import javafx.scene.Cursor;
+<i>8</i>&nbsp;import javafx.scene.control.*;
+<i>9</i>&nbsp;import javafx.scene.image.Image;
+<i>10</i>&nbsp;import javafx.scene.image.ImageView;
+<i>11</i>&nbsp;import javafx.scene.input.Dragboard;
+<i>12</i>&nbsp;import javafx.scene.input.TransferMode;
+<i>13</i>&nbsp;import javafx.scene.layout.Region;
+<i>14</i>&nbsp;import javafx.scene.layout.VBox;
+<i>15</i>&nbsp;import javafx.scene.media.Media;
+<i>16</i>&nbsp;import javafx.scene.media.MediaPlayer;
+<i>17</i>&nbsp;import javafx.scene.paint.Color;
+<i>18</i>&nbsp;import javafx.scene.text.Font;
+<i>19</i>&nbsp;import javafx.scene.text.FontWeight;
+<i>20</i>&nbsp;import org.apache.log4j.Logger;
+<i>21</i>&nbsp;import talkboxnew.AddWizard.AddWizardView;
+<i>22</i>&nbsp;import talkboxnew.Commands.ChangeCommand;
+<i>23</i>&nbsp;import talkboxnew.Commands.History;
+<i>24</i>&nbsp;import talkboxnew.Commands.RemoveCommand;
+<i>25</i>&nbsp;import talkboxnew.Entry;
+<i>26</i>&nbsp;import talkboxnew.Utils;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;import java.io.File;
+<i>29</i>&nbsp;import java.io.FileInputStream;
+<i>30</i>&nbsp;import java.io.FileNotFoundException;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;import static talkboxnew.ConfigStage.WAV;
+<i>33</i>&nbsp;import static talkboxnew.ConfigStage.data;
+<i>34</i>&nbsp;import static talkboxnew.Entry.Builder;
+<i>35</i>&nbsp;import static talkboxnew.Utils.tryFactory;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;/**
+<i>38</i>&nbsp; * Pre-customized button to use for selecting / playing audio with provided data logic. All necessary methods
+<i>39</i>&nbsp; * implemented appropriately and no further changes needed.
+<i>40</i>&nbsp; * &lt;p&gt;&lt;/p&gt;
+<i>41</i>&nbsp; * If {@code database[i][j]} in the configuration file is null, pressing the button adds audio via TTSWizard.
+<i>42</i>&nbsp; * Else, the audio is played. An individual {@code *.wav} file may be associated with the button via right
+<i>43</i>&nbsp; * clicking -&gt; {@code Change} or by dragging and dropping.
+<i>44</i>&nbsp; * &lt;p&gt;&lt;/p&gt;
+<i>45</i>&nbsp; * Comes preconfigured with:
+<i>46</i>&nbsp; * &lt;ul&gt;
+<i>47</i>&nbsp; * &lt;li&gt;Automatically updating text and graphic to represent the button&#39;s content&lt;/li&gt;
+<i>48</i>&nbsp; * &lt;li&gt;Automatically updating tooltip&lt;/li&gt;
+<i>49</i>&nbsp; * &lt;li&gt;Accessibility options enabled&lt;/li&gt;
+<i>50</i>&nbsp; * &lt;li&gt;Can be renamed, removed, or changed / added&lt;/li&gt;
+<i>51</i>&nbsp; * &lt;/ul&gt;
+<i>52</i>&nbsp; */
+<i>53</i>&nbsp;public final class AudioButton extends Button {
+<i>54</i>&nbsp;	private final int i;
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;	private final static int GRAPHIC_SIZE = 60;
+<i>57</i>&nbsp;	private final static int BUTTON_SIZE = 100;
+<i>58</i>&nbsp;
+<b class="fc"><i>59</i>&nbsp;	private static final Logger log = Logger.getLogger(Utils.class.getName());</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;	public AudioButton(int i) {
+<b class="fc"><i>62</i>&nbsp;		super();</b>
+<b class="fc"><i>63</i>&nbsp;		this.i = i;</b>
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;		this.setUI();</b>
+<b class="fc"><i>66</i>&nbsp;		this.setAccessibility();</b>
+<b class="fc"><i>67</i>&nbsp;		this.setDragged();</b>
+<b class="fc"><i>68</i>&nbsp;		this.setContextMenu();</b>
+<i>69</i>&nbsp;
+<b class="fc"><i>70</i>&nbsp;		data.addListener((ListChangeListener&lt;Entry&gt;) c -&gt; {</b>
+<b class="fc"><i>71</i>&nbsp;			c.next();</b>
+<b class="fc"><i>72</i>&nbsp;			setProperties();</b>
+<b class="fc"><i>73</i>&nbsp;		});</b>
+<i>74</i>&nbsp;
+<b class="fc"><i>75</i>&nbsp;		this.setOnAction(this::onAction);</b>
+<b class="fc"><i>76</i>&nbsp;		this.setProperties();</b>
+<b class="fc"><i>77</i>&nbsp;	}</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;	private void setProperties() {
+<b class="fc"><i>80</i>&nbsp;		if (data.get(i) == null) {</b>
+<b class="fc"><i>81</i>&nbsp;			this.setText(&quot;Empty&quot;);</b>
+<b class="fc"><i>82</i>&nbsp;			this.setGraphic(null);</b>
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;			this.setTooltip(new Tooltip(&quot;Click to add audio&quot;));</b>
+<i>85</i>&nbsp;		} else {
+<b class="fc"><i>86</i>&nbsp;			final Label name = new Label(data.get(i).getName());</b>
+<b class="fc"><i>87</i>&nbsp;			final Label freq = new Label(String.format(&quot;Hits: %.0f%%&quot;, Utils.getFrequencyPercentage(data.get(i), data)).toUpperCase());</b>
+<i>88</i>&nbsp;
+<b class="fc"><i>89</i>&nbsp;			freq.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.SEMI_BOLD, 11));</b>
+<b class="fc"><i>90</i>&nbsp;			freq.setTextFill(Color.GRAY);</b>
+<i>91</i>&nbsp;
+<b class="fc"><i>92</i>&nbsp;			this.setTooltip(new Tooltip(&quot;Click to play audio&quot;));</b>
+<i>93</i>&nbsp;
+<b class="fc"><i>94</i>&nbsp;			ImageView graphic = null;</b>
+<i>95</i>&nbsp;			try {
+<b class="fc"><i>96</i>&nbsp;				graphic = new ImageView(new Image(new FileInputStream(data.get(i).getImage())));</b>
+<b class="fc"><i>97</i>&nbsp;				graphic.setFitHeight(GRAPHIC_SIZE);</b>
+<b class="fc"><i>98</i>&nbsp;				graphic.setPreserveRatio(true);</b>
+<b class="nc"><i>99</i>&nbsp;			} catch (FileNotFoundException e) {</b>
+<b class="nc"><i>100</i>&nbsp;				e.printStackTrace();</b>
+<b class="fc"><i>101</i>&nbsp;			}</b>
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;			final Region r = new Region();</b>
+<b class="fc"><i>104</i>&nbsp;			r.setPrefHeight(7);</b>
+<i>105</i>&nbsp;
+<b class="fc"><i>106</i>&nbsp;			final VBox vbox = new VBox(0, graphic, r, name, freq);</b>
+<b class="fc"><i>107</i>&nbsp;			vbox.setAlignment(Pos.CENTER);</b>
+<i>108</i>&nbsp;
+<b class="fc"><i>109</i>&nbsp;			this.setGraphic(vbox);</b>
+<b class="fc"><i>110</i>&nbsp;			this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);</b>
+<i>111</i>&nbsp;		}
+<b class="fc"><i>112</i>&nbsp;	}</b>
+<i>113</i>&nbsp;
+<b class="fc"><i>114</i>&nbsp;	private static MediaPlayer player = null;</b>
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;	private synchronized void onAction(ActionEvent event) {
+<b class="fc"><i>117</i>&nbsp;		if (data.get(i) == null) tryFactory.attemptTo(() -&gt; {</b>
+<b class="fc"><i>118</i>&nbsp;			log.info(&quot;Entry empty. Invoking AddWizardView for index &quot; + i);</b>
+<b class="fc"><i>119</i>&nbsp;			final AddWizardView aav = new AddWizardView(i, this.getScene().getWindow());</b>
+<i>120</i>&nbsp;
+<b class="fc"><i>121</i>&nbsp;			aav.showAndWait().ifPresent(button -&gt; {</b>
+<b class="fc"><i>122</i>&nbsp;				if (button == ButtonType.FINISH) aav.doOnFinish();</b>
+<b class="fc"><i>123</i>&nbsp;			});</b>
+<b class="fc"><i>124</i>&nbsp;		});</b>
+<i>125</i>&nbsp;		else {
+<b class="fc"><i>126</i>&nbsp;			log.info(&quot;Playing audio for Entry &quot; + i);</b>
+<b class="fc"><i>127</i>&nbsp;			final File soundFile = data.get(i).getFile();</b>
+<b class="fc"><i>128</i>&nbsp;			final Media media = new Media(soundFile.toURI().toString());</b>
+<i>129</i>&nbsp;
+<b class="fc"><i>130</i>&nbsp;			if (player != null &amp;&amp; player.getStatus() == MediaPlayer.Status.PLAYING) player.stop();</b>
+<i>131</i>&nbsp;
+<b class="fc"><i>132</i>&nbsp;			player = new MediaPlayer(media);</b>
+<b class="fc"><i>133</i>&nbsp;			player.play();</b>
+<i>134</i>&nbsp;		}
+<b class="fc"><i>135</i>&nbsp;	}</b>
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;	private void setUI() {
+<b class="fc"><i>138</i>&nbsp;		this.setContentDisplay(ContentDisplay.TOP);</b>
+<b class="fc"><i>139</i>&nbsp;		this.setPrefSize(BUTTON_SIZE, BUTTON_SIZE + 20);</b>
+<b class="fc"><i>140</i>&nbsp;		this.setCursor(Cursor.HAND);</b>
+<b class="fc"><i>141</i>&nbsp;	}</b>
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;	private void setDragged() {
+<b class="fc"><i>144</i>&nbsp;		this.setOnDragOver(event -&gt; {</b>
+<b class="nc"><i>145</i>&nbsp;			if (event.getGestureSource() != this &amp;&amp; event.getDragboard().hasFiles())</b>
+<b class="nc"><i>146</i>&nbsp;				event.acceptTransferModes(TransferMode.COPY_OR_MOVE);</b>
+<b class="nc"><i>147</i>&nbsp;			event.consume();</b>
+<b class="nc"><i>148</i>&nbsp;		});</b>
+<i>149</i>&nbsp;
+<b class="fc"><i>150</i>&nbsp;		this.setOnDragDropped(event -&gt; {</b>
+<b class="nc"><i>151</i>&nbsp;			final Dragboard dragboard = event.getDragboard();</b>
+<b class="nc"><i>152</i>&nbsp;			final File file = dragboard.getFiles().get(0);</b>
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;			if (file.getName().matches(WAV))</b>
+<b class="nc"><i>155</i>&nbsp;				tryFactory.attemptTo(() -&gt; History.getInstance().execute(new ChangeCommand(i, Builder.of(file).build())));</b>
+<b class="nc"><i>156</i>&nbsp;		});</b>
+<b class="fc"><i>157</i>&nbsp;	}</b>
+<i>158</i>&nbsp;
+<i>159</i>&nbsp;	private void setAccessibility() {
+<b class="fc"><i>160</i>&nbsp;		this.setAccessibleRole(AccessibleRole.BUTTON);</b>
+<b class="fc"><i>161</i>&nbsp;		this.accessibleTextProperty().bind(this.textProperty());</b>
+<b class="fc"><i>162</i>&nbsp;	}</b>
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;	private void setContextMenu() {
+<b class="fc"><i>165</i>&nbsp;		final ContextMenu contextMenu = new ContextMenu();</b>
+<i>166</i>&nbsp;
+<b class="fc"><i>167</i>&nbsp;		final MenuItem remove = new MenuItem(&quot;Remove&quot;);</b>
+<b class="fc"><i>168</i>&nbsp;		final MenuItem change = new MenuItem(&quot;Change&quot;);</b>
+<b class="fc"><i>169</i>&nbsp;		contextMenu.getItems().addAll(remove, change);</b>
+<i>170</i>&nbsp;
+<b class="fc"><i>171</i>&nbsp;		change.setOnAction(event -&gt; tryFactory.attemptTo(() -&gt; {</b>
+<b class="nc"><i>172</i>&nbsp;			final AddWizardView awv = new AddWizardView(i, this.getScene().getWindow());</b>
+<b class="nc"><i>173</i>&nbsp;			awv.showAndWait().ifPresent(button -&gt; {</b>
+<b class="nc"><i>174</i>&nbsp;				if (button == ButtonType.FINISH) awv.doOnFinish();</b>
+<b class="nc"><i>175</i>&nbsp;			});</b>
+<b class="nc"><i>176</i>&nbsp;		}));</b>
+<i>177</i>&nbsp;
+<b class="fc"><i>178</i>&nbsp;		remove.setOnAction(event -&gt; tryFactory.attemptTo(() -&gt; History.getInstance().execute(new RemoveCommand(i))));</b>
+<i>179</i>&nbsp;
+<b class="fc"><i>180</i>&nbsp;		this.setContextMenu(contextMenu);</b>
+<b class="fc"><i>181</i>&nbsp;	}</b>
+<i>182</i>&nbsp;}
+<i>183</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 11:20</div>
+</div>
+</body>
+</html>

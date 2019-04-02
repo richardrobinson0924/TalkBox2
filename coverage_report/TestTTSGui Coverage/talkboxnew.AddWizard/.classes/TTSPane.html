@@ -1,0 +1,329 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TTSPane</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew.AddWizard</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TTSPane (talkboxnew.AddWizard)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TTSPane</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (72/ 84)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TTSPane$Voice</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    93.8%
+  </span>
+  <span class="absValue">
+    (15/ 16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (84/ 96)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew.AddWizard;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.api.gax.core.CredentialsProvider;
+<i>4</i>&nbsp;import com.google.auth.Credentials;
+<i>5</i>&nbsp;import com.google.auth.oauth2.GoogleCredentials;
+<i>6</i>&nbsp;import com.google.cloud.texttospeech.v1.*;
+<i>7</i>&nbsp;import com.google.common.collect.Lists;
+<i>8</i>&nbsp;import javafx.beans.property.SimpleBooleanProperty;
+<i>9</i>&nbsp;import javafx.collections.FXCollections;
+<i>10</i>&nbsp;import javafx.collections.ObservableList;
+<i>11</i>&nbsp;import javafx.scene.Cursor;
+<i>12</i>&nbsp;import javafx.scene.control.Button;
+<i>13</i>&nbsp;import javafx.scene.control.ComboBox;
+<i>14</i>&nbsp;import javafx.scene.control.Label;
+<i>15</i>&nbsp;import javafx.scene.control.TextField;
+<i>16</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>17</i>&nbsp;import javafx.scene.layout.HBox;
+<i>18</i>&nbsp;import javafx.scene.text.TextFlow;
+<i>19</i>&nbsp;import marytts.LocalMaryInterface;
+<i>20</i>&nbsp;import marytts.MaryInterface;
+<i>21</i>&nbsp;import org.apache.log4j.Logger;
+<i>22</i>&nbsp;import org.controlsfx.dialog.Wizard;
+<i>23</i>&nbsp;import org.controlsfx.dialog.WizardPane;
+<i>24</i>&nbsp;import talkboxnew.Entry;
+<i>25</i>&nbsp;import talkboxnew.Utils;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;import javax.sound.sampled.AudioInputStream;
+<i>28</i>&nbsp;import javax.sound.sampled.AudioSystem;
+<i>29</i>&nbsp;import javax.sound.sampled.Clip;
+<i>30</i>&nbsp;import java.io.ByteArrayInputStream;
+<i>31</i>&nbsp;import java.io.IOException;
+<i>32</i>&nbsp;import java.net.URL;
+<i>33</i>&nbsp;import java.net.URLConnection;
+<i>34</i>&nbsp;import java.util.EnumSet;
+<i>35</i>&nbsp;import java.util.Objects;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;import static talkboxnew.AddWizard.AddWizardView.*;
+<i>38</i>&nbsp;import static talkboxnew.Utils.tryFactory;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;public class TTSPane extends WizardPane {
+<i>41</i>&nbsp;	private final TextField phrase;
+<i>42</i>&nbsp;	private ComboBox&lt;Voice&gt; comboBox;
+<b class="fc"><i>43</i>&nbsp;	private static SimpleBooleanProperty isReady = new SimpleBooleanProperty();</b>
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;	private static final Logger log = Logger.getLogger(TTSPane.class.getName());</b>
+<i>46</i>&nbsp;	private static final String LANG = &quot;en-US&quot;;
+<i>47</i>&nbsp;
+<b class="fc"><i>48</i>&nbsp;	public static final String[] nodesId = {&quot;TTSPhrase&quot;,&quot;PLAY_BUTTON&quot;,&quot;TTSVoice&quot;};</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;	public TTSPane(Entry oldEntry) {
+<b class="fc"><i>51</i>&nbsp;		super();</b>
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;		this.phrase = new TextField();</b>
+<b class="fc"><i>54</i>&nbsp;		phrase.setId(nodesId[0]);</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;		phrase.setPromptText(oldEntry == null</b>
+<i>57</i>&nbsp;				? &quot;Enter a phrase&quot;
+<b class="nc"><i>58</i>&nbsp;				: oldEntry.getName()</b>
+<i>59</i>&nbsp;		);
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;		this.setHeaderText(&quot;Text to Speech&quot;);</b>
+<b class="fc"><i>62</i>&nbsp;		this.setContent(getView());</b>
+<b class="fc"><i>63</i>&nbsp;		this.setPrefSize(WIDTH, HEIGHT);</b>
+<b class="fc"><i>64</i>&nbsp;	}</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;	@Override
+<i>67</i>&nbsp;	public void onEnteringPage(Wizard wizard) {
+<b class="fc"><i>68</i>&nbsp;		AddWizardView.next.setValue(4);</b>
+<b class="fc"><i>69</i>&nbsp;		wizard.invalidProperty().unbind();</b>
+<b class="fc"><i>70</i>&nbsp;		wizard.invalidProperty().bind(phrase.textProperty().isEmpty());</b>
+<b class="fc"><i>71</i>&nbsp;	}</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;	@Override
+<i>74</i>&nbsp;	public void onExitingPage(Wizard wizard) {
+<b class="fc"><i>75</i>&nbsp;		wizard.invalidProperty().unbind();</b>
+<b class="fc"><i>76</i>&nbsp;		wizard.invalidProperty().setValue(false);</b>
+<b class="fc"><i>77</i>&nbsp;	}</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;	private GridPane getView() {
+<b class="fc"><i>80</i>&nbsp;		final GridPane grid = new GridPane();</b>
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;		grid.setHgap(SPACING);</b>
+<b class="fc"><i>83</i>&nbsp;		grid.setVgap(SPACING);</b>
+<b class="fc"><i>84</i>&nbsp;		grid.setPadding(PADDING);</b>
+<i>85</i>&nbsp;
+<b class="fc"><i>86</i>&nbsp;		final Label text = new Label(&quot;Enter the text you would like the button to speak. Click the \nPlay button to preview what it sounds like.&quot;);</b>
+<b class="fc"><i>87</i>&nbsp;		text.setWrapText(true);</b>
+<i>88</i>&nbsp;
+<b class="fc"><i>89</i>&nbsp;		grid.add(new TextFlow(text), 0, 0, 2, 1);</b>
+<b class="fc"><i>90</i>&nbsp;		grid.addRow(1, new Label(&quot;Phrase:&quot;), getHBox());</b>
+<b class="fc"><i>91</i>&nbsp;		grid.addRow(2, new Label(&quot;Voice:&quot;), comboBox);</b>
+<i>92</i>&nbsp;
+<b class="fc"><i>93</i>&nbsp;		return grid;</b>
+<i>94</i>&nbsp;	}
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;	private HBox getHBox() {
+<b class="fc"><i>97</i>&nbsp;		final ObservableList&lt;Voice&gt; options = FXCollections.observableArrayList(EnumSet.allOf(Voice.class));</b>
+<i>98</i>&nbsp;
+<b class="fc"><i>99</i>&nbsp;		comboBox = new ComboBox&lt;&gt;(options);</b>
+<i>100</i>&nbsp;
+<b class="fc"><i>101</i>&nbsp;		comboBox.setId(nodesId[2]);</b>
+<b class="fc"><i>102</i>&nbsp;		comboBox.setValue(comboBox.getItems().get(0));</b>
+<b class="fc"><i>103</i>&nbsp;		comboBox.setDisable(!isConnectedToInternet());</b>
+<i>104</i>&nbsp;
+<b class="fc"><i>105</i>&nbsp;		final Button b = new Button(&quot;Play&quot;);</b>
+<b class="fc"><i>106</i>&nbsp;		b.disableProperty().bind(phrase.textProperty().isEmpty());</b>
+<i>107</i>&nbsp;
+<b class="fc"><i>108</i>&nbsp;		b.setCursor(Cursor.HAND);</b>
+<b class="fc"><i>109</i>&nbsp;		b.setId(nodesId[1]);</b>
+<i>110</i>&nbsp;
+<b class="fc"><i>111</i>&nbsp;		b.setOnAction(e -&gt; {</b>
+<i>112</i>&nbsp;//			this.getScene().setCursor(Cursor.WAIT);
+<i>113</i>&nbsp;//
+<i>114</i>&nbsp;//			final Task&lt;Void&gt; task = new Task&lt;Void&gt;() {
+<i>115</i>&nbsp;//				@Override
+<i>116</i>&nbsp;//				protected Void call() {
+<i>117</i>&nbsp;//
+<i>118</i>&nbsp;//
+<i>119</i>&nbsp;//					return null;
+<i>120</i>&nbsp;//				}
+<i>121</i>&nbsp;//			};
+<i>122</i>&nbsp;//
+<i>123</i>&nbsp;//			task.setOnSucceeded(e1 -&gt; this.getScene().setCursor(Cursor.DEFAULT));
+<i>124</i>&nbsp;//
+<i>125</i>&nbsp;//			final Thread thread = new Thread(task);
+<i>126</i>&nbsp;//			thread.start();
+<i>127</i>&nbsp;
+<b class="fc"><i>128</i>&nbsp;			tryFactory.attemptTo(() -&gt; {</b>
+<b class="fc"><i>129</i>&nbsp;				final Clip clip = AudioSystem.getClip();</b>
+<b class="fc"><i>130</i>&nbsp;				clip.open(getAudio(phrase.getText(), comboBox.valueProperty().get()));</b>
+<b class="fc"><i>131</i>&nbsp;				clip.start();</b>
+<b class="fc"><i>132</i>&nbsp;			});</b>
+<b class="fc"><i>133</i>&nbsp;		});</b>
+<i>134</i>&nbsp;
+<b class="fc"><i>135</i>&nbsp;		return new HBox(SPACING, phrase, b);</b>
+<i>136</i>&nbsp;	}
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;	public static AudioInputStream getAudio(String phrase, Voice voice) throws Exception {
+<b class="fc"><i>139</i>&nbsp;		return isConnectedToInternet()</b>
+<b class="fc"><i>140</i>&nbsp;				? getHiFi(phrase, voice)</b>
+<b class="nc"><i>141</i>&nbsp;				: getLoFi(phrase);</b>
+<i>142</i>&nbsp;	}
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;	private static AudioInputStream getLoFi(String phrase) throws Exception {
+<b class="nc"><i>145</i>&nbsp;		isReady.setValue(false);</b>
+<b class="nc"><i>146</i>&nbsp;		final MaryInterface marytts = new LocalMaryInterface();</b>
+<i>147</i>&nbsp;
+<b class="nc"><i>148</i>&nbsp;		final AudioInputStream stream =  marytts.generateAudio(phrase);</b>
+<b class="nc"><i>149</i>&nbsp;		isReady.setValue(true);</b>
+<b class="nc"><i>150</i>&nbsp;		return stream;</b>
+<i>151</i>&nbsp;	}
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;	private static AudioInputStream getHiFi(String phrase, Voice voice) throws Exception {
+<b class="fc"><i>154</i>&nbsp;		isReady.setValue(false);</b>
+<i>155</i>&nbsp;
+<b class="fc"><i>156</i>&nbsp;		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {</b>
+<b class="fc"><i>157</i>&nbsp;			final SynthesisInput input = SynthesisInput.newBuilder()</b>
+<b class="fc"><i>158</i>&nbsp;					.setText(phrase)</b>
+<b class="fc"><i>159</i>&nbsp;					.build();</b>
+<i>160</i>&nbsp;
+<b class="fc"><i>161</i>&nbsp;			final VoiceSelectionParams vsp = VoiceSelectionParams.newBuilder()</b>
+<b class="fc"><i>162</i>&nbsp;					.setLanguageCode(LANG)</b>
+<b class="fc"><i>163</i>&nbsp;					.setName(LANG + &quot;-Wavenet-&quot; + voice.variant)</b>
+<b class="fc"><i>164</i>&nbsp;					.build();</b>
+<i>165</i>&nbsp;
+<b class="fc"><i>166</i>&nbsp;			final AudioConfig audioConfig = AudioConfig.newBuilder()</b>
+<b class="fc"><i>167</i>&nbsp;					.setAudioEncoding(AudioEncoding.LINEAR16)</b>
+<b class="fc"><i>168</i>&nbsp;					.build();</b>
+<i>169</i>&nbsp;
+<b class="fc"><i>170</i>&nbsp;			final SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, vsp, audioConfig);</b>
+<i>171</i>&nbsp;
+<b class="fc"><i>172</i>&nbsp;			final ByteArrayInputStream bin = new ByteArrayInputStream(response.getAudioContent().toByteArray());</b>
+<i>173</i>&nbsp;
+<b class="fc"><i>174</i>&nbsp;			final AudioInputStream stream = AudioSystem.getAudioInputStream(bin);</b>
+<b class="fc"><i>175</i>&nbsp;			textToSpeechClient.shutdown();</b>
+<i>176</i>&nbsp;
+<b class="fc"><i>177</i>&nbsp;			isReady.setValue(true);</b>
+<b class="fc"><i>178</i>&nbsp;			return stream;</b>
+<b class="fc"><i>179</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>180</i>&nbsp;			Utils.release(e);</b>
+<b class="nc"><i>181</i>&nbsp;			return null;</b>
+<i>182</i>&nbsp;		}
+<i>183</i>&nbsp;	}
+<i>184</i>&nbsp;
+<i>185</i>&nbsp;	private static boolean isConnectedToInternet() {
+<b class="fc"><i>186</i>&nbsp;		boolean b = true;</b>
+<i>187</i>&nbsp;		try {
+<b class="fc"><i>188</i>&nbsp;			final URL url = new URL(&quot;https://cloud.google.com/&quot;);</b>
+<b class="fc"><i>189</i>&nbsp;			final URLConnection connection = url.openConnection();</b>
+<b class="fc"><i>190</i>&nbsp;			connection.connect();</b>
+<b class="nc"><i>191</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>192</i>&nbsp;			log.info(&quot;Not connected to internet. Using default TTS...&quot;);</b>
+<b class="nc"><i>193</i>&nbsp;			b = false;</b>
+<b class="fc"><i>194</i>&nbsp;		}</b>
+<i>195</i>&nbsp;
+<b class="fc"><i>196</i>&nbsp;		return b;</b>
+<i>197</i>&nbsp;	}
+<i>198</i>&nbsp;
+<b class="fc"><i>199</i>&nbsp;	public enum Voice {</b>
+<b class="fc"><i>200</i>&nbsp;		MALE1(&quot;Male 1&quot;, &#39;A&#39;),</b>
+<b class="fc"><i>201</i>&nbsp;		MALE2(&quot;Male 2&quot;, &#39;B&#39;),</b>
+<b class="fc"><i>202</i>&nbsp;		MALE3(&quot;Male 3&quot;, &#39;D&#39;),</b>
+<b class="fc"><i>203</i>&nbsp;		FEMALE1(&quot;Female 1&quot;, &#39;C&#39;),</b>
+<b class="fc"><i>204</i>&nbsp;		FEMALE2(&quot;Female 2&quot;, &#39;E&#39;),</b>
+<b class="fc"><i>205</i>&nbsp;		FEMALE3(&quot;Female 3&quot;, &#39;F&#39;);</b>
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;		private final char variant;
+<i>208</i>&nbsp;		private final String name;
+<i>209</i>&nbsp;
+<b class="fc"><i>210</i>&nbsp;		Voice(String name, char variant) {</b>
+<b class="fc"><i>211</i>&nbsp;			this.variant = variant;</b>
+<b class="fc"><i>212</i>&nbsp;			this.name = name;</b>
+<b class="fc"><i>213</i>&nbsp;		}</b>
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;		@Override
+<i>216</i>&nbsp;		public String toString() {
+<b class="fc"><i>217</i>&nbsp;			return name;</b>
+<i>218</i>&nbsp;		}
+<i>219</i>&nbsp;	}
+<i>220</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 11:20</div>
+</div>
+</body>
+</html>

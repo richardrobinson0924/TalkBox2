@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ChangeCommand</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">talkboxnew.Commands</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ChangeCommand (talkboxnew.Commands)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChangeCommand</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (16/ 20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package talkboxnew.Commands;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.apache.commons.io.IOUtils;
+<i>4</i>&nbsp;import talkboxnew.Entry;
+<i>5</i>&nbsp;import talkboxnew.Utils;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.io.IOException;
+<i>8</i>&nbsp;import java.nio.file.Files;
+<i>9</i>&nbsp;import java.nio.file.Path;
+<i>10</i>&nbsp;import java.nio.file.StandardCopyOption;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import static talkboxnew.ConfigStage.data;
+<i>13</i>&nbsp;import static talkboxnew.Entry.Builder;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class ChangeCommand implements History.Command {
+<i>16</i>&nbsp;	private final int index;
+<i>17</i>&nbsp;	private final Entry tuple;
+<b class="fc"><i>18</i>&nbsp;	private boolean wasEmpty = false;</b>
+<i>19</i>&nbsp;	private RemoveCommand rc;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;	/**
+<i>22</i>&nbsp;	 * Precondition: the file in {@code tuple} exists in the Audio directory
+<i>23</i>&nbsp;	 * @param i     the index of the tuple
+<i>24</i>&nbsp;	 * @param tuple the tuple to change to
+<i>25</i>&nbsp;	 */
+<b class="fc"><i>26</i>&nbsp;	public ChangeCommand(int i, Entry tuple) {</b>
+<b class="fc"><i>27</i>&nbsp;		this.index = i;</b>
+<b class="fc"><i>28</i>&nbsp;		this.tuple = tuple;</b>
+<b class="fc"><i>29</i>&nbsp;		if (data.get(index) != null) rc = new RemoveCommand(i);</b>
+<b class="fc"><i>30</i>&nbsp;	}</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;	@Override
+<i>33</i>&nbsp;	public void execute() throws IOException {
+<b class="fc"><i>34</i>&nbsp;		if (data.get(index) == null) wasEmpty = true;</b>
+<b class="nc"><i>35</i>&nbsp;		else rc.execute();</b>
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;		final Path to = Utils.getAudio(tuple.getName() + &quot;.wav&quot;);</b>
+<b class="fc"><i>38</i>&nbsp;		Files.copy(tuple.getFile().toPath(), to, StandardCopyOption.REPLACE_EXISTING);</b>
+<i>39</i>&nbsp;
+<b class="fc"><i>40</i>&nbsp;		final Path imgTo = Utils.getImage(tuple.getName() + &quot;.png&quot;);</b>
+<b class="fc"><i>41</i>&nbsp;		Files.copy(tuple.getImage().toPath(), imgTo, StandardCopyOption.REPLACE_EXISTING);</b>
+<i>42</i>&nbsp;
+<b class="fc"><i>43</i>&nbsp;		data.set(index, Builder.of(to.toFile())</b>
+<b class="fc"><i>44</i>&nbsp;				.withName(tuple.getName())</b>
+<b class="fc"><i>45</i>&nbsp;				.withImage(imgTo.toFile())</b>
+<b class="fc"><i>46</i>&nbsp;				.build()</b>
+<i>47</i>&nbsp;		);
+<b class="fc"><i>48</i>&nbsp;	}</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;	@Override
+<i>51</i>&nbsp;	public void undo() throws IOException {
+<b class="nc"><i>52</i>&nbsp;		if (wasEmpty) data.set(index, null);</b>
+<b class="nc"><i>53</i>&nbsp;		else rc.undo();</b>
+<b class="nc"><i>54</i>&nbsp;	}</b>
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-04-02 11:20</div>
+</div>
+</body>
+</html>
