@@ -95,8 +95,8 @@ public class AddWizardView extends Wizard {
 			return;
 		}
 
-		eb.withName((String) map.get("AudioName"));
-		eb.withImage((File) map.get("image"));
+		eb = eb.withName((String) map.get("AudioName"))
+				.withImage((File) map.get("image"));
 
 		final Entry finalEb = eb.build();
 		tryFactory.attemptTo(() -> History.getInstance().execute(new ChangeCommand(index, finalEb)));
