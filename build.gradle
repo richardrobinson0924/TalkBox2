@@ -36,6 +36,13 @@ dependencies {
 
 }
 
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 jar {
     manifest {
         attributes "Main-Class": "$mainClassName"

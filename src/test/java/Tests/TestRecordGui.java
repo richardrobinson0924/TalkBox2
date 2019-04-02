@@ -180,7 +180,7 @@ public class TestRecordGui extends ApplicationTest {
     }
 
     @Test
-    // Set Text-To-Speech test1
+    // Set Recording Audio Button test0
     public void testH_RAB0() {
         // check if the buttons exists
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);

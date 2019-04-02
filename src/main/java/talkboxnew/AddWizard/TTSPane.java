@@ -45,7 +45,7 @@ public class TTSPane extends WizardPane {
 	private static final Logger log = Logger.getLogger(TTSPane.class.getName());
 	private static final String LANG = "en-US";
 
-	public static final String[] nodesId = {"TTSPhrase","PLAY_BUTTON"};
+	public static final String[] nodesId = {"TTSPhrase","PLAY_BUTTON","TTSVoice"};
 
 	public TTSPane(Entry oldEntry) {
 		super();
@@ -98,7 +98,7 @@ public class TTSPane extends WizardPane {
 
 		comboBox = new ComboBox<>(options);
 
-		comboBox.setId("TTSVoice");
+		comboBox.setId(nodesId[2]);
 		comboBox.setValue(comboBox.getItems().get(0));
 		comboBox.setDisable(!isConnectedToInternet());
 

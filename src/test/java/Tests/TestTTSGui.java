@@ -64,13 +64,6 @@ public class TestTTSGui extends ApplicationTest {
     public void testA_IAT1() {
         Button openButton = lookfor(SplashStageTestingNodes.OPEN_BUTTON);
         Assertions.assertThat(openButton).hasText("Open Existing Directory...");
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -78,13 +71,6 @@ public class TestTTSGui extends ApplicationTest {
     public void testA_IAT2() {
         Button newButton = lookfor(SplashStageTestingNodes.NEW_BUTTON);
         Assertions.assertThat(newButton).hasText(" New TalkBox Directory...");
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -93,12 +79,6 @@ public class TestTTSGui extends ApplicationTest {
         ListView newView = lookfor(SplashStageTestingNodes.LIST);
         if (newView.getItems().isEmpty()){
             assertThat(newView, ListViewMatchers.isEmpty());
-        }
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
         }
     }
 
@@ -111,13 +91,6 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(newTextField);
         writeText("foobarTTS");
         Assertions.assertThat(newTextField).hasText("foobarTTS");
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     // successfully moved onto the next page
@@ -137,13 +110,6 @@ public class TestTTSGui extends ApplicationTest {
             clickOn();
         }
         assertThat(newButtonSpinner.getValue(), is(equalTo(8)));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -155,13 +121,6 @@ public class TestTTSGui extends ApplicationTest {
             clickOn();
         }
         assertThat(newButtonSpinner.getValue(), is(equalTo(6)));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     // The next tests aren't working...  ---> not in lexicographic order
@@ -175,13 +134,6 @@ public class TestTTSGui extends ApplicationTest {
             clickOn();
         }
         assertThat(newSetSpinner.getValue(), is(equalTo(7)));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
     //
     @Test
@@ -193,13 +145,6 @@ public class TestTTSGui extends ApplicationTest {
             clickOn();
         }
         assertThat(newSetSpinner.getValue(), is(equalTo(4)));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -208,13 +153,6 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(LabeledMatchers.hasText("Previous"));
         clickOn(LabeledMatchers.hasText("Next"));
         clickOn(LabeledMatchers.hasText("Next"));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -224,13 +162,6 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(newButton);
         push(KeyCode.ENTER);
         Assertions.assertThat(newButton).hasText("Choose");
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -246,13 +177,6 @@ public class TestTTSGui extends ApplicationTest {
         catch (Exception e){
             clickOn();
         }
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
 
@@ -263,13 +187,6 @@ public class TestTTSGui extends ApplicationTest {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         clickOn(LabeledMatchers.hasText("Empty"));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test//REPEAT
@@ -282,13 +199,6 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
         clickOn(newRadioButton);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -301,15 +211,8 @@ public class TestTTSGui extends ApplicationTest {
         clickOn();
         writeText("Hello World");
         clickOn(newButton);
-        // wait 3 seconds
-        sleep(10,TimeUnit.SECONDS);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        // wait 5 seconds
+        sleep(5,TimeUnit.SECONDS);
     }
 
     @Test
@@ -322,33 +225,15 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(LabeledMatchers.hasText("Previous"));
         clickOn(LabeledMatchers.hasText("Next"));
         clickOn(LabeledMatchers.hasText("Next"));
-        moveBy(0, 15);
+        moveBy(0, 20);
         clickOn();
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
     // Play Audio Button 1
     public void testK_PAB1() {
-        try {
-            clickOn(LabeledMatchers.hasText("Hello World"));
-            sleep(5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        clickOn(LabeledMatchers.hasText("Hello World"));
+        sleep(3, TimeUnit.SECONDS);
     }
 
     @Test
@@ -356,77 +241,96 @@ public class TestTTSGui extends ApplicationTest {
     public void testL_STTS() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
-  /*  //TEST V2 Start HOW TO MAKE THIS RUN AFTER L
+
+    //TEST V2 Start HOW TO MAKE THIS RUN AFTER L
     @Test//NEW
-    public void testL_STTS1() {
+    public void testM_TTS0() {
         // check if the buttons exists
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
-        //goes to the first button and clicks it
-        clickOn(LabeledMatchers.hasText("Empty"));
+        moveBy(150,40);
+        clickOn();
 
         try {
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
         }
         catch(Exception e){
 
         }
     }
+
     @Test//REPEAT
-
-    public void testL_STTS2() {
+    public void testM_TTS1() {
         // click on the record radio button and then the tts radio button
-        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
         clickOn(newRadioButton);
-        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
-        clickOn(newRadioButton);
-        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
-        clickOn(newRadioButton);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
     @Test
     // Set Text-To-Speech test2
-    public void testL_STTS3() {//CHANGE EVERY VOICE TEST
+    // test the male 1 voice
+    public void testM_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Male 2"));
         moveTo(newTextField);
         clickOn();
         writeText("Hello World 2");
         clickOn(newButton);
         // wait 3 seconds
-        sleep(10,TimeUnit.SECONDS);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        sleep(3,TimeUnit.SECONDS);
     }
+
     @Test
-    public void testL_STTS4() {
+    // test male voice 2
+    public void testM_TTS3() {
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Male 3"));
+        clickOn(newButton);
+        sleep(3,TimeUnit.SECONDS);
+    }
+
+    @Test
+    // test male voice 3
+    public void testM_TTS4() {
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Female 1"));
+        clickOn(newButton);
+    }
+
+    @Test
+    public void testM_TTS5() {
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Female 2"));
+        clickOn(newButton);
+    }
+
+    @Test
+    public void testM_TTS6() {
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Female 3"));
+        clickOn(newButton);
+        sleep(3,TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void testM_TTS7() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
         writeText("Hello World 2");
-        clickOn(LabeledMatchers.hasText("Previous"));
         clickOn(LabeledMatchers.hasText("Next"));
-        clickOn(LabeledMatchers.hasText("Next"));
-        moveBy(0, 15);
+        moveBy(0, 20);
         clickOn();
 
         try {
@@ -436,42 +340,25 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
+
     @Test
     // Play Audio Button 1
-    public void testL_STTS5() {//CHANGE EVERY TEST
-        try {
-            clickOn(LabeledMatchers.hasText("Hello World 2"));
-            sleep(5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+    public void testM_TTS8() {//CHANGE EVERY TEST
+        clickOn(LabeledMatchers.hasText("Hello World 2"));
     }
 
     @Test
     // Save TTS
-    public void testL_STTS6() {
+    public void testM_TTS9() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
-    //TEST V2 END*/
+    //TEST V2 END
 
 //    @Test
 //    // Perform Undo Function and save
 //    public void testM_PUF1() {
+
 //	    clickOn(LabeledMatchers.hasText("Edit"));
 //        clickOn(LabeledMatchers.hasText("Undo"));
 //
@@ -483,13 +370,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testN_SCF1() {
         clickOn(LabeledMatchers.hasText("Edit"));
         clickOn(LabeledMatchers.hasText("Custom Phrase List"));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
+        Assertions.assertThat(newTextField).hasText("");
     }
 
     @Test
@@ -505,13 +387,7 @@ public class TestTTSGui extends ApplicationTest {
         release(new KeyCode[]{});
         writeText("Fall");
         press(KeyCode.ENTER);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        Assertions.assertThat(newTextField).hasText("");
     }
 
     @Test
@@ -528,13 +404,7 @@ public class TestTTSGui extends ApplicationTest {
         release(new KeyCode[]{});
         writeText("You");
         press(KeyCode.ENTER);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        Assertions.assertThat(newTextField).hasText("");
     }
 
     @Test
@@ -551,13 +421,7 @@ public class TestTTSGui extends ApplicationTest {
         release(new KeyCode[]{});
         writeText("Stairs");
         press(KeyCode.ENTER);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
+        Assertions.assertThat(newTextField).hasText("");
     }
 
     @Test
@@ -569,13 +433,6 @@ public class TestTTSGui extends ApplicationTest {
         release(new KeyCode[]{});
         clickOn(LabeledMatchers.hasText("View"));
         clickOn(LabeledMatchers.hasText("Open in Simulator..."));
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -596,13 +453,6 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(LabeledMatchers.hasText("Play"));
         sleep(3, TimeUnit.SECONDS);
         Assertions.assertThat(newLabel).hasText("I Jumped Cliff.");
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
     @Test
@@ -611,13 +461,6 @@ public class TestTTSGui extends ApplicationTest {
         push(KeyCode.ALT, KeyCode.F4);
         release(new KeyCode[]{});
         push(KeyCode.CONTROL, KeyCode.S);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
     }
 
 }

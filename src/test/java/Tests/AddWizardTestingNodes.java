@@ -9,104 +9,89 @@ import talkboxnew.AddWizard.TTSPane;
 public class AddWizardTestingNodes {
 
     static class IntroPaneNodes {
-        private static String[] introPaneNodes = getIntroPaneNodes();
         public static final String TTS_BUTTON = getTTsButton();
         public static final String WAV_BUTTON = getWavButton();
         public static final String RECORD_BUTTON = getRecordButton();
 
-        static String[] getIntroPaneNodes(){
-            String [] Id;
-            Id=IntroPane.nodesId;
+        private static String[] getIntroPaneNodes(){
+            String [] Id = IntroPane.nodesId;
             return Id;
         }
-        static String getTTsButton(){
-            String []Id;
-            Id=getIntroPaneNodes();
-            String TTS;
-            TTS=Id[0];
+        private static String getTTsButton(){
+            String []Id = getIntroPaneNodes();
+            String TTS = Id[0];
             return TTS;
         }
-        static String getRecordButton(){
-            String []Id;
-            Id=getIntroPaneNodes();
-            String WAV;
-            WAV=Id[2];
+        private static String getRecordButton(){
+            String []Id = getIntroPaneNodes();
+            String WAV = Id[2];
             return WAV;
         }
-        static String getWavButton(){
-            String []Id;
-            Id=getIntroPaneNodes();
-            String RECORD;
-            RECORD=Id[1];
+        private static String getWavButton(){
+            String []Id = getIntroPaneNodes();
+            String RECORD = Id[1];
             return RECORD;
         }
     }
 
 
     static class TTSPaneNodes {
-        private static String[] TTSPaneNodes = getTTSNodes();
         public static final String TTSPHRASE_TEXTFIELD = getTTsText();
         public static final String TTSPLAY_BUTTON = getTTsPlay();
-        static String[] getTTSNodes(){
-            String [] Id;
-            Id=TTSPane.nodesId;
+        public static final String TTSVOICE_COMBOBOX = getTTsComboBox();
+
+        private static String[] getTTSNodes(){
+            String [] Id = TTSPane.nodesId;
             return Id;
         }
-        static String getTTsText(){
-            String []Id;
-            Id=getTTSNodes();
-            String TTS;
-            TTS=Id[0];
+        private static String getTTsText(){
+            String []Id = getTTSNodes();
+            String TTS = Id[0];
             return TTS;
         }
-        static String getTTsPlay(){
-            String []Id;
-            Id=getTTSNodes();
-            String TTS;
-            TTS=Id[1];
+        private static String getTTsPlay(){
+            String []Id = getTTSNodes();
+            String TTS = Id[1];
+            return TTS;
+        }
+        private static String getTTsComboBox(){
+            String []Id = getTTSNodes();
+            String TTS = Id[2];
             return TTS;
         }
 
     }
 
     static class NamePaneNodes {
-        private static String[] namePaneNodes = getNamePaneNodes();
         public static String AUDIONAME_TEXTFIELD = getNamePaneText();
-        static String[] getNamePaneNodes(){
-            String [] Id;
-            Id=NamePane.nodesId;
+
+        private static String[] getNamePaneNodes(){
+            String [] Id = NamePane.nodesId;
             return Id;
         }
-        static String getNamePaneText(){
-            String []Id;
-            Id=getNamePaneNodes();
-            String TTS;
-            TTS=Id[0];
+        private static String getNamePaneText(){
+            String []Id = getNamePaneNodes();
+            String TTS = Id[0];
             return TTS;
         }
     }
 
     static class RecordingPaneNodes {
-        private static String[] recordingPaneNodes = getRecordingPaneNodes();
         public static String PLAY_BUTTON = getRecordingPanePlay();
         public static String RECORDING_TOGGLE = getRecordingTogglePlay();
-        static String[] getRecordingPaneNodes(){
-            String [] Id;
-            Id=RecordingPane.nodesId;
+
+        private static String[] getRecordingPaneNodes(){
+            String [] Id = RecordingPane.nodesId;
             return Id;
         }
-        static String getRecordingPanePlay(){
-            String []Id;
-            Id=getRecordingPaneNodes();
-            String TTS;
-            TTS=Id[1];
+        private static String getRecordingPanePlay(){
+            String []Id = getRecordingPaneNodes();
+            String TTS = Id[1];
             return TTS;
         }
-        static String getRecordingTogglePlay(){
-            String []Id;
-            Id=getRecordingPaneNodes();
-            String TTS;
-            TTS=Id[0];
+        private static String getRecordingTogglePlay(){
+            String []Id = getRecordingPaneNodes();
+            String TTS = Id[0];
             return TTS;
         }
 
