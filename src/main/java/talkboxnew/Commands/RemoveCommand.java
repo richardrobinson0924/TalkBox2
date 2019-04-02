@@ -38,7 +38,6 @@ public class RemoveCommand implements History.Command {
 
 		data.set(i, null);
 		if (f.exists()) Files.delete(f.toPath());
-		if (img.exists()) Files.delete(img.toPath());
 	}
 
 	@Override
