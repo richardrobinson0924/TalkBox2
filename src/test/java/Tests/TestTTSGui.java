@@ -1,4 +1,3 @@
-
 package Tests;
 
 import javafx.scene.Node;
@@ -189,8 +188,7 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(LabeledMatchers.hasText("Empty"));
     }
 
-    @Test//REPEAT
-
+    @Test
     public void testH_TTS1() {
         // click on the record radio button and then the tts radio button
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
@@ -203,7 +201,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test2
-    public void testI_TTS2() {
+    public void testH_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -217,7 +215,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test3 and play it in the configurator
-    public void testJ_TTS3() {
+    public void testH_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -231,21 +229,21 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Play Audio Button 1
-    public void testK_PAB1() {
+    public void testI_PAB1() {
         clickOn(LabeledMatchers.hasText("Hello World"));
         sleep(3, TimeUnit.SECONDS);
     }
 
     @Test
     // Save TTS
-    public void testL_STTS() {
+    public void testJ_STTS() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
     }
-    //TEST V2 Start
-    //Click on the empty button inorder to create new button
-    @Test//NEW
-    public void testM_TTS0() {
+    //Start Testing male voice 2
+    // Set Text-To-Speech test1
+    @Test
+    public void testK_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         moveBy(150,40);
@@ -256,9 +254,9 @@ public class TestTTSGui extends ApplicationTest {
         catch(Exception e){
         }
     }
-//Clicks on every state of data input and then setlles on tts button
+    // click on the record radio button and then the tts radio button
     @Test//REPEAT
-    public void testM_TTS1() {
+    public void testK_TTS1() {
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
@@ -274,8 +272,7 @@ public class TestTTSGui extends ApplicationTest {
     }
     @Test
     // Set Text-To-Speech test2
-    // test the male 1 voice
-    public void testM_TTS2() {
+    public void testK_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -296,8 +293,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 2
-    public void testM_TTS3() {
+    // Set Text-To-Speech test3 and play it in the configurator
+    public void testK_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -317,8 +314,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 3
-    public void testM_TTS4() {
+    // Play Audio Button 2
+    public void testL_PAB1() {
         try {
             clickOn(LabeledMatchers.hasText("Hello World 2"));
             sleep(5, TimeUnit.SECONDS);
@@ -333,29 +330,12 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
-
+    //End voice testing male 2
+    //*************************************
+    //Start voice testing male 3
+    // Set Text-To-Speech test1
     @Test
-    // test male voice 3
-    public void testM_TTS5() {
-        try {
-            clickOn(LabeledMatchers.hasText("Hello World 3"));
-            sleep(5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        }
-        catch(Exception e){
-
-        }
-    }
-    //Start voice testing 3
-    //TEST V2 Start
-    //Click on the empty button inorder to create new button
-    @Test//NEW
-    public void testM_TTS6() {
+    public void testN_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         moveBy(100,20);
@@ -366,9 +346,9 @@ public class TestTTSGui extends ApplicationTest {
         catch(Exception e){
         }
     }
-    //Clicks on every state of data input and then setlles on tts button
+    // click on the record radio button and then the tts radio button
     @Test//REPEAT
-    public void testM_TTS7() {
+    public void testN_TTS1() {
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
@@ -385,8 +365,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test2
-    // test the male 1 voice
-    public void testM_TTS8() {
+    public void testN_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -407,8 +386,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 2
-    public void testM_TTS9() {
+    // Set Text-To-Speech test3 and play it in the configurator
+    public void testN_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -426,8 +405,9 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
+    // Play Audio Button 3
     @Test
-    public void testN_SCF1() {
+    public void testO_PAB1() {
         try {
             clickOn(LabeledMatchers.hasText("Hello World 3"));
             sleep(5, TimeUnit.SECONDS);
@@ -442,12 +422,12 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
-    //End Voice testing 3
+    //End Voice testing male 3
+    //***************************************
     //Start voice testing female 1
-    //TEST V2 Start
-    //Click on the empty button inorder to create new button
-    @Test//NEW
-    public void testN_SCF2() {
+    // Set Text-To-Speech test1
+    @Test
+    public void testP_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         moveBy(100,20);
@@ -458,9 +438,9 @@ public class TestTTSGui extends ApplicationTest {
         catch(Exception e){
         }
     }
-    //Clicks on every state of data input and then setlles on tts button
-    @Test//REPEAT
-    public void testN_SCF3() {
+    // click on the record radio button and then the tts radio button
+    @Test
+    public void testP_TTS1() {
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
@@ -477,8 +457,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test2
-    // test the male 1 voice
-    public void testN_SCF4() {
+    public void testP_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -499,8 +478,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 2
-    public void testN_SCF5() {
+    // Set Text-To-Speech test3 and play it in the configurator
+    public void testP_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -518,8 +497,9 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
+    // Play Audio Button 4
     @Test
-    public void testN_SCF6() {
+    public void testQ_PAB1() {
         try {
             clickOn(LabeledMatchers.hasText("Hello World 4"));
             sleep(5, TimeUnit.SECONDS);
@@ -534,11 +514,12 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
-    //End Voice testing 3
     //End voice  testing female 1
+    //***************************************
     //Start voice testing female 2
-    @Test//NEW
-    public void testN_SCF7() {
+    // Set Text-To-Speech test1
+    @Test
+    public void testR_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         moveBy(-180,80);
@@ -549,9 +530,9 @@ public class TestTTSGui extends ApplicationTest {
         catch(Exception e){
         }
     }
-    //Clicks on every state of data input and then setlles on tts button
-    @Test//REPEAT
-    public void testN_SCF8() {
+    // click on the record radio button and then the tts radio button
+    @Test
+    public void testR_TTS1() {
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
@@ -568,8 +549,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test2
-    // test the male 1 voice
-    public void testN_SCF9() {
+    public void testR_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -590,8 +570,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 2
-    public void testO_OST1() {
+    // Set Text-To-Speech test3 and play it in the configurator
+    public void testR_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -609,8 +589,9 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
+    // Play Audio Button 5
     @Test
-    public void testO_OST2() {
+    public void testS_PAB1() {
         try {
             clickOn(LabeledMatchers.hasText("Hello World 5"));
             sleep(5, TimeUnit.SECONDS);
@@ -626,9 +607,11 @@ public class TestTTSGui extends ApplicationTest {
         }
     }
     //End voice testing female 2
+    //********************************************
     //Start voice testing female 3
-    @Test//NEW
-    public void testO_OST3() {
+    // Set Text-To-Speech test1
+    @Test
+    public void testT_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
         moveBy(100,20);
@@ -639,9 +622,9 @@ public class TestTTSGui extends ApplicationTest {
         catch(Exception e){
         }
     }
-    //Clicks on every state of data input and then setlles on tts button
-    @Test//REPEAT
-    public void testO_OST4() {
+    // click on the record radio button and then the tts radio button
+    @Test
+    public void testT_TTS1() {
         RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
         clickOn(newRadioButton);
         newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
@@ -658,8 +641,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Text-To-Speech test2
-    // test the male 1 voice
-    public void testO_OST5() {
+    public void testT_TTS2() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -680,8 +662,8 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // test male voice 2
-    public void testO_OST6() {
+    // Set Text-To-Speech test3 and play it in the configurator
+    public void testT_TTS3() {
         clickOn(LabeledMatchers.hasText("Next"));
         TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
         clickOn(newTextField);
@@ -699,8 +681,9 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
+    // Play Audio Button 6
     @Test
-    public void testO_OST7() {
+    public void testU_PAB1() {
         try {
             clickOn(LabeledMatchers.hasText("Hello World 6"));
             sleep(5, TimeUnit.SECONDS);
@@ -715,72 +698,16 @@ public class TestTTSGui extends ApplicationTest {
 
         }
     }
-    //end voice testing female 3
-/*
-    @Test
-    public void testM_TTS5() {
-        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
-        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
-        clickOn(newComboBox);
-        clickOn(LabeledMatchers.hasText("Female 2"));
-        clickOn(newButton);
-    }
-
-    @Test
-    public void testM_TTS6() {
-        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
-        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
-        clickOn(newComboBox);
-        clickOn(LabeledMatchers.hasText("Female 3"));
-        clickOn(newButton);
-        sleep(3,TimeUnit.SECONDS);
-    }
-
-    @Test
-    public void testM_TTS7() {
-        clickOn(LabeledMatchers.hasText("Next"));
-        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
-        clickOn(newTextField);
-        writeText("Hello World 2");
-        clickOn(LabeledMatchers.hasText("Next"));
-        moveBy(0, 20);
-        clickOn();
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch(Exception e){
-
-        }
-    }
-
-    @Test
-    // Play Audio Button 1
-    public void testM_TTS8() {//CHANGE EVERY TEST
-        clickOn(LabeledMatchers.hasText("Hello World 2"));
-    }*/
 
     @Test
     // Save TTS
-    public void testO_OST8() {
+    public void testV_SSTS() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
     }
-    //TEST V2 END
-
-//    @Test
-//    // Perform Undo Function and save
-//    public void testM_PUF1() {
-
-//	    clickOn(LabeledMatchers.hasText("Edit"));
-//        clickOn(LabeledMatchers.hasText("Undo"));
-//
-//        push(KeyCode.CONTROL, KeyCode.S);
-//    }
-
     @Test
     // Set Custom Function1
-    public void testO_OST9() {
+    public void testW_SCF1() {
         clickOn(LabeledMatchers.hasText("Edit"));
         clickOn(LabeledMatchers.hasText("Custom Phrase List"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
@@ -789,7 +716,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Custom Function2
-    public void testP_CSP1() {
+    public void testW_SCF2() {
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
         writeText("Jump");
@@ -805,7 +732,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     //
-    public void testP_CSP2() {
+    public void testW_SCF3() {
         clickOn(LabeledMatchers.hasText("Subjects"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
@@ -822,7 +749,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     //
-    public void testP_CSP3(){
+    public void testW_SCF4(){
         clickOn(LabeledMatchers.hasText("Objects"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
@@ -839,7 +766,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // open Simulator Test1
-    public void testP_CSP4() {
+    public void testX_OST1() {
         push(KeyCode.ALT, KeyCode.F4);
         release(new KeyCode[]{});
         push(KeyCode.CONTROL, KeyCode.S);
@@ -850,7 +777,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Create Sentence and play it
-    public void testP_CSP5() {
+    public void testY_CSP1() {
         Label newLabel = lookfor(SimulatorStageTestingNodes.CUSTOM_LABEL);
         clickOn(LabeledMatchers.hasText("Custom Phrase"));
         clickOn(LabeledMatchers.hasText("Jump"));
@@ -870,7 +797,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Save TTS
-    public void testQ_STTS() {
+    public void testZ_STTS() {
         push(KeyCode.ALT, KeyCode.F4);
         release(new KeyCode[]{});
         push(KeyCode.CONTROL, KeyCode.S);
