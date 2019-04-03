@@ -41,6 +41,9 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+    afterSuite { suite, result ->
+        result.exception?.printStackTrace()
+    }
 }
 
 jar {

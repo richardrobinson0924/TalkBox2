@@ -1,7 +1,10 @@
 package talkboxnew.AddWizard;
 
+import com.darkprograms.speech.recognizer.GoogleResponse;
 import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.core.GoogleCredentialsProvider;
 import com.google.auth.Credentials;
+import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.common.collect.Lists;
@@ -31,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
 
@@ -153,7 +157,12 @@ public class TTSPane extends WizardPane {
 	private static AudioInputStream getHiFi(String phrase, Voice voice) throws Exception {
 		isReady.setValue(false);
 
-		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {
+		final TextToSpeechSettings speechSettings = TextToSpeechSettings
+			.newBuilder()
+			.setCredentialsProvider(() -> GoogleCredentials.fromStream(Utils.getStream(".TalkBox2-804fc1dcd25e.json")))
+			.build();
+
+		try (final TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(speechSettings)) {
 			final SynthesisInput input = SynthesisInput.newBuilder()
 					.setText(phrase)
 					.build();
@@ -162,6 +171,7 @@ public class TTSPane extends WizardPane {
 					.setLanguageCode(LANG)
 					.setName(LANG + "-Wavenet-" + voice.variant)
 					.build();
+
 
 			final AudioConfig audioConfig = AudioConfig.newBuilder()
 					.setAudioEncoding(AudioEncoding.LINEAR16)
