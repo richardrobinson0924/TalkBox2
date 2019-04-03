@@ -47,6 +47,7 @@ public final class CreateConfigWizard {
 	private final static Insets PADDING = new Insets(2 * SPACING, 100, SPACING, SPACING);
 
 	public static final String[] NAMEWIZARDPANE_NODES = {"NAME_TEXTFIELD"};
+	public static final String[] FEATURESWIZARDPANE_NODES = {"BACK_CHECKBOX", "CUSTOM_CHECKBOX"};
 	public static final String[] NUMBERSWIZARDPANE_NODES = {"NUMBUTTONS_SPINNER","NUMSETS_SPINNER"};
 	public static final String[] FILEWIZARDPANE_NODES = {"CHOOSE_BUTTON"};
 
@@ -195,6 +196,9 @@ public final class CreateConfigWizard {
 	private WizardPane getFeatures() {
 		final CheckBox backButton = new CheckBox("Enable Previous Audio Set Button?");
 		final CheckBox customButton = new CheckBox("Enable Custom Phrase Generation?");
+
+		backButton.setId(FEATURESWIZARDPANE_NODES[0]);
+		customButton.setId(FEATURESWIZARDPANE_NODES[1]);
 
 		backButton.setSelected(true);
 		customButton.setSelected(true);

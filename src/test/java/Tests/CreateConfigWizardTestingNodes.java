@@ -6,7 +6,6 @@ public class CreateConfigWizardTestingNodes {
 
     static class NamePane {
         private static String[] namePaneNodes = CreateConfigWizard.NAMEWIZARDPANE_NODES;
-
         static String getIdTextfield () {
             return namePaneNodes[0];
         }
@@ -14,7 +13,6 @@ public class CreateConfigWizardTestingNodes {
 
     static class NumbersPane {
         private static String[] numbersPaneNodes = CreateConfigWizard.NUMBERSWIZARDPANE_NODES;
-
         static String getIdNumButtonsSpinner () {
             return numbersPaneNodes[0];
         }
@@ -27,6 +25,16 @@ public class CreateConfigWizardTestingNodes {
         private static String[] filePaneNodes = CreateConfigWizard.FILEWIZARDPANE_NODES;
         static String getIdFileTextfield() {
             return filePaneNodes[0];
+        }
+    }
+
+    static class FeaturesPane {
+        private static String[] featuresPaneNodes = CreateConfigWizard.FEATURESWIZARDPANE_NODES;
+        static String getIdBackCheckBox () {
+            return featuresPaneNodes[0];
+        }
+        static String getIdCustomCheckBox() {
+            return featuresPaneNodes[1];
         }
     }
 

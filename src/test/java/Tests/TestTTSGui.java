@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -82,14 +83,40 @@ public class TestTTSGui extends ApplicationTest {
     }
 
     @Test
-    // setName test 1
-    public void testB_SNT1() {
+    // Set Name Foobar 1
+    public void testB_SNF1() {
         Button newButton = lookfor(SplashStageTestingNodes.NEW_BUTTON);
         clickOn(newButton);
         TextField newTextField = lookfor(CreateConfigWizardTestingNodes.NamePane.getIdTextfield());
         clickOn(newTextField);
         writeText("foobarTTS");
         Assertions.assertThat(newTextField).hasText("foobarTTS");
+    }
+
+    @Test
+    // set "Enablers" On (previous button)
+    public void testB_SON1() {
+        try {
+            clickOn(LabeledMatchers.hasText("Next"));
+            CheckBox newCB1 = lookfor(CreateConfigWizardTestingNodes.FeaturesPane.getIdBackCheckBox());
+            clickOn(newCB1);
+            clickOn(newCB1);
+            boolean result = newCB1.isSelected();
+            Assert.assertTrue("Expected True", result);
+        }
+        catch(Exception e) {
+            System.exit(1);
+        }
+    }
+
+    @Test
+    // set "Enablers" On (custom button)
+    public void testB_SON2() {
+        CheckBox newCB2 = lookfor(CreateConfigWizardTestingNodes.FeaturesPane.getIdCustomCheckBox());
+        clickOn(newCB2);
+        clickOn(newCB2);
+        boolean result = newCB2.isSelected();
+        Assert.assertTrue("Expected True",result);
     }
 
     // successfully moved onto the next page
@@ -121,7 +148,6 @@ public class TestTTSGui extends ApplicationTest {
         }
         assertThat(newButtonSpinner.getValue(), is(equalTo(6)));
     }
-
     // The next tests aren't working...  ---> not in lexicographic order
 
     @Test
@@ -246,7 +272,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testK_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
-        moveBy(150,40);
+        moveTo(LabeledMatchers.hasText("Empty"));
+        moveBy(115,0);
         clickOn();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -338,7 +365,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testN_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
-        moveBy(100,20);
+        moveTo(LabeledMatchers.hasText("Empty"));
+        moveBy(230,0);
         clickOn();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -430,7 +458,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testP_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
-        moveBy(100,20);
+        moveTo(LabeledMatchers.hasText("Empty"));
+        moveBy(345,0);
         clickOn();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -522,7 +551,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testR_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
-        moveBy(-180,80);
+        moveTo(LabeledMatchers.hasText("Empty"));
+        moveBy(460,0);
         clickOn();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -614,7 +644,8 @@ public class TestTTSGui extends ApplicationTest {
     public void testT_TTS0() {
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
         //goes to the first button and clicks it
-        moveBy(100,20);
+        moveTo(LabeledMatchers.hasText("Empty"));
+        moveBy(575,0);
         clickOn();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -704,103 +735,6 @@ public class TestTTSGui extends ApplicationTest {
     public void testV_SSTS() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
-    }
-    @Test
-    // Set Custom Function1
-    public void testW_SCF1() {
-        clickOn(LabeledMatchers.hasText("Edit"));
-        clickOn(LabeledMatchers.hasText("Custom Phrase List"));
-        TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
-        Assertions.assertThat(newTextField).hasText("");
-    }
-
-    @Test
-    // Set Custom Function2
-    public void testW_SCF2() {
-        TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
-        clickOn(newTextField);
-        writeText("Jump");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("Slip");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("Fall");
-        press(KeyCode.ENTER);
-        Assertions.assertThat(newTextField).hasText("");
-    }
-
-    @Test
-    //
-    public void testW_SCF3() {
-        clickOn(LabeledMatchers.hasText("Subjects"));
-        TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
-        clickOn(newTextField);
-        writeText("I");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("We");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("You");
-        press(KeyCode.ENTER);
-        Assertions.assertThat(newTextField).hasText("");
-    }
-
-    @Test
-    //
-    public void testW_SCF4(){
-        clickOn(LabeledMatchers.hasText("Objects"));
-        TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
-        clickOn(newTextField);
-        writeText("Banana");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("Cliff");
-        press(KeyCode.ENTER);
-        release(new KeyCode[]{});
-        writeText("Stairs");
-        press(KeyCode.ENTER);
-        Assertions.assertThat(newTextField).hasText("");
-    }
-
-    @Test
-    // open Simulator Test1
-    public void testX_OST1() {
-        push(KeyCode.ALT, KeyCode.F4);
-        release(new KeyCode[]{});
-        push(KeyCode.CONTROL, KeyCode.S);
-        release(new KeyCode[]{});
-        clickOn(LabeledMatchers.hasText("View"));
-        clickOn(LabeledMatchers.hasText("Open in Simulator..."));
-    }
-
-    @Test
-    // Create Sentence and play it
-    public void testY_CSP1() {
-        Label newLabel = lookfor(SimulatorStageTestingNodes.CUSTOM_LABEL);
-        clickOn(LabeledMatchers.hasText("Custom Phrase"));
-        clickOn(LabeledMatchers.hasText("Jump"));
-        clickOn(LabeledMatchers.hasText("2"));
-        sleep(1, TimeUnit.SECONDS);
-        clickOn(LabeledMatchers.hasText("I"));
-        clickOn(LabeledMatchers.hasText("3"));
-        sleep(1, TimeUnit.SECONDS);
-        clickOn(LabeledMatchers.hasText("Cliff"));
-        clickOn(LabeledMatchers.hasText("4"));
-        sleep(1, TimeUnit.SECONDS);
-        clickOn(LabeledMatchers.hasText("Past"));
-        clickOn(LabeledMatchers.hasText("Play"));
-        sleep(3, TimeUnit.SECONDS);
-        Assertions.assertThat(newLabel).hasText("I Jumped Cliff.");
-    }
-
-    @Test
-    // Save TTS
-    public void testZ_STTS() {
-        push(KeyCode.ALT, KeyCode.F4);
-        release(new KeyCode[]{});
-        push(KeyCode.CONTROL, KeyCode.S);
     }
 
 }

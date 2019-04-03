@@ -49,7 +49,7 @@ public final class SimulatorStage extends Stage {
 	public static SPhraseSpec phraseSpec;
 	public static Realiser realiser;
 
-	public static final String[] nodesId = {"CUSTOM_LABEL"};
+	public static final String[] nodesId = {"CUSTOM_LABEL", "PLAY_BUTTON"};
 
 	public SimulatorStage(Path masterPath, Window owner) {
 		this.initOwner(owner);
@@ -116,6 +116,7 @@ public final class SimulatorStage extends Stage {
 		this.customToggle.setPrefSize(BUTTON_SIZE, 40);
 
 		final Button customPlay = new Button("Play");
+		customPlay.setId(nodesId[1]);
 		customPlay.disableProperty()
 				.bind(customText
 				.isEmpty()
