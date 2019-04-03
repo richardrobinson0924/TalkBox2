@@ -171,13 +171,13 @@ public final class SplashStage extends Stage {
 		box.setSpacing(SPACING);
 
 		final Button openButton = new CustomButton(
-				"Open Existing Directory...",
+				"Open Configuration...",
 				FontAwesome.Glyph.FOLDER_OPEN,
 				this::openAction
 		);
 
 		final Button newButton = new CustomButton(
-				" New TalkBox Directory...",
+				" New Configuration...",
 				FontAwesome.Glyph.PLUS,
 				this::newAction
 		);
