@@ -242,28 +242,35 @@ public class TestTTSGui extends ApplicationTest {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
     }
-
-    //TEST V2 Start HOW TO MAKE THIS RUN AFTER L
+    //TEST V2 Start
+    //Click on the empty button inorder to create new button
     @Test//NEW
     public void testM_TTS0() {
-        // check if the buttons exists
         FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
+        //goes to the first button and clicks it
         moveBy(150,40);
         clickOn();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+//Clicks on every state of data input and then setlles on tts button
+    @Test//REPEAT
+    public void testM_TTS1() {
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
+        clickOn(newRadioButton);
 
         try {
             TimeUnit.SECONDS.sleep(1);
         }
         catch(Exception e){
-
         }
-    }
-
-    @Test//REPEAT
-    public void testM_TTS1() {
-        // click on the record radio button and then the tts radio button
-        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
-        clickOn(newRadioButton);
     }
     @Test
     // Set Text-To-Speech test2
@@ -279,31 +286,437 @@ public class TestTTSGui extends ApplicationTest {
         clickOn();
         writeText("Hello World 2");
         clickOn(newButton);
-        // wait 3 seconds
-        sleep(3,TimeUnit.SECONDS);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
     }
 
     @Test
     // test male voice 2
     public void testM_TTS3() {
-        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
-        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
-        clickOn(newComboBox);
-        clickOn(LabeledMatchers.hasText("Male 3"));
-        clickOn(newButton);
-        sleep(3,TimeUnit.SECONDS);
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
+        clickOn(newTextField);
+        writeText("Hello World 2");
+        clickOn(LabeledMatchers.hasText("Previous"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        moveBy(0, 15);
+        clickOn();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
     }
 
     @Test
     // test male voice 3
     public void testM_TTS4() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 2"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+
+    @Test
+    // test male voice 3
+    public void testM_TTS5() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 3"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    //Start voice testing 3
+    //TEST V2 Start
+    //Click on the empty button inorder to create new button
+    @Test//NEW
+    public void testM_TTS6() {
+        FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
+        //goes to the first button and clicks it
+        moveBy(100,20);
+        clickOn();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+    //Clicks on every state of data input and then setlles on tts button
+    @Test//REPEAT
+    public void testM_TTS7() {
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
+        clickOn(newRadioButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+
+    @Test
+    // Set Text-To-Speech test2
+    // test the male 1 voice
+    public void testM_TTS8() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Male 3"));
+        moveTo(newTextField);
+        clickOn();
+        writeText("Hello World 3");
+        clickOn(newButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+
+    @Test
+    // test male voice 2
+    public void testM_TTS9() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
+        clickOn(newTextField);
+        writeText("Hello World 3");
+        clickOn(LabeledMatchers.hasText("Previous"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        moveBy(0, 15);
+        clickOn();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    @Test
+    public void testN_SCF1() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 3"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    //End Voice testing 3
+    //Start voice testing female 1
+    //TEST V2 Start
+    //Click on the empty button inorder to create new button
+    @Test//NEW
+    public void testN_SCF2() {
+        FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
+        //goes to the first button and clicks it
+        moveBy(100,20);
+        clickOn();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+    //Clicks on every state of data input and then setlles on tts button
+    @Test//REPEAT
+    public void testN_SCF3() {
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
+        clickOn(newRadioButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+
+    @Test
+    // Set Text-To-Speech test2
+    // test the male 1 voice
+    public void testN_SCF4() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
         ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
         clickOn(newComboBox);
         clickOn(LabeledMatchers.hasText("Female 1"));
+        moveTo(newTextField);
+        clickOn();
+        writeText("Hello World 4");
         clickOn(newButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
     }
 
+    @Test
+    // test male voice 2
+    public void testN_SCF5() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
+        clickOn(newTextField);
+        writeText("Hello World 4");
+        clickOn(LabeledMatchers.hasText("Previous"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        moveBy(0, 15);
+        clickOn();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    @Test
+    public void testN_SCF6() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 4"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    //End Voice testing 3
+    //End voice  testing female 1
+    //Start voice testing female 2
+    @Test//NEW
+    public void testN_SCF7() {
+        FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
+        //goes to the first button and clicks it
+        moveBy(-180,80);
+        clickOn();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+    //Clicks on every state of data input and then setlles on tts button
+    @Test//REPEAT
+    public void testN_SCF8() {
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
+        clickOn(newRadioButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+
+    @Test
+    // Set Text-To-Speech test2
+    // test the male 1 voice
+    public void testN_SCF9() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Female 2"));
+        moveTo(newTextField);
+        clickOn();
+        writeText("Hello World 5");
+        clickOn(newButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+
+    @Test
+    // test male voice 2
+    public void testO_OST1() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
+        clickOn(newTextField);
+        writeText("Hello World 5");
+        clickOn(LabeledMatchers.hasText("Previous"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        moveBy(0, 15);
+        clickOn();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    @Test
+    public void testO_OST2() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 5"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    //End voice testing female 2
+    //Start voice testing female 3
+    @Test//NEW
+    public void testO_OST3() {
+        FlowPane newFlowPane = lookfor(ConfigStageTestingNodes.BUTTONS_FLOWPANE);
+        //goes to the first button and clicks it
+        moveBy(100,20);
+        clickOn();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+    //Clicks on every state of data input and then setlles on tts button
+    @Test//REPEAT
+    public void testO_OST4() {
+        RadioButton newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.RECORD_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.WAV_BUTTON);
+        clickOn(newRadioButton);
+        newRadioButton = lookfor(AddWizardTestingNodes.IntroPaneNodes.TTS_BUTTON);
+        clickOn(newRadioButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+        }
+    }
+
+    @Test
+    // Set Text-To-Speech test2
+    // test the male 1 voice
+    public void testO_OST5() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPHRASE_TEXTFIELD);
+        Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
+        ComboBox newComboBox = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSVOICE_COMBOBOX);
+        clickOn(newComboBox);
+        clickOn(LabeledMatchers.hasText("Female 3"));
+        moveTo(newTextField);
+        clickOn();
+        writeText("Hello World 6");
+        clickOn(newButton);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+
+    @Test
+    // test male voice 2
+    public void testO_OST6() {
+        clickOn(LabeledMatchers.hasText("Next"));
+        TextField newTextField = lookfor(AddWizardTestingNodes.NamePaneNodes.AUDIONAME_TEXTFIELD);
+        clickOn(newTextField);
+        writeText("Hello World 6");
+        clickOn(LabeledMatchers.hasText("Previous"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        clickOn(LabeledMatchers.hasText("Next"));
+        moveBy(0, 15);
+        clickOn();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    @Test
+    public void testO_OST7() {
+        try {
+            clickOn(LabeledMatchers.hasText("Hello World 6"));
+            sleep(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }
+        catch(Exception e){
+
+        }
+    }
+    //end voice testing female 3
+/*
     @Test
     public void testM_TTS5() {
         Button newButton = lookfor(AddWizardTestingNodes.TTSPaneNodes.TTSPLAY_BUTTON);
@@ -345,11 +758,11 @@ public class TestTTSGui extends ApplicationTest {
     // Play Audio Button 1
     public void testM_TTS8() {//CHANGE EVERY TEST
         clickOn(LabeledMatchers.hasText("Hello World 2"));
-    }
+    }*/
 
     @Test
     // Save TTS
-    public void testM_TTS9() {
+    public void testO_OST8() {
         clickOn(LabeledMatchers.hasText("File"));
         clickOn(LabeledMatchers.hasText("Save"));
     }
@@ -367,7 +780,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Custom Function1
-    public void testN_SCF1() {
+    public void testO_OST9() {
         clickOn(LabeledMatchers.hasText("Edit"));
         clickOn(LabeledMatchers.hasText("Custom Phrase List"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
@@ -376,7 +789,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Set Custom Function2
-    public void testN_SCF2() {
+    public void testP_CSP1() {
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
         writeText("Jump");
@@ -392,7 +805,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     //
-    public void testN_SCF3() {
+    public void testP_CSP2() {
         clickOn(LabeledMatchers.hasText("Subjects"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
@@ -409,7 +822,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     //
-    public void testN_SCF4(){
+    public void testP_CSP3(){
         clickOn(LabeledMatchers.hasText("Objects"));
         TextField newTextField = lookfor(CustomDataViewTestingNodes.ADD_TEXTFIELD);
         clickOn(newTextField);
@@ -426,7 +839,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // open Simulator Test1
-    public void testO_OST1() {
+    public void testP_CSP4() {
         push(KeyCode.ALT, KeyCode.F4);
         release(new KeyCode[]{});
         push(KeyCode.CONTROL, KeyCode.S);
@@ -437,7 +850,7 @@ public class TestTTSGui extends ApplicationTest {
 
     @Test
     // Create Sentence and play it
-    public void testP_CSP1() {
+    public void testP_CSP5() {
         Label newLabel = lookfor(SimulatorStageTestingNodes.CUSTOM_LABEL);
         clickOn(LabeledMatchers.hasText("Custom Phrase"));
         clickOn(LabeledMatchers.hasText("Jump"));
