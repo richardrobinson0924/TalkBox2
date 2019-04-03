@@ -79,8 +79,8 @@ public class TestCustomGui extends ApplicationTest {
         clickOn(newButton);
         TextField newTextField = lookfor(CreateConfigWizardTestingNodes.NamePane.getIdTextfield());
         clickOn(newTextField);
-        writeText("foobarTTS");
-        Assertions.assertThat(newTextField).hasText("foobarTTS");
+        writeText("foobarCustom");
+        Assertions.assertThat(newTextField).hasText("foobarCustom");
     }
 
     @Test
