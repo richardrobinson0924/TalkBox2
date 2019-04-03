@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -32,6 +33,7 @@ import java.util.Objects;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.log4j.Logger.*;
 import static talkboxnew.AddWizard.AddWizardView.*;
+import static talkboxnew.Utils.tryFactory;
 
 public class ImagePane extends WizardPane {
 	Logger log = getLogger(this.getClass());
@@ -86,17 +88,15 @@ public class ImagePane extends WizardPane {
 			final File received = fileChooser.showOpenDialog(null);
 
 			if (received != null) {
-				try {
-					stream[0] = received;
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				imageView.setImage(new Image(stream[0].toPath().toString()));
+				stream[0] = received;
+				tryFactory.attemptTo(() -> {
+					imageView.setImage(new Image(stream[0].toURI().toURL().toString()));
+					wiz.getSettings().put("image", stream[0]);
+				});
 			}
 		});
 
 		wiz.getSettings().put("image", stream[0]);
-
 		return img;
 	}
 }

@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
@@ -44,7 +46,7 @@ public final class CreateConfigWizard {
 			SPACING = 10,
 			NUM_PANES = 4;
 
-	private final static Insets PADDING = new Insets(2 * SPACING, 100, SPACING, SPACING);
+	private final static Insets PADDING = new Insets(2 * SPACING, SPACING, SPACING, SPACING);
 
 	public static final String[] NAMEWIZARDPANE_NODES = {"NAME_TEXTFIELD"};
 	public static final String[] NUMBERSWIZARDPANE_NODES = {"NUMBUTTONS_SPINNER","NUMSETS_SPINNER"};
@@ -243,16 +245,21 @@ public final class CreateConfigWizard {
 		namePane.setHeaderText("Choose Name for File");
 		namePane.setPrefHeight(210);
 
-		final GridPane grid = new GridPane();
-		grid.setHgap(SPACING);
-		grid.setVgap(SPACING);
-		grid.setPadding(PADDING);
-		grid.addRow(0, new Label("File Name:"), textField);
+		final HBox hbox = new HBox(SPACING * 2, new Label("File Name:"), textField);
+		hbox.setAlignment(Pos.CENTER_LEFT);
 
-		namePane.setContent(grid);
+		final Label text = new Label("Please enter the name of this TalkBox Configuration.");
+		text.setWrapText(true);
+
+		VBox box = new VBox(SPACING, new TextFlow(text), hbox);
+		box.setAlignment(Pos.CENTER_LEFT);
+
+		namePane.setContent(box);
 
 		// set Id for name wizard pane and textfield in wizard pane
 		textField.setId(NAMEWIZARDPANE_NODES[0]);
+
+		namePane.setPrefWidth(350);
 		return namePane;
 	}
 
