@@ -49,6 +49,7 @@ public class ConfigStage extends Stage {
 	public static final Logger log = Logger.getLogger(ConfigStage.class.getName());
 
 	public static final String WAV = ".*\\.wav$";
+	public static final int WIDTH_FACTOR = 120;
 
 	// nodes for testing
 	public static final String[] nodesId = {"BUTTONS_FLOWPANE"};
@@ -63,7 +64,6 @@ public class ConfigStage extends Stage {
 
 		log.info("Starting Configuration App");
 
-		this.setWidth(500);
 		this.setHeight(400);
 		this.getIcons().add(new Image(Utils.getResource("icon2.png").toString()));
 
@@ -83,6 +83,7 @@ public class ConfigStage extends Stage {
 		});
 
 		box.getChildren().add(getGridPane());
+		this.setWidth(ts.numberOfAudioButtons * WIDTH_FACTOR);
 
 		this.setOnCloseRequest(this::warnBeforeExit);
 		this.setTitle("TalkBox Configurator — " + masterPath.getFileName().toString());
@@ -136,7 +137,6 @@ public class ConfigStage extends Stage {
 		flowPane.setVgap(10);
 		flowPane.setHgap(10);
 		flowPane.setAlignment(Pos.CENTER);
-
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++) {
 			flowPane.getChildren().add(new AudioButton(page * ts.numberOfAudioButtons + i));

@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import talkboxnew.Utils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +69,11 @@ public class Main extends Application {
 	private ObservableList<String[]> parseFile() throws Exception {
 		final ObservableList<String[]> list = FXCollections.observableArrayList();
 
-		final File file = Paths
-				.get(Utils.getResource("logging.log").toURI())
+		final File file = FileUtils
+				.getUserDirectory()
+				.toPath()
+				.resolve("TalkBox")
+				.resolve("logging.log")
 				.toFile();
 
 		final Scanner sc = new Scanner(file);

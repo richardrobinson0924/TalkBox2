@@ -37,6 +37,7 @@ public final class Main extends Application {
 		}
 
 		props.setProperty("log4j.appender.FILE.file", talkboxDir.resolve(LOG).toString());
+		System.out.println(props.getProperty("log4j.appender.FILE.file"));
 		PropertyConfigurator.configure(props);
 	}
 

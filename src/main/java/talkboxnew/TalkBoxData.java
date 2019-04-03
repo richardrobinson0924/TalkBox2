@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 public class TalkBoxData implements TalkBoxConfiguration {
 	private static final long serialVersionUID = -512851111601552178L;
 
+	boolean hasCustomButton = false;
+	boolean hasBackButton = false;
 	int numberOfAudioButtons = 0;
 	int numberOfAudioSets = 0;
-
 	List<Entry> database = new ArrayList<>();
-
 	List<List<String>> customWords = new ArrayList<>();
 
 	public int getNumberOfAudioButtons() {

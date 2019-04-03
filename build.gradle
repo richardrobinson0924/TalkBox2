@@ -42,6 +42,18 @@ dependencies {
 
 }
 
+task utilJar(type: Jar) {
+    baseName = "logger"
+    manifest {
+        attributes "Main-Class": "logger.Main"
+    }
+
+    from(sourceSets.main.output) {
+        // filter to only include certain class files (Ant glob pattern)
+        include "some/package/**"
+    }
+}
+
 //test {
 //    useJUnitPlatform()
 //    testLogging {

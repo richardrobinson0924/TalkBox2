@@ -1,6 +1,10 @@
 package talkboxnew;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -39,7 +43,8 @@ public final class SimulatorStage extends Stage {
 	private TalkBoxData ts;
 	private SimpleStringProperty customText = new SimpleStringProperty();
 	private ToggleButton customToggle;
-	private Pagination pagination;
+	private SimpleIntegerProperty page = new SimpleIntegerProperty(0);
+	private int size;
 
 	public static SPhraseSpec phraseSpec;
 	public static Realiser realiser;
@@ -52,7 +57,6 @@ public final class SimulatorStage extends Stage {
 		this.setTitle("TalkBox Simulator – " + masterPath.getFileName().toString());
 
 		this.setHeight(owner.getHeight() - 20);
-		this.setWidth(owner.getWidth());
 
 		final Lexicon lexicon = Lexicon.getDefaultLexicon();
 		final NLGFactory factory = new NLGFactory(lexicon);
@@ -61,39 +65,64 @@ public final class SimulatorStage extends Stage {
 		realiser = new Realiser(lexicon);
 
 		tryFactory.attemptTo(() -> ts = ConfigStage.readConfig());
+		this.setWidth(ts.numberOfAudioButtons * 120 + 200);
 
-		pagination = new Pagination(ts.getNumberOfAudioSets());
-		pagination.setPageFactory(this::pageFactory);
-
-		final VBox box = new VBox();
+		final HBox box = new HBox();
+		box.setPadding(new Insets(0,10,0,10));
 		box.setAlignment(Pos.CENTER);
-		box.setSpacing(SPACING * 2);
-		box.getChildren().addAll(customBar(), pagination);
+
+		this.customToggle = new ToggleButton("Custom");
+
+		box.getChildren().addAll(getFlow(), getSwap());
+		if (ts.hasCustomButton) box.getChildren().add(0, customBar());
 
 		this.setScene(new Scene(box));
 		this.setOnCloseRequest(e -> {
 			log.info("Closing simulator...");
 			saveConfig();
+
 			ConfigStage.data.setAll(ts.database);
 			ConfigStage.save.fire();
 			this.close();
 		});
 	}
 
-	private HBox customBar() {
-		final HBox custom = new HBox(20);
-		custom.setAlignment(Pos.CENTER);
-		customToggle = new ToggleButton("Custom Phrase");
+	private VBox getSwap() {
+		final VBox swapBox = new VBox(SPACING * 2);
+		swapBox.setAlignment(Pos.CENTER);
 
-		final Label customLabel = new Label();
-		customLabel.setId(nodesId[0]);
-		customLabel.textProperty().bind(customText);
+		final Button next = new Button("Next");
+		next.setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
+		next.setOnAction(e -> page.set((page.getValue() + 1) % size));
+
+		if (ts.hasBackButton) {
+			final Button back = new Button("Previous");
+			next.setPrefSize(BUTTON_SIZE, BUTTON_SIZE / 2 - 10);
+			back.setPrefSize(BUTTON_SIZE, BUTTON_SIZE / 2 - 10);
+
+			back.setOnAction(e -> page.set((page.getValue() + size - 1) % size));
+			swapBox.getChildren().addAll(back);
+		}
+
+		swapBox.getChildren().addAll(next);
+		swapBox.setMinWidth(BUTTON_SIZE);
+
+		return swapBox;
+	}
+
+	private VBox customBar() {
+		final VBox custom = new VBox(20);
+		custom.setAlignment(Pos.CENTER);
+		this.customToggle.setPrefSize(BUTTON_SIZE, 40);
 
 		final Button customPlay = new Button("Play");
-		customPlay.disableProperty().bind(customText
+		customPlay.disableProperty()
+				.bind(customText
 				.isEmpty()
 				.or(customToggle.selectedProperty().not())
 		);
+
+		customPlay.setPrefSize(BUTTON_SIZE, 40);
 
 		customPlay.setOnAction(event -> tryFactory.attemptTo(() -> {
 			log.info("Playing custom audio...");
@@ -105,13 +134,14 @@ public final class SimulatorStage extends Stage {
 			Utils.play(phrase);
 		}));
 
-		custom.getChildren().addAll(customToggle, customLabel, customPlay);
+		custom.getChildren().addAll(customToggle, customPlay);
+		custom.setMinWidth(BUTTON_SIZE);
+
 		return custom;
 	}
 
 	private void doIfCustom(int page, FlowPane flowPane) {
-		pagination.setPageCount(4);
-
+		this.size = 4;
 		for (int i = 0; i < ts.numberOfAudioButtons; i++)
 			if (i >= ts.customWords.get(page).size()) {
 				final Button b = new Button("Empty");
@@ -124,36 +154,47 @@ public final class SimulatorStage extends Stage {
 	}
 
 	private void doIfNormal(int page, FlowPane flowPane) {
-		pagination.setPageCount(ts.getNumberOfAudioSets());
+		this.size = ts.numberOfAudioSets;
 		flowPane.getChildren().clear();
 
 		for (int i = 0; i < ts.numberOfAudioButtons; i++)
 			flowPane.getChildren().add(new SimButton(ts.database.get(page * ts.numberOfAudioButtons + i)));
 	}
 
-	private FlowPane pageFactory(int page) {
+	private FlowPane getFlow() {
 		final FlowPane flowPane = new FlowPane();
+		this.size = ts.numberOfAudioSets;
 
 		flowPane.setVgap(SPACING);
 		flowPane.setHgap(SPACING);
 		flowPane.setAlignment(Pos.CENTER);
 
-		if (customToggle.isSelected()) doIfCustom(page, flowPane);
-		else doIfNormal(page, flowPane);
+		changed(page.getValue(), flowPane);
+		page.addListener((o, old, newValue) -> changed((Integer) newValue, flowPane));
+
+		flowPane.setPrefWidth(ts.numberOfAudioButtons * 120);
+		return flowPane;
+	}
+
+	private void changed(int newValue, FlowPane flowPane) {
+		flowPane.getChildren().clear();
 
 		customToggle.setOnAction(event -> {
 			log.info("Custom toggle toggled");
+			page.setValue(0);
+
 			if (customToggle.isSelected()) {
 				flowPane.getChildren().clear();
-				doIfCustom(page, flowPane);
+				doIfCustom(0, flowPane);
 			} else {
-				doIfNormal(page, flowPane);
+				doIfNormal(0, flowPane);
 				customText.set("");
 			}
 		});
 
-		flowPane.minWidthProperty().bindBidirectional(this.minWidthProperty());
-		return flowPane;
+		if (customToggle.isSelected()) {
+			doIfCustom(newValue, flowPane);
+		} else doIfNormal(newValue, flowPane);
 	}
 
 	private void saveConfig() {

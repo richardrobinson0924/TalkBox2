@@ -4,8 +4,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -66,6 +68,7 @@ public final class CreateConfigWizard {
 
 		final Wizard.LinearFlow wizFlow = new Wizard.LinearFlow(
 				getName(),
+				getFeatures(),
 				getNumbers(),
 				getFile()
 		);
@@ -186,6 +189,43 @@ public final class CreateConfigWizard {
 		numSets.setId(NUMBERSWIZARDPANE_NODES[1]);
 
 		wizardPane.setContent(grid);
+		return wizardPane;
+	}
+
+	private WizardPane getFeatures() {
+		final CheckBox backButton = new CheckBox("Enable Previous Audio Set Button?");
+		final CheckBox customButton = new CheckBox("Enable Custom Phrase Generation?");
+
+		backButton.setSelected(true);
+		customButton.setSelected(true);
+
+		final GridPane grid = new GridPane();
+		grid.setHgap(SPACING);
+		grid.setVgap(SPACING);
+		grid.setPadding(PADDING);
+
+		final Label text = new Label("If you have a limited number of buttons on your device,\nit is recommended to disable one or both features.");
+		text.setWrapText(true);
+
+		grid.addRow(0, new TextFlow(text));
+		grid.addRow(1, backButton);
+		grid.addRow(2, customButton);
+
+		final WizardPane wizardPane = new WizardPane() {
+			@Override
+			public void onEnteringPage(Wizard wizard) {
+				log.info("Features pane invoked");
+			}
+
+			@Override
+			public void onExitingPage(Wizard wizard) {
+				tbd.hasBackButton = backButton.selectedProperty().getValue();
+				tbd.hasCustomButton = customButton.selectedProperty().getValue();
+			}
+		};
+
+		wizardPane.setContent(grid);
+		wizardPane.setHeaderText("Customize Features");
 		return wizardPane;
 	}
 
