@@ -36,15 +36,15 @@ dependencies {
 
 }
 
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    afterSuite { suite, result ->
-        result.exception?.printStackTrace()
-    }
-}
+//test {
+//    useJUnitPlatform()
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//    }
+//    afterSuite { suite, result ->
+//        result.exception?.printStackTrace()
+//    }
+//}
 
 jar {
     manifest {
